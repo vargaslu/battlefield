@@ -24,6 +24,10 @@ class Ocean {
         }
     }
 
+    function peek(Location $location) {
+        return $this->grid->getItem($location);
+    }
+
     private function calculateNextLocation(Location $location, $direction) {
         $newLocation = Location::of($location);
 

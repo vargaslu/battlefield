@@ -4,7 +4,7 @@
 namespace Game\Battleship;
 
 
-abstract class Direction {
+final class Direction {
 
     const HORIZONTAL = 0;
     const VERTICAL = 1;

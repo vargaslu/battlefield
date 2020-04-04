@@ -2,25 +2,24 @@
 
 namespace Tests\Game\Battleship;
 
-require_once __DIR__ . '/../../src/items/Destroyer.php';
+require_once 'FakeShip.php';
 
-use Game\Battleship\Destroyer;
 use PHPUnit\Framework\TestCase;
 
 class ShipTest extends TestCase {
 
     public function testShipCreation() {
-        $destroyer = new Destroyer();
-        self::assertEquals("Destroyer", $destroyer->getName());
-        self::assertEquals(2, $destroyer->getSize());
-        self::assertEquals(true, $destroyer->isAlive());
+        $fakeShip = FakeShip::default();
+        self::assertEquals("FakeShip", $fakeShip->getName());
+        self::assertEquals(2, $fakeShip->getSize());
+        self::assertEquals(true, $fakeShip->isAlive());
     }
 
     public function testHitToSink() {
-        $destroyer = new Destroyer();
-        $destroyer->hit();
-        $destroyer->hit();
-        self::assertEquals(false, $destroyer->isAlive());
+        $fakeShip = FakeShip::default();
+        $fakeShip->hit();
+        $fakeShip->hit();
+        self::assertEquals(false, $fakeShip->isAlive());
     }
 
 }

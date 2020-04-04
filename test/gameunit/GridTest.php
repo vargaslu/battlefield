@@ -5,8 +5,10 @@ namespace Tests\Game\Battleship;
 require_once __DIR__.'/../items/FakeItem.php';
 require_once __DIR__.'/../../src/gameunit/Grid.php';
 require_once __DIR__.'/../../src/exceptions/LocationException.php';
+require_once __DIR__.'/../../src/exceptions/LocationOutOfBoundsException.php';
 
 use Game\Battleship\LocationException;
+use Game\Battleship\LocationOutOfBoundsException;
 use Tests\Game\Battleship\FakeItem;
 use Game\Battleship\Grid;
 use Game\Battleship\Location;
@@ -28,6 +30,12 @@ class GridTest extends TestCase {
         $grid = new Grid();
         $grid->put($this->item1, new Location("A", 2));
         $grid->put($this->item2, new Location("B", 2));
+
+        $expectedItem = $grid->getItem(new Location('A', 2));
+        self::assertEquals("item1", $expectedItem);
+
+        $expectedItem = $grid->getItem(new Location('B', 2));
+        self::assertEquals("item2", $expectedItem);
 
         self::assertEquals("item1:A-2 item2:B-2", $grid->asString());
     }
@@ -51,5 +59,12 @@ class GridTest extends TestCase {
         $grid->put($this->item2, new Location("C", 3));
 
         self::assertEquals("item1:B-2 item2:C-3", $grid->asString());
+    }
+
+    public function testExceptionWhenGettingAnItemOutsideOfTheGrid() {
+        $this->expectException(LocationOutOfBoundsException::class);
+        $grid = new Grid();
+
+        $grid->getItem(new Location('B', 7));
     }
 }

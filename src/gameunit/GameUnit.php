@@ -30,9 +30,10 @@ class GameUnit {
                             new Destroyer());
     }
 
-    public function placeShip(Ship $ship, Location $location) {
+    public function placeShip(Ship $ship, Location $location, $direction) {
         // TODO: Validations before placing.
         // 1. Verify if ship is available
+        $this->ocean->place($ship, $location, $direction);
     }
 
     public function makeShot(Location $location) {
@@ -41,7 +42,11 @@ class GameUnit {
     }
 
     public function verifyShot(Location $location) {
-        // TODO: Is a hit or miss, if hit return name of ship
+        $peekResult = $this->ocean->peek($location);
+        if (strcmp('', $peekResult) == 0) {
+            return HitResult::createMissedHitResult();
+        }
+        return HitResult::createSuccessfulHitResult($peekResult);
     }
 
     public function availableShips() {

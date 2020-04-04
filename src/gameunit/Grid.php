@@ -5,7 +5,6 @@ namespace Game\Battleship;
 require_once __DIR__.'/../positioning/Location.php';
 require_once __DIR__.'/../positioning/LocationAsInteger.php';
 
-use Game\Battleship\InvalidLocationException;
 use Game\Battleship\LocationException;
 
 class Grid {
@@ -62,6 +61,15 @@ class Grid {
 
     private function getItemFromLocation(ILocation $location) {
         return $this->board[$location->getColumn()][$location->getRow()];
+    }
+
+    public function getItem(Location $location) {
+        $locationAsInteger = new LocationAsInteger($location);
+        if ($this->isLocationOutsideGrid($locationAsInteger)) {
+            throw new LocationOutOfBoundsException();
+        }
+
+        return $this->getItemFromLocation($locationAsInteger);
     }
 
     function asString() {
