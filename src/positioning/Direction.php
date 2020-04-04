@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Battleship\GameUnit;
+namespace Game\Battleship;
 
 
-abstract class Position {
+abstract class Direction {
 
     const HORIZONTAL = 0;
     const VERTICAL = 1;

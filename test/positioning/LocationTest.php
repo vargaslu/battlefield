@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Battleship\GameUnit;
+namespace Tests\Game\Battleship;
 
-require_once __DIR__.'/../../src/gameunit/Location.php';
+require_once __DIR__ . '/../../src/positioning/Location.php';
 
-use Battleship\GameUnit\Location;
+use Game\Battleship\Location;
 use PHPUnit\Framework\TestCase;
 
 class LocationTest extends TestCase {

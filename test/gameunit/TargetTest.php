@@ -1,15 +1,16 @@
 <?php
 
-namespace Tests\Battleship\GameUnit;
+namespace Tests\Game\Battleship;
 
-require_once __DIR__.'/../../src/gameunit/Peg.php';
+require_once __DIR__.'/../../src/items/Peg.php';
 require_once __DIR__.'/../../src/gameunit/Target.php';
+require_once __DIR__.'/../../src/exceptions/LocationException.php';
 
-use Battleship\Exceptions\LocationException;
-use Battleship\GameUnit\Grid;
-use Battleship\GameUnit\Location;
-use Battleship\GameUnit\Peg;
-use Battleship\GameUnit\Target;
+use Game\Battleship\LocationException;
+use Game\Battleship\Grid;
+use Game\Battleship\Location;
+use Game\Battleship\Peg;
+use Game\Battleship\Target;
 use PHPUnit\Framework\TestCase;
 
 class TargetTest extends TestCase {

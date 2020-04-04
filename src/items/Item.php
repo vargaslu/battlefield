@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Battleship\GameUnit;
+namespace Game\Battleship;
 
 
 interface Item {

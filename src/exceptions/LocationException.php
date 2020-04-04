@@ -1,6 +1,6 @@
 <?php
 
-namespace Battleship\Exceptions;
+namespace Game\Battleship;
 
 use Exception;
 

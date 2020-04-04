@@ -1,13 +1,16 @@
 <?php
 
 
-namespace Battleship\GameUnit;
+namespace Game\Battleship;
 
-require_once 'Battleship.php';
-require_once 'Carrier.php';
-require_once 'Cruiser.php';
-require_once 'Submarine.php';
-require_once 'Destroyer.php';
+require_once __DIR__.'/../items/Battleship.php';
+require_once __DIR__.'/../items/Carrier.php';
+require_once __DIR__.'/../items/Cruiser.php';
+require_once __DIR__.'/../items/Submarine.php';
+require_once __DIR__.'/../items/Destroyer.php';
+require_once 'Ocean.php';
+require_once 'Target.php';
+
 
 class GameUnit {
 

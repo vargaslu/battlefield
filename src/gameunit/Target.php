@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Battleship\GameUnit;
+namespace Game\Battleship;
 
 require_once 'Grid.php';
-require_once 'Peg.php';
+require_once __DIR__.'/../items/Peg.php';
 
 class Target {
 

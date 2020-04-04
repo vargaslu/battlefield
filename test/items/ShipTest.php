@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Battleship\GameUnit;
+namespace Tests\Game\Battleship;
 
-require_once __DIR__.'/../../src/gameunit/Destroyer.php';
+require_once __DIR__ . '/../../src/items/Destroyer.php';
 
-use Battleship\GameUnit\Destroyer;
+use Game\Battleship\Destroyer;
 use PHPUnit\Framework\TestCase;
 
 class ShipTest extends TestCase {

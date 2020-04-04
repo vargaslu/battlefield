@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Battleship\GameUnit;
+namespace Game\Battleship;
 
-require_once 'Ship.php';
+require_once __DIR__.'/../items/Ship.php';
+require_once __DIR__.'/../positioning/Location.php';
+require_once __DIR__ . '/../positioning/Direction.php';
 require_once 'Grid.php';
-require_once 'Location.php';
-require_once 'Position.php';
 
 class Ocean {
 
@@ -16,20 +16,20 @@ class Ocean {
         $this->grid = $grid;
     }
 
-    function place(Ship $ship, Location $location, $position) {
+    function place(Ship $ship, Location $location, $direction) {
         $nextLocation = Location::of($location);
         for ($size = 0; $size < $ship->getSize(); $size++) {
             $this->grid->put($ship, $nextLocation);
-            $nextLocation = $this->calculateNextLocation($nextLocation, $position);
+            $nextLocation = $this->calculateNextLocation($nextLocation, $direction);
         }
     }
 
-    private function calculateNextLocation(Location $location, $position) {
+    private function calculateNextLocation(Location $location, $direction) {
         $newLocation = Location::of($location);
 
-        if ($position == Position::HORIZONTAL) {
+        if ($direction == Direction::HORIZONTAL) {
             $newLocation->increaseRow();
-        } else if ($position == Position::VERTICAL){
+        } else if ($direction == Direction::VERTICAL){
             $newLocation->increaseColumn();
         } else {
             throw new Exception("Invalid Position value");

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Battleship\GameUnit;
+namespace Game\Battleship;
 
 
 interface ILocation {
@@ -15,4 +15,5 @@ interface ILocation {
     function increaseColumn();
 
     function increaseRow();
+
 }

@@ -1,17 +1,15 @@
 <?php
 
-namespace Tests\Battleship\GameUnit;
+namespace Tests\Game\Battleship;
 
+require_once __DIR__.'/../items/FakeItem.php';
 require_once __DIR__.'/../../src/gameunit/Grid.php';
 require_once __DIR__.'/../../src/exceptions/LocationException.php';
-require_once __DIR__.'/../../src/exceptions/InvalidLocationException.php';
-require_once __DIR__.'/FakeItem.php';
 
-use Battleship\Exceptions\InvalidLocationException;
-use Battleship\Exceptions\LocationException;
-use Tests\Battleship\GameUnit\FakeItem;
-use Battleship\GameUnit\Grid;
-use Battleship\GameUnit\Location;
+use Game\Battleship\LocationException;
+use Tests\Game\Battleship\FakeItem;
+use Game\Battleship\Grid;
+use Game\Battleship\Location;
 use PHPUnit\Framework\TestCase;
 
 class GridTest extends TestCase {

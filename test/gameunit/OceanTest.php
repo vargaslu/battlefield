@@ -1,19 +1,19 @@
 <?php
 
-namespace Tests\Battleship\GameUnit;
+namespace Tests\Game\Battleship;
 
-require_once __DIR__.'/../../src/gameunit/Carrier.php';
-require_once __DIR__.'/../../src/gameunit/Destroyer.php';
+require_once __DIR__.'/../../src/items/Carrier.php';
+require_once __DIR__.'/../../src/items/Destroyer.php';
 require_once __DIR__.'/../../src/gameunit/Ocean.php';
 require_once __DIR__.'/../../src/exceptions/LocationException.php';
 
-use Battleship\GameUnit\Grid;
-use Battleship\GameUnit\Ocean;
-use Battleship\GameUnit\Location;
-use Battleship\GameUnit\Position;
-use Battleship\Exceptions\LocationException;
-use Battleship\GameUnit\Carrier;
-use Battleship\GameUnit\Destroyer;
+use Game\Battleship\Grid;
+use Game\Battleship\Ocean;
+use Game\Battleship\Location;
+use Game\Battleship\Direction;
+use Game\Battleship\LocationException;
+use Game\Battleship\Carrier;
+use Game\Battleship\Destroyer;
 use PHPUnit\Framework\TestCase;
 
 class OceanTest extends TestCase {
@@ -26,21 +26,21 @@ class OceanTest extends TestCase {
         $this->expectException(LocationException::class);
 
         $ocean = new Ocean(new Grid());
-        $ocean->place(new Carrier(), new Location("A", 2), Position::HORIZONTAL);
+        $ocean->place(new Carrier(), new Location("A", 2), Direction::HORIZONTAL);
     }
 
     public function testExceptionWhenPartOfShipIsPlacedOutsideGridVertical() {
         $this->expectException(LocationException::class);
 
         $ocean = new Ocean(new Grid());
-        $ocean->place(new Carrier(), new Location("B", 1), Position::VERTICAL);
+        $ocean->place(new Carrier(), new Location("B", 1), Direction::VERTICAL);
     }
 
     public function testExceptionWhenTwoShipsCollide() {
         $this->expectException(LocationException::class);
 
         $ocean = new Ocean(new Grid());
-        $ocean->place(new Carrier(), new Location("B", 1), Position::HORIZONTAL);
-        $ocean->place(new Destroyer(), new Location("A", 2), Position::VERTICAL);
+        $ocean->place(new Carrier(), new Location("B", 1), Direction::HORIZONTAL);
+        $ocean->place(new Destroyer(), new Location("A", 2), Direction::VERTICAL);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Battleship\GameUnit;
+namespace Game\Battleship;
 
 require_once 'Ship.php';
 
