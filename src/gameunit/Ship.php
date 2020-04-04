@@ -3,8 +3,9 @@
 
 namespace battleship\gameunit;
 
+require_once 'Item.php';
 
-abstract class Ship {
+abstract class Ship implements Item {
 
     private $name;
 

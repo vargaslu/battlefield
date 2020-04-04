@@ -30,12 +30,13 @@ class Grid {
         }
     }
 
-    function put(String $item, Location $location) {
+    function put(Item $item, Location $location) {
 
+        $itemName = $item->getName();
         $locationAsInteger = new LocationAsInteger($location);
 
         if ($this->isLocationOutsideGrid($locationAsInteger)) {
-            throw new LocationException("Item: " . $item ." is out of board");
+            throw new LocationException("Item: " . $itemName ." is out of board");
         }
 
         if ($this->isLocationOccupied($locationAsInteger)) {
@@ -48,7 +49,7 @@ class Grid {
         $column = $locationAsInteger->getColumn();
         $row = $locationAsInteger->getRow();
 
-        $this->board[$column][$row] = $item;
+        $this->board[$column][$row] = $itemName;
     }
 
     private function isLocationOutsideGrid(ILocation $location) {

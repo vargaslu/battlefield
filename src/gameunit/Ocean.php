@@ -21,7 +21,7 @@ class Ocean {
         // 1. Verify if ship is available
         $nextLocation = Location::of($location);
         for ($size = 0; $size < $ship->getSize(); $size++) {
-            $this->grid->put($ship->getName(), $nextLocation);
+            $this->grid->put($ship, $nextLocation);
             $nextLocation = $this->calculateNextLocation($nextLocation, $position);
         }
     }
