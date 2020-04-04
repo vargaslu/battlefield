@@ -2,7 +2,7 @@
 
 namespace battleship\test\gameunit;
 
-require_once '../../src/gameunit/Location.php';
+require_once __DIR__.'/../../src/gameunit/Location.php';
 
 use battleship\gameunit\Location;
 use PHPUnit\Framework\TestCase;

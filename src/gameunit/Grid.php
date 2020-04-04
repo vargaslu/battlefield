@@ -5,6 +5,7 @@ namespace battleship\gameunit;
 require_once 'Location.php';
 require_once 'LocationAsInteger.php';
 
+use battleship\exceptions\InvalidLocationException;
 use battleship\exceptions\LocationException;
 
 class Grid {
@@ -29,10 +30,6 @@ class Grid {
         }
     }
 
-    function putFromTo(String $item, Location $fromLocation, Location $toLocation) {
-
-    }
-
     function put(String $item, Location $location) {
 
         $locationAsInteger = new LocationAsInteger($location);
@@ -42,7 +39,10 @@ class Grid {
         }
 
         if ($this->isLocationOccupied($locationAsInteger)) {
-            throw new LocationException("Location " . $locationAsInteger . " is occupied by Item: " . $this->getItemFromLocation($locationAsInteger));
+            throw new LocationException("Location " .
+                $locationAsInteger .
+                " is occupied by Item: " .
+                $this->getItemFromLocation($locationAsInteger));
         }
 
         $column = $locationAsInteger->getColumn();
@@ -61,5 +61,20 @@ class Grid {
 
     private function getItemFromLocation(ILocation $location) {
         return $this->board[$location->getColumn()][$location->getRow()];
+    }
+
+    function asString() {
+        $gridDisplay = "";
+        for ($row = 1; $row <= Grid::$size; $row++) {
+            for ($column = 1; $column <= Grid::$size; $column++) {
+                $locationAsInteger = LocationAsInteger::of($column, $row);
+                $item = $this->getItemFromLocation($locationAsInteger);
+                if (strcmp($item, "") == 0) {
+                    continue;
+                }
+                $gridDisplay = $gridDisplay . $item . ":" . $locationAsInteger . " ";
+            }
+        }
+        return chop($gridDisplay);
     }
 }

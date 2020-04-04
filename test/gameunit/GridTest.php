@@ -2,9 +2,11 @@
 
 namespace battleship\test\gameunit;
 
-require_once '../../src/gameunit/Grid.php';
-require_once '../../src/exceptions/LocationException.php';
+require_once __DIR__.'/../../src/gameunit/Grid.php';
+require_once __DIR__.'/../../src/exceptions/LocationException.php';
+require_once __DIR__.'/../../src/exceptions/InvalidLocationException.php';
 
+use battleship\exceptions\InvalidLocationException;
 use battleship\exceptions\LocationException;
 use battleship\gameunit\Grid;
 use battleship\gameunit\Location;
@@ -17,11 +19,11 @@ class GridTest extends TestCase {
     }
 
     public function testSuccessfulGridFilling() {
-        $this->expectNotToPerformAssertions();
-
         $grid = new Grid();
-        $grid->put("item", new Location("A", 2));
+        $grid->put("item1", new Location("A", 2));
         $grid->put("item2", new Location("B", 2));
+
+        self::assertEquals("item1:A-2 item2:B-2", $grid->asString());
     }
 
     public function testExceptionWhenItemIsOutsideOfTheGrid() {
@@ -37,11 +39,11 @@ class GridTest extends TestCase {
         $grid->put("item2", new Location("B", 2));
     }
 
-    public function testSuccessfulGridFillingFromTo() {
-        $this->expectNotToPerformAssertions();
-
+    public function testToString() {
         $grid = new Grid();
-        $grid->putFromTo("item", new Location("A", 2), new Location("A", 3));
-        $grid->putFromTo("item2", new Location("B", 2), new Location("C", 2));
+        $grid->put("item1", new Location("B", 2));
+        $grid->put("item2", new Location("C", 3));
+
+        self::assertEquals("item1:B-2 item2:C-3", $grid->asString());
     }
 }

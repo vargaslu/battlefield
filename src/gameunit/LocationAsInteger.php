@@ -7,7 +7,7 @@ require_once 'ILocation.php';
 
 final class LocationAsInteger implements ILocation {
 
-    private const ASCII_DECIMAL_TO_REDUCE = 64;
+    private const ASCII_DECIMALS_GAP = 64;
 
     private $location;
 
@@ -15,8 +15,12 @@ final class LocationAsInteger implements ILocation {
         $this->location = $location;
     }
 
+    public function of($column, $row) {
+        return new LocationAsInteger(new Location(chr($column + self::ASCII_DECIMALS_GAP), $row));
+    }
+
     function getColumn() {
-        return ord($this->location->getColumn()) - LocationAsInteger::ASCII_DECIMAL_TO_REDUCE;
+        return ord($this->location->getColumn()) - LocationAsInteger::ASCII_DECIMALS_GAP;
     }
 
     function getRow() {

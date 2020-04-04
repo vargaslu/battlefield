@@ -10,9 +10,12 @@ abstract class Ship {
 
     private $size;
 
+    private $lives;
+
     protected function __construct($name, $size) {
         $this->name = $name;
         $this->size = $size;
+        $this->lives = $size;
     }
 
     final function getName() {
@@ -21,6 +24,14 @@ abstract class Ship {
 
     final function getSize() {
         return $this->size;
+    }
+
+    final function hit() {
+        $this->lives--;
+    }
+
+    final function isAlive() {
+        return $this->lives > 0;
     }
 
     function __toString() {

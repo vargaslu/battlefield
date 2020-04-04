@@ -2,8 +2,8 @@
 
 namespace battleship\test\gameunit;
 
-require_once '../../src/gameunit/Location.php';
-require_once '../../src/gameunit/LocationAsInteger.php';
+require_once __DIR__.'/../../src/gameunit/Location.php';
+require_once __DIR__.'/../../src/gameunit/LocationAsInteger.php';
 
 use battleship\gameunit\Location;
 use battleship\gameunit\LocationAsInteger;

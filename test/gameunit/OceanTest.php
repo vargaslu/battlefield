@@ -2,10 +2,10 @@
 
 namespace battleship\test\gameunit;
 
-include '../../src/gameunit/Carrier.php';
-include '../../src/gameunit/Destroyer.php';
-include '../../src/gameunit/Ocean.php';
-include '../../src/exceptions/LocationException.php';
+require_once __DIR__.'/../../src/gameunit/Carrier.php';
+require_once __DIR__.'/../../src/gameunit/Destroyer.php';
+require_once __DIR__.'/../../src/gameunit/Ocean.php';
+require_once __DIR__.'/../../src/exceptions/LocationException.php';
 
 use battleship\gameunit\Grid;
 use battleship\gameunit\Ocean;
