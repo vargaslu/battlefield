@@ -1,7 +1,7 @@
 <?php
 
 
-namespace battleship\gameunit;
+namespace Battleship\GameUnit;
 
 require_once 'Grid.php';
 require_once 'Peg.php';

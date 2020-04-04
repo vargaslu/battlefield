@@ -1,7 +1,7 @@
 <?php
 
 
-namespace battleship\gameunit;
+namespace Battleship\GameUnit;
 
 require_once 'Ship.php';
 require_once 'Grid.php';
@@ -17,8 +17,6 @@ class Ocean {
     }
 
     function place(Ship $ship, Location $location, $position) {
-        // TODO: Validations before placing.
-        // 1. Verify if ship is available
         $nextLocation = Location::of($location);
         for ($size = 0; $size < $ship->getSize(); $size++) {
             $this->grid->put($ship, $nextLocation);

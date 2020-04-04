@@ -1,11 +1,11 @@
 <?php
 
 
-namespace battleship\test\gameunit;
+namespace Tests\Battleship\GameUnit;
 
 require_once __DIR__.'/../../src/gameunit/Item.php';
 
-use battleship\gameunit\Item;
+use Battleship\GameUnit\Item;
 
 final class FakeItem implements Item {
 

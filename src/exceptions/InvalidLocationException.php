@@ -1,7 +1,7 @@
 <?php
 
 
-namespace battleship\exceptions;
+namespace Battleship\Exceptions;
 
 use Exception;
 

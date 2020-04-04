@@ -1,15 +1,15 @@
 <?php
 
-namespace battleship\test\gameunit;
+namespace Tests\Battleship\GameUnit;
 
 require_once __DIR__.'/../../src/gameunit/Peg.php';
 require_once __DIR__.'/../../src/gameunit/Target.php';
 
-use battleship\exceptions\LocationException;
-use battleship\gameunit\Grid;
-use battleship\gameunit\Location;
-use battleship\gameunit\Peg;
-use battleship\gameunit\Target;
+use Battleship\Exceptions\LocationException;
+use Battleship\GameUnit\Grid;
+use Battleship\GameUnit\Location;
+use Battleship\GameUnit\Peg;
+use Battleship\GameUnit\Target;
 use PHPUnit\Framework\TestCase;
 
 class TargetTest extends TestCase {
@@ -31,6 +31,5 @@ class TargetTest extends TestCase {
         $target = new Target(new Grid());
         $target->place(new Peg(), new Location("G", 1));
     }
-
 
 }

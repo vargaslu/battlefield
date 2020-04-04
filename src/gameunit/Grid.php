@@ -1,12 +1,12 @@
 <?php
 
-namespace battleship\gameunit;
+namespace Battleship\GameUnit;
 
 require_once 'Location.php';
 require_once 'LocationAsInteger.php';
 
-use battleship\exceptions\InvalidLocationException;
-use battleship\exceptions\LocationException;
+use Battleship\Exceptions\InvalidLocationException;
+use Battleship\Exceptions\LocationException;
 
 class Grid {
 

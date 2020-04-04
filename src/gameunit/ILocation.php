@@ -1,7 +1,7 @@
 <?php
 
 
-namespace battleship\gameunit;
+namespace Battleship\GameUnit;
 
 
 interface ILocation {

@@ -1,12 +1,12 @@
 <?php
 
-namespace battleship\test\gameunit;
+namespace Tests\Battleship\GameUnit;
 
 require_once __DIR__.'/../../src/gameunit/Location.php';
 require_once __DIR__.'/../../src/gameunit/LocationAsInteger.php';
 
-use battleship\gameunit\Location;
-use battleship\gameunit\LocationAsInteger;
+use Battleship\GameUnit\Location;
+use Battleship\GameUnit\LocationAsInteger;
 use PHPUnit\Framework\TestCase;
 
 class LocationAsIntegerTest extends TestCase {
