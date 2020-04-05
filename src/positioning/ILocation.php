@@ -6,14 +6,14 @@ namespace Game\Battleship;
 
 interface ILocation {
 
-    function getColumn();
+    function getLetter();
 
-    function getRow();
+    function getColumn();
 
     function __toString();
 
-    function increaseColumn();
+    function increaseLetter();
 
-    function increaseRow();
+    function increaseColumn();
 
 }

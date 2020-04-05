@@ -18,4 +18,7 @@ class Target {
         $this->grid->put($peg, $location);
     }
 
+    function getFilteredPegs(Predicate $predicate) {
+
+    }
 }

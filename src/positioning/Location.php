@@ -11,53 +11,53 @@ final class Location implements ILocation {
 
     private const ASCII_Z = 90;
 
+    private $letter;
+
     private $column;
 
-    private $row;
-
-    function __construct(String $column, $row) {
-        $this->validateColumn($column);
-        $this->column = strtoupper($column{0});
-        $this->row = $row;
+    function __construct(String $letter, $column) {
+        $this->validateLetter($letter);
+        $this->letter = strtoupper($letter{0});
+        $this->column = $column;
     }
 
-    private function validateColumn($column) {
+    private function validateLetter($letter) {
         $exceptionMessage = '';
-        if (strlen($column) > 1) {
-            $exceptionMessage = 'Column size should not be bigger as 1';
-        } elseif ($this->isColumnValueBetweenAandZ(strtoupper($column{0}))) {
-            $exceptionMessage = 'Valid column values should be between A-Z';
+        if (strlen($letter) > 1) {
+            $exceptionMessage = 'Letter size should not be bigger as 1';
+        } elseif ($this->isLetterValueBetweenAAndZ(strtoupper($letter{0}))) {
+            $exceptionMessage = 'Valid letter values should be between A-Z';
         }
         if (strlen($exceptionMessage) > 0) {
             throw new InvalidLocationException($exceptionMessage);
         }
     }
 
-    private function isColumnValueBetweenAAndZ($column) {
-        return ord(strtoupper($column{0})) < self::ASCII_A || ord(strtoupper($column{0})) > self::ASCII_Z;
+    private function isLetterValueBetweenAAndZ($letter) {
+        return ord(strtoupper($letter{0})) < self::ASCII_A || ord(strtoupper($letter{0})) > self::ASCII_Z;
     }
 
     public static function of(Location $location) {
-        return new Location($location->getColumn(), $location->getRow());
+        return new Location($location->getLetter(), $location->getColumn());
+    }
+
+    function getLetter() {
+        return $this->letter;
     }
 
     function getColumn() {
         return $this->column;
     }
 
-    function getRow() {
-        return $this->row;
+    function __toString() {
+        return $this->letter . "-" .$this->column;
     }
 
-    function __toString() {
-        return $this->column . "-" .$this->row;
+    public function increaseLetter() {
+        $this->letter = chr(ord($this->letter) + 1);
     }
 
     public function increaseColumn() {
-        $this->column = chr(ord($this->column) + 1);
-    }
-
-    public function increaseRow() {
-        $this->row++;
+        $this->column++;
     }
 }

@@ -22,11 +22,7 @@ class Grid {
     }
 
     private function initializeBoard() {
-        for ($column = 1; $column <= Grid::$size; $column++) {
-            for ($row = 1; $row <= Grid::$size; $row++) {
-                $this->board[$column][$row] = "";
-            }
-        }
+        $this->board = array_fill(1, Grid::$size, array_fill(1, Grid::$size, ''));
     }
 
     function put(Item $item, Location $location) {
@@ -45,14 +41,14 @@ class Grid {
                 $this->getItemFromLocation($locationAsInteger));
         }
 
+        $letter = $locationAsInteger->getLetter();
         $column = $locationAsInteger->getColumn();
-        $row = $locationAsInteger->getRow();
 
-        $this->board[$column][$row] = $itemName;
+        $this->board[$letter][$column] = $itemName;
     }
 
     private function isLocationOutsideGrid(ILocation $location) {
-        return $location->getColumn() > Grid::$size || $location->getRow() > Grid::$size;
+        return $location->getLetter() > Grid::$size || $location->getColumn() > Grid::$size;
     }
 
     private function isLocationOccupied(ILocation $location) {
@@ -60,7 +56,7 @@ class Grid {
     }
 
     private function getItemFromLocation(ILocation $location) {
-        return $this->board[$location->getColumn()][$location->getRow()];
+        return $this->board[$location->getLetter()][$location->getColumn()];
     }
 
     public function getItem(Location $location) {
@@ -72,11 +68,18 @@ class Grid {
         return $this->getItemFromLocation($locationAsInteger);
     }
 
+    public function getFilteredGrid($filter) {
+        $arrayFilter = function ($array) use ($filter) {
+            return array_filter($array, $filter);
+        };
+        return array_filter($this->board, $arrayFilter);
+    }
+
     function asString() {
         $gridDisplay = "";
-        for ($row = 1; $row <= Grid::$size; $row++) {
-            for ($column = 1; $column <= Grid::$size; $column++) {
-                $locationAsInteger = LocationAsInteger::of($column, $row);
+        for ($column = 1; $column <= Grid::$size; $column++) {
+            for ($letter = 1; $letter <= Grid::$size; $letter++) {
+                $locationAsInteger = LocationAsInteger::of($letter, $column);
                 $item = $this->getItemFromLocation($locationAsInteger);
                 if (strcmp($item, "") == 0) {
                     continue;

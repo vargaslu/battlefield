@@ -32,9 +32,9 @@ class Ocean {
         $newLocation = Location::of($location);
 
         if ($direction == Direction::HORIZONTAL) {
-            $newLocation->increaseRow();
-        } else if ($direction == Direction::VERTICAL){
             $newLocation->increaseColumn();
+        } else if ($direction == Direction::VERTICAL){
+            $newLocation->increaseLetter();
         } else {
             throw new Exception("Invalid Position value");
         }

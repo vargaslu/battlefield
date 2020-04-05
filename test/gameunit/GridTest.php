@@ -67,4 +67,17 @@ class GridTest extends TestCase {
 
         $grid->getItem(new Location('B', 7));
     }
+
+    public function testFilteredBoard() {
+        $grid = new Grid();
+        $grid->put($this->item1, new Location("B", 2));
+        $grid->put($this->item1, new Location("C", 2));
+        $grid->put($this->item2, new Location("C", 3));
+
+        $filteredGrid = $grid->getFilteredGrid(function ($var) {
+            return strcmp($var, 'item1') == 0;
+        });
+
+        self::assertEquals(1, sizeof($filteredGrid));
+    }
 }

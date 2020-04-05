@@ -11,18 +11,18 @@ use PHPUnit\Framework\TestCase;
 
 class LocationAsIntegerTest extends TestCase {
 
-    public function testColumnAndRowAsInteger() {
+    public function testLetterAndColumnAsInteger() {
         $location = new Location("B", 3);
         $locationInteger = new LocationAsInteger($location);
-        self::assertEquals(2, $locationInteger->getColumn());
-        self::assertEquals(3, $locationInteger->getRow());
+        self::assertEquals(2, $locationInteger->getLetter());
+        self::assertEquals(3, $locationInteger->getColumn());
     }
 
-    public function testIncreaseColumn() {
+    public function testIncreaseLetter() {
         $location = new Location("B", 3);
         $locationInteger = new LocationAsInteger($location);
-        $locationInteger->increaseColumn();
-        self::assertEquals(3, $locationInteger->getColumn());
-        self::assertEquals("C", $location->getColumn());
+        $locationInteger->increaseLetter();
+        self::assertEquals(3, $locationInteger->getLetter());
+        self::assertEquals("C", $location->getLetter());
     }
 }

@@ -15,27 +15,27 @@ final class LocationAsInteger implements ILocation {
         $this->location = $location;
     }
 
-    public function of($column, $row) {
-        return new LocationAsInteger(new Location(chr($column + self::ASCII_DECIMALS_GAP), $row));
+    public function of($letter, $column) {
+        return new LocationAsInteger(new Location(chr($letter + self::ASCII_DECIMALS_GAP), $column));
+    }
+
+    function getLetter() {
+        return ord($this->location->getLetter()) - LocationAsInteger::ASCII_DECIMALS_GAP;
     }
 
     function getColumn() {
-        return ord($this->location->getColumn()) - LocationAsInteger::ASCII_DECIMALS_GAP;
-    }
-
-    function getRow() {
-        return $this->location->getRow();
+        return $this->location->getColumn();
     }
 
     function __toString() {
         return $this->location->__toString();
     }
 
-    function increaseColumn() {
-        $this->location->increaseColumn();
+    function increaseLetter() {
+        $this->location->increaseLetter();
     }
 
-    function increaseRow() {
-        $this->location->increaseRow();
+    function increaseColumn() {
+        $this->location->increaseColumn();
     }
 }

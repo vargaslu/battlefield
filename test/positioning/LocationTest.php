@@ -11,39 +11,39 @@ use PHPUnit\Framework\TestCase;
 
 class LocationTest extends TestCase {
 
-    public function testInvalidColumnSize() {
+    public function testInvalidLetterSize() {
         $this->expectException(InvalidLocationException::class);
         new Location("ABC" , 1);
     }
 
-    public function testInvalidColumnValue() {
+    public function testInvalidLetterValue() {
         $this->expectException(InvalidLocationException::class);
         new Location("1" , 1);
     }
 
     /**
-     * @dataProvider validColumnValues
+     * @dataProvider validLetterValues
      */
-    public function testValidColumnValue($column) {
-        $location = new Location($column , 1);
-        $this->assertEquals($column, $location->getColumn());
+    public function testValidLetterValue($letter) {
+        $location = new Location($letter , 1);
+        $this->assertEquals($letter, $location->getLetter());
     }
 
-    public function validColumnValues() {
+    public function validLetterValues() {
         return [['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],
         ['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
     }
 
     public function testLocationCreation() {
         $location = new Location("A" , 1);
-        self::assertEquals("A", $location->getColumn());
-        self::assertEquals(1, $location->getRow());
+        self::assertEquals("A", $location->getLetter());
+        self::assertEquals(1, $location->getColumn());
     }
 
-    public function testUppercaseOfLocationCreationColumn() {
+    public function testUppercaseOfLocationCreationLetter() {
         $location = new Location("b" , 2);
-        self::assertEquals("B", $location->getColumn());
-        self::assertEquals(2, $location->getRow());
+        self::assertEquals("B", $location->getLetter());
+        self::assertEquals(2, $location->getColumn());
     }
 
     public function testLocationToString() {
@@ -51,25 +51,25 @@ class LocationTest extends TestCase {
         self::assertEquals("C-3", $location);
     }
 
-    public function testIncreaseColumn() {
+    public function testIncreaseLetter() {
         $location = new Location("D" , 3);
-        $location->increaseColumn();
+        $location->increaseLetter();
         self::assertEquals("E-3", $location);
     }
 
-    public function testIncreaseRow() {
+    public function testIncreaseColumn() {
         $location = new Location("D" , 3);
-        $location->increaseRow();
+        $location->increaseColumn();
         self::assertEquals("D-4", $location);
     }
 
     public function testCopyCreation() {
         $location = new Location("D" , 3);
         $copiedLocation = Location::of($location);
+        $copiedLocation->increaseLetter();
         $copiedLocation->increaseColumn();
-        $copiedLocation->increaseRow();
 
+        self::assertNotEquals($location->getLetter(), $copiedLocation->getLetter());
         self::assertNotEquals($location->getColumn(), $copiedLocation->getColumn());
-        self::assertNotEquals($location->getRow(), $copiedLocation->getRow());
     }
 }
