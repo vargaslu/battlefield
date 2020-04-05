@@ -3,11 +3,36 @@
 namespace Tests\Game\Battleship;
 
 require_once __DIR__ . '/../../src/positioning/Location.php';
+require_once __DIR__ . '/../../src/exceptions/InvalidLocationException.php';
 
+use Game\Battleship\InvalidLocationException;
 use Game\Battleship\Location;
 use PHPUnit\Framework\TestCase;
 
 class LocationTest extends TestCase {
+
+    public function testInvalidColumnSize() {
+        $this->expectException(InvalidLocationException::class);
+        new Location("ABC" , 1);
+    }
+
+    public function testInvalidColumnValue() {
+        $this->expectException(InvalidLocationException::class);
+        new Location("1" , 1);
+    }
+
+    /**
+     * @dataProvider validColumnValues
+     */
+    public function testValidColumnValue($column) {
+        $location = new Location($column , 1);
+        $this->assertEquals($column, $location->getColumn());
+    }
+
+    public function validColumnValues() {
+        return [['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],
+        ['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
+    }
 
     public function testLocationCreation() {
         $location = new Location("A" , 1);
