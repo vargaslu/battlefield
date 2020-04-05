@@ -21,7 +21,10 @@ class GameUnit implements PropertyChangeListener {
 
     private $placedShips;
 
-    public function __construct() {
+    private $gameService;
+
+    public function __construct(GameService $gameService) {
+        $this->gameService = $gameService;
         $this->ocean = new Ocean(new Grid());
         $this->target = new Target(new Grid());
         $this->placedShips = [];
@@ -36,8 +39,12 @@ class GameUnit implements PropertyChangeListener {
     }
 
     public function makeShot(Location $location) {
-        // TODO: mark in target
-        // TODO: Service to verifyShot in opponent
+        $hitResult = $this->gameService->makeShot($this, $location);
+        if ($hitResult->isHit()) {
+            $this->target->place(Peg::createRedPeg(), $location);
+        } else {
+            $this->target->place(Peg::createWhitePeg(), $location);
+        }
     }
 
     public function receiveShot(Location $location) {
@@ -56,8 +63,9 @@ class GameUnit implements PropertyChangeListener {
     }
 
     function fireUpdate($ship, $oldValue, $newValue) {
-        if (strcmp($newValue, 'sank') == 0) {
+        if (strcmp($newValue, Ship::DESTROYED) == 0) {
             unset($this->placedShips[$ship]);
+            // TODO: if size of placedships is 0 notify that game is over
         }
     }
 }

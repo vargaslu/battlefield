@@ -23,14 +23,14 @@ class TargetTest extends TestCase {
         $this->expectException(LocationException::class);
 
         $target = new Target(new Grid());
-        $target->place(new Peg(), new Location("A", 6));
+        $target->place(Peg::createRedPeg(), new Location("A", 6));
     }
 
     public function testExceptionWhenPegIsOutsideGridVertically() {
         $this->expectException(LocationException::class);
 
         $target = new Target(new Grid());
-        $target->place(new Peg(), new Location("G", 1));
+        $target->place(Peg::createWhitePeg(), new Location("G", 1));
     }
 
 }

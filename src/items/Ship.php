@@ -7,6 +7,8 @@ require_once 'Item.php';
 
 abstract class Ship implements Item {
 
+    public const DESTROYED = 'destroyed';
+
     private $name;
 
     private $size;
@@ -52,7 +54,7 @@ abstract class Ship implements Item {
     private function notifyShipIsSankToListeners() {
         foreach ($this->listeners as $i => $value) {
             $listener = $this->listeners[$i];
-            $listener->fireUpdate($this->getName(), '', 'sank');
+            $listener->fireUpdate($this->getName(), '', Ship::DESTROYED);
         }
     }
 }

@@ -26,8 +26,7 @@ class ShipTest extends TestCase {
     }
 
     public function testNotifyToListeners() {
-        $listener = $this->getMockBuilder(PropertyChangeListener::class)
-                        ->setMethods(['fireUpdate'])->getMock();
+        $listener = $this->getMockBuilder(PropertyChangeListener::class)->getMock();
         $listener->expects($this->once())->method('fireUpdate');
 
         $fakeShip = FakeShip::default();

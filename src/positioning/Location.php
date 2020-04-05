@@ -7,6 +7,10 @@ require_once 'ILocation.php';
 
 final class Location implements ILocation {
 
+    private const ASCII_A = 65;
+
+    private const ASCII_Z = 90;
+
     private $column;
 
     private $row;
@@ -21,12 +25,16 @@ final class Location implements ILocation {
         $exceptionMessage = '';
         if (strlen($column) > 1) {
             $exceptionMessage = 'Column size should not be bigger as 1';
-        } elseif (ord(strtoupper($column{0})) < 65 || ord(strtoupper($column{0})) > 90) {
+        } elseif ($this->isColumnValueBetweenAandZ(strtoupper($column{0}))) {
             $exceptionMessage = 'Valid column values should be between A-Z';
         }
         if (strlen($exceptionMessage) > 0) {
             throw new InvalidLocationException($exceptionMessage);
         }
+    }
+
+    private function isColumnValueBetweenAAndZ($column) {
+        return ord(strtoupper($column{0})) < self::ASCII_A || ord(strtoupper($column{0})) > self::ASCII_Z;
     }
 
     public static function of(Location $location) {
