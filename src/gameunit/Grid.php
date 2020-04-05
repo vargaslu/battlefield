@@ -3,7 +3,6 @@
 namespace Game\Battleship;
 
 require_once __DIR__.'/../positioning/Location.php';
-require_once __DIR__.'/../positioning/LocationAsInteger.php';
 
 use Game\Battleship\LocationException;
 
@@ -22,50 +21,53 @@ class Grid {
     }
 
     private function initializeBoard() {
-        $this->board = array_fill(1, Grid::$size, array_fill(1, Grid::$size, ''));
+        $letters = [];
+        for ($asciiLetter = Location::ASCII_A; $asciiLetter < Grid::$size + Location::ASCII_A; $asciiLetter++) {
+            $letters[] = chr($asciiLetter);
+        }
+        $this->board = array_fill_keys($letters, array_fill(1, Grid::$size, ''));
     }
 
     function put(Item $item, Location $location) {
 
         $itemName = $item->getName();
-        $locationAsInteger = new LocationAsInteger($location);
+        //$locationAsInteger = new LocationAsInteger($location);
 
-        if ($this->isLocationOutsideGrid($locationAsInteger)) {
+        if ($this->isLocationOutsideGrid($location)) {
             throw new LocationException("Item: " . $itemName ." is out of board");
         }
 
-        if ($this->isLocationOccupied($locationAsInteger)) {
+        if ($this->isLocationOccupied($location)) {
             throw new LocationException("Location " .
-                $locationAsInteger .
+                $location .
                 " is occupied by Item: " .
-                $this->getItemFromLocation($locationAsInteger));
+                $this->getItemFromLocation($location));
         }
 
-        $letter = $locationAsInteger->getLetter();
-        $column = $locationAsInteger->getColumn();
+        $letter = $location->getLetter();
+        $column = $location->getColumn();
 
         $this->board[$letter][$column] = $itemName;
     }
 
-    private function isLocationOutsideGrid(ILocation $location) {
-        return $location->getLetter() > Grid::$size || $location->getColumn() > Grid::$size;
+    private function isLocationOutsideGrid(Location $location) {
+        return ord($location->getLetter()) > (Grid::$size + Location::ASCII_DECIMALS_GAP) || $location->getColumn() > Grid::$size;
     }
 
-    private function isLocationOccupied(ILocation $location) {
+    private function isLocationOccupied(Location $location) {
         return $this->getItemFromLocation($location) != "";
     }
 
-    private function getItemFromLocation(ILocation $location) {
+    private function getItemFromLocation(Location $location) {
         return $this->board[$location->getLetter()][$location->getColumn()];
     }
 
     public function getItem(Location $location) {
-        $locationAsInteger = new LocationAsInteger($location);
-        if ($this->isLocationOutsideGrid($locationAsInteger)) {
+        if ($this->isLocationOutsideGrid($location)) {
             throw new LocationOutOfBoundsException();
         }
 
-        return $this->getItemFromLocation($locationAsInteger);
+        return $this->getItemFromLocation($location);
     }
 
     public function getFilteredGrid($filter) {
@@ -77,16 +79,18 @@ class Grid {
 
     function asString() {
         $gridDisplay = "";
-        for ($column = 1; $column <= Grid::$size; $column++) {
-            for ($letter = 1; $letter <= Grid::$size; $letter++) {
-                $locationAsInteger = LocationAsInteger::of($letter, $column);
-                $item = $this->getItemFromLocation($locationAsInteger);
+
+        foreach ($this->board as $letter => $columns) {
+            foreach ($columns as $column => $value) {
+                $location = new Location($letter, $column);
+                $item = $this->getItemFromLocation($location);
                 if (strcmp($item, "") == 0) {
                     continue;
                 }
-                $gridDisplay = $gridDisplay . $item . ":" . $locationAsInteger . " ";
+                $gridDisplay = $gridDisplay . $item . ":" . $location . " ";
             }
         }
+
         return chop($gridDisplay);
     }
 }

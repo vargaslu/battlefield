@@ -3,13 +3,14 @@
 
 namespace Game\Battleship;
 
-require_once 'ILocation.php';
 
-final class Location implements ILocation {
+final class Location {
 
-    private const ASCII_A = 65;
+    public const ASCII_A = 65;
 
     private const ASCII_Z = 90;
+
+    public const ASCII_DECIMALS_GAP = 64;
 
     private $letter;
 
