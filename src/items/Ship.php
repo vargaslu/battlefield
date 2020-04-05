@@ -13,10 +13,13 @@ abstract class Ship implements Item {
 
     private $lives;
 
+    private $listeners;
+
     protected function __construct($name, $size) {
         $this->name = $name;
         $this->size = $size;
         $this->lives = $size;
+        $this->listeners = [];
     }
 
     final function getName() {
@@ -29,6 +32,9 @@ abstract class Ship implements Item {
 
     final function hit() {
         $this->lives--;
+        if (!$this->isAlive()) {
+            $this->notifyShipIsSankToListeners();
+        }
     }
 
     final function isAlive() {
@@ -37,5 +43,16 @@ abstract class Ship implements Item {
 
     function __toString() {
         return $this->name;
+    }
+
+    final function addPropertyChangeListener(PropertyChangeListener $listener) {
+        $this->listeners[] = $listener;
+    }
+
+    private function notifyShipIsSankToListeners() {
+        foreach ($this->listeners as $i => $value) {
+            $listener = $this->listeners[$i];
+            $listener->fireUpdate($this->getName(), '', 'sank');
+        }
     }
 }

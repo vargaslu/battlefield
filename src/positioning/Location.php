@@ -12,6 +12,7 @@ final class Location implements ILocation {
     private $row;
 
     function __construct(String $column, $row) {
+        //TODO: Validate just A-Z chars
         $this->column = strtoupper($column{0});
         $this->row = $row;
     }

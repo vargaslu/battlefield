@@ -2,9 +2,12 @@
 
 namespace Tests\Game\Battleship;
 
+require_once __DIR__.'/../../src/listeners/PropertyChangeListener.php';
 require_once 'FakeShip.php';
 
+use Game\Battleship\PropertyChangeListener;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 
 class ShipTest extends TestCase {
 
@@ -20,6 +23,17 @@ class ShipTest extends TestCase {
         $fakeShip->hit();
         $fakeShip->hit();
         self::assertEquals(false, $fakeShip->isAlive());
+    }
+
+    public function testNotifyToListeners() {
+        $listener = $this->getMockBuilder(PropertyChangeListener::class)
+                        ->setMethods(['fireUpdate'])->getMock();
+        $listener->expects($this->once())->method('fireUpdate');
+
+        $fakeShip = FakeShip::default();
+        $fakeShip->addPropertyChangeListener($listener);
+        $fakeShip->hit();
+        $fakeShip->hit();
     }
 
 }
