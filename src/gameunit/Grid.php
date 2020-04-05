@@ -5,6 +5,7 @@ namespace Game\Battleship;
 require_once __DIR__.'/../positioning/Location.php';
 
 use Game\Battleship\LocationException;
+use ArrayObject;
 
 class Grid {
 
@@ -31,7 +32,6 @@ class Grid {
     function put(Item $item, Location $location) {
 
         $itemName = $item->getName();
-        //$locationAsInteger = new LocationAsInteger($location);
 
         if ($this->isLocationOutsideGrid($location)) {
             throw new LocationException("Item: " . $itemName ." is out of board");
@@ -55,7 +55,7 @@ class Grid {
     }
 
     private function isLocationOccupied(Location $location) {
-        return $this->getItemFromLocation($location) != "";
+        return $this->getItemFromLocation($location) !== '';
     }
 
     private function getItemFromLocation(Location $location) {
@@ -70,11 +70,21 @@ class Grid {
         return $this->getItemFromLocation($location);
     }
 
-    public function getFilteredGrid($filter) {
-        $arrayFilter = function ($array) use ($filter) {
-            return array_filter($array, $filter);
-        };
-        return array_filter($this->board, $arrayFilter);
+    public function getFilteredGrid($filterClosure) {
+        $copyArrayObject = new ArrayObject($this->board);
+        $filteredArray = $copyArrayObject->getArrayCopy();
+
+        foreach ($this->board as $letter => $columns) {
+            foreach ($columns as $column => $value) {
+                if (!$filterClosure($value)) {
+                    unset($filteredArray[$letter][$column]);
+                }
+            }
+            if (sizeof($filteredArray[$letter]) == 0) {
+                unset($filteredArray[$letter]);
+            }
+        }
+        return $filteredArray;
     }
 
     function asString() {

@@ -18,7 +18,23 @@ class Target {
         $this->grid->put($peg, $location);
     }
 
-    function getFilteredPegs(Predicate $predicate) {
+    function peek(Location $location) {
+        return $this->grid->getItem($location);
+    }
 
+    function getWhitePegs() {
+        $filterClosure = $this->getClosureFilter(Peg::WHITE);
+        return $this->grid->getFilteredGrid($filterClosure);
+    }
+
+    function getRedPegs() {
+        $filterClosure = $this->getClosureFilter(Peg::RED);
+        return $this->grid->getFilteredGrid($filterClosure);
+    }
+
+    private function getClosureFilter($pegType) {
+        return function ($value) use ($pegType) {
+            return $value === $pegType;
+        };
     }
 }
