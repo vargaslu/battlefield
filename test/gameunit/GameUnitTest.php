@@ -28,7 +28,7 @@ class GameUnitTest extends TestCase {
         $this->mockedGameService = $this->getMockBuilder(GameService::class)->getMock();
     }
 
-    public function testConstruction() {
+    public function testPositionSuccessfully() {
         $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new Location('A', 1), Direction::VERTICAL);
         $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new Location('A', 2), Direction::HORIZONTAL);
 
@@ -37,15 +37,6 @@ class GameUnitTest extends TestCase {
         $gameUnit->placeShip($fakeShip2);
 
         self::assertEquals(2, $gameUnit->availableShips());
-    }
-
-    public function testPositionSuccessfully() {
-        $this->expectNotToPerformAssertions();
-
-        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new Location('A', 1), Direction::VERTICAL);
-
-        $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->placeShip($fakeShip1);
     }
 
     public function testVerifyShipWasHit() {

@@ -14,6 +14,8 @@ class GameController {
 
     private $type;
 
+    private $placedShipsHumanPlayer;
+
     public function __construct() {
 
     }
@@ -21,18 +23,22 @@ class GameController {
     public function start() {
         //$this->humanPlayer = new GameUnit(//GameService);
         //$this->computerPlayer = new GameUnit(//GameService);
-        // TODO: set state PlacingShipsState
+        // TODO: set state PlacingShipsState with currentPlayer
     }
 
     public function setState(GameState $gameState) {
         $this->gameState = $gameState;
     }
 
-    public function getState() {
+    public function getState() : GameState {
         return $this->gameState;
     }
 
-    public function placeShip(Ship $ship, Location $location) {
-        $this->gameState->placingShips();
+    public function placeShip(Ship $ship) {
+        $this->gameState->placingShips($ship);
+    }
+
+    public function callShot(Location $location) {
+        $this->gameState->callingShot($location);
     }
 }

@@ -3,6 +3,7 @@
 namespace Game\Battleship;
 
 require_once __DIR__.'/../positioning/Location.php';
+require_once __DIR__.'/../exceptions/LocationException.php';
 
 use Game\Battleship\LocationException;
 use ArrayObject;

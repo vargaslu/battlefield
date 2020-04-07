@@ -6,9 +6,9 @@ namespace Game\Battleship;
 
 interface GameState {
 
-    function placingShips(GameUnit $currentGameUnit);
+    function placingShips(Ship $ship);
 
-    function makingShot(GameUnit $currentGameUnit);
+    function callingShot(Location $location);
 
     function setNextState(GameState $nextGameState);
 

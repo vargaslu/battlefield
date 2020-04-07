@@ -7,8 +7,13 @@ require_once 'Ship.php';
 
 final class Cruiser extends Ship {
 
-    function __construct() {
-        parent::__construct("Cruiser", 3);
+    public const NAME = 'Cruiser';
+
+    private function __construct(Location $location, $direction) {
+        parent::__construct(self::NAME, 3, $location, $direction);
     }
 
+    public static function build(Location $location, $direction) {
+        return new Cruiser($location, $direction);
+    }
 }

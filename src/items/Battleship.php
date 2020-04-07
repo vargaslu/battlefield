@@ -7,8 +7,13 @@ require_once 'Ship.php';
 
 final class Battleship extends Ship {
 
-    function __construct() {
-        parent::__construct("Battleship", 4);
+    public const NAME = 'Battleship';
+
+    private function __construct(Location $location, $direction) {
+        parent::__construct(self::NAME, 4);
     }
 
+    public static function build(Location $location, $direction) {
+        return new Battleship($location, $direction);
+    }
 }
