@@ -30,10 +30,10 @@ class GameUnit implements PropertyChangeListener {
         $this->placedShips = [];
     }
 
-    public function placeShip(Ship $ship, Location $location, $direction) {
+    public function placeShip(Ship $ship) {
         // TODO: Validations before placing.
         // 1. Verify if ship is available
-        $this->ocean->place($ship, $location, $direction);
+        $this->ocean->place($ship);
         $this->placedShips[$ship->getName()] = $ship;
         $ship->addPropertyChangeListener($this);
     }
@@ -41,9 +41,9 @@ class GameUnit implements PropertyChangeListener {
     public function makeShot(Location $location) {
         $hitResult = $this->gameService->makeShot($this, $location);
         if ($hitResult->isHit()) {
-            $this->target->place(Peg::createRedPeg(), $location);
+            $this->target->place(Peg::createRedPeg($location));
         } else {
-            $this->target->place(Peg::createWhitePeg(), $location);
+            $this->target->place(Peg::createWhitePeg($location));
         }
     }
 

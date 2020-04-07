@@ -15,17 +15,20 @@ class Peg implements Item {
 
     private $size;
 
-    private function __construct($name) {
+    private $location;
+
+    private function __construct($name, Location $location) {
         $this->name = $name;
         $this->size = 1;
+        $this->location = $location;
     }
 
-    public static function createWhitePeg() {
-        return new Peg(self::WHITE);
+    public static function createWhitePeg(Location $location) {
+        return new Peg(self::WHITE, $location);
     }
 
-    public static function createRedPeg() {
-        return new Peg(self::RED);
+    public static function createRedPeg(Location $location) {
+        return new Peg(self::RED, $location);
     }
 
     final function getName() {
@@ -34,5 +37,9 @@ class Peg implements Item {
 
     final function getSize() {
         return $this->size;
+    }
+
+    final function getLocation(): Location {
+        return $this->location;
     }
 }

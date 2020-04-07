@@ -16,11 +16,11 @@ class Ocean {
         $this->grid = $grid;
     }
 
-    function place(Ship $ship, Location $location, $direction) {
-        $nextLocation = Location::of($location);
+    function place(Ship $ship) {
+        $nextLocation = Location::of($ship->getLocation());
         for ($size = 0; $size < $ship->getSize(); $size++) {
             $this->grid->put($ship, $nextLocation);
-            $nextLocation = $this->calculateNextLocation($nextLocation, $direction);
+            $nextLocation = $this->calculateNextLocation($nextLocation, $ship->getDirection());
         }
     }
 

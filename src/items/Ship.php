@@ -17,10 +17,16 @@ abstract class Ship implements Item {
 
     private $listeners;
 
-    protected function __construct($name, $size) {
+    private $location;
+
+    private $direction;
+
+    protected function __construct($name, $size, Location $location, $direction) {
         $this->name = $name;
         $this->size = $size;
         $this->lives = $size;
+        $this->location = $location;
+        $this->direction = $direction;
         $this->listeners = [];
     }
 
@@ -49,6 +55,14 @@ abstract class Ship implements Item {
 
     final function addPropertyChangeListener(PropertyChangeListener $listener) {
         $this->listeners[] = $listener;
+    }
+
+    final function getLocation(): Location {
+        return $this->location;
+    }
+
+    final function getDirection() {
+        return $this->direction;
     }
 
     private function notifyShipIsSankToListeners() {

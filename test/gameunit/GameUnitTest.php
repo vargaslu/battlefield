@@ -17,45 +17,53 @@ use PHPUnit\Framework\TestCase;
 
 class GameUnitTest extends TestCase {
 
-    private $fakeShip1;
+    private const FAKE_SHIP1 = 'FakeShip1';
 
-    private $fakeShip2;
+    private const FAKE_SHIP2 = 'FakeShip2';
 
     private $mockedGameService;
 
     protected function setUp(): void {
         Grid::setSize(5);
-        $this->fakeShip1 = new FakeShip('FakeShip1', 3);
-        $this->fakeShip2 = new FakeShip('FakeShip2', 2);
         $this->mockedGameService = $this->getMockBuilder(GameService::class)->getMock();
     }
 
     public function testConstruction() {
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new Location('A', 1), Direction::VERTICAL);
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new Location('A', 2), Direction::HORIZONTAL);
+
         $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->placeShip($this->fakeShip1, new Location('A', 1), Direction::VERTICAL);
-        $gameUnit->placeShip($this->fakeShip2, new Location('A', 2), Direction::HORIZONTAL);
+        $gameUnit->placeShip($fakeShip1);
+        $gameUnit->placeShip($fakeShip2);
 
         self::assertEquals(2, $gameUnit->availableShips());
     }
 
     public function testPositionSuccessfully() {
         $this->expectNotToPerformAssertions();
+
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new Location('A', 1), Direction::VERTICAL);
+
         $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->placeShip($this->fakeShip1, new Location('A', 1), Direction::VERTICAL);
+        $gameUnit->placeShip($fakeShip1);
     }
 
     public function testVerifyShipWasHit() {
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new Location('B', 2), Direction::VERTICAL);
+
         $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->placeShip($this->fakeShip1, new Location('B', 2), Direction::VERTICAL);
+        $gameUnit->placeShip($fakeShip1);
         $hitResult = $gameUnit->receiveShot(new Location('B', 2));
 
         self::assertEquals(true, $hitResult->isHit());
-        self::assertEquals('FakeShip1', $hitResult->getShipName());
+        self::assertEquals(self::FAKE_SHIP1, $hitResult->getShipName());
     }
 
     public function testVerifyShipWasNotHit() {
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new Location('B', 2), Direction::VERTICAL);
+
         $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->placeShip($this->fakeShip1, new Location('B', 2), Direction::VERTICAL);
+        $gameUnit->placeShip($fakeShip1);
         $hitResult = $gameUnit->receiveShot(new Location('B', 1));
 
         self::assertEquals(false, $hitResult->isHit());
@@ -63,8 +71,10 @@ class GameUnitTest extends TestCase {
     }
 
     public function testVerifyShipIsDestroyed() {
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new Location('B', 2), Direction::VERTICAL);
+
         $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->placeShip($this->fakeShip2, new Location('B', 2), Direction::VERTICAL);
+        $gameUnit->placeShip($fakeShip2);
         self::assertEquals(1, $gameUnit->availableShips());
 
         $hitResult = $gameUnit->receiveShot(new Location('B', 2));
@@ -82,7 +92,7 @@ class GameUnitTest extends TestCase {
             ->expects($this->once())
             ->method('makeShot')
             ->with($gameUnit, $this->anything())
-            ->willReturn(HitResult::createSuccessfulHitResult($this->fakeShip1));
+            ->willReturn(HitResult::createSuccessfulHitResult(self::FAKE_SHIP1));
 
         $gameUnit->makeShot(new Location('A', 1));
         // TODO: Assert Red Peg

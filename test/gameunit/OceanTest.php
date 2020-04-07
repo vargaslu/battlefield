@@ -15,46 +15,53 @@ use PHPUnit\Framework\TestCase;
 
 class OceanTest extends TestCase {
 
-    private $fakeShip1;
+    private const FAKE_SHIP1 = 'FakeShip1';
 
-    private $fakeShip2;
+    private const FAKE_SHIP2 = 'FakeShip2';
 
     protected function setUp(): void {
         Grid::setSize(5);
-        $this->fakeShip1 = new FakeShip("FakeShip1", 5);
-        $this->fakeShip2 = new FakeShip("FakeShip2", 2);
     }
 
     public function testExceptionWhenPartOfShipIsPlacedOutsideGridHorizontal() {
         $this->expectException(LocationException::class);
 
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new Location('A', 2), Direction::HORIZONTAL);
+
         $ocean = new Ocean(new Grid());
-        $ocean->place($this->fakeShip1, new Location("A", 2), Direction::HORIZONTAL);
+        $ocean->place($fakeShip1);
     }
 
     public function testExceptionWhenPartOfShipIsPlacedOutsideGridVertical() {
         $this->expectException(LocationException::class);
 
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new Location('B', 1), Direction::VERTICAL);
+
         $ocean = new Ocean(new Grid());
-        $ocean->place($this->fakeShip1, new Location("B", 1), Direction::VERTICAL);
+        $ocean->place($fakeShip1);
     }
 
     public function testExceptionWhenTwoShipsCollide() {
         $this->expectException(LocationException::class);
 
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new Location('B', 1), Direction::HORIZONTAL);
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new Location('A', 2), Direction::VERTICAL);
+
         $ocean = new Ocean(new Grid());
-        $ocean->place($this->fakeShip1, new Location("B", 1), Direction::HORIZONTAL);
-        $ocean->place($this->fakeShip2, new Location("A", 2), Direction::VERTICAL);
+        $ocean->place($fakeShip1);
+        $ocean->place($fakeShip2);
     }
 
     public function testPeekFromGrid() {
-        $ocean = new Ocean(new Grid());
-        $ocean->place($this->fakeShip1, new Location('A', 1), Direction::HORIZONTAL);
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new Location('A', 1), Direction::HORIZONTAL);
 
-        self::assertEquals('FakeShip1', $ocean->peek(new Location('A', 1)));
-        self::assertEquals('FakeShip1', $ocean->peek(new Location('A', 2)));
-        self::assertEquals('FakeShip1', $ocean->peek(new Location('A', 3)));
-        self::assertEquals('FakeShip1', $ocean->peek(new Location('A', 4)));
+        $ocean = new Ocean(new Grid());
+        $ocean->place($fakeShip1);
+
+        self::assertEquals(self::FAKE_SHIP1, $ocean->peek(new Location('A', 1)));
+        self::assertEquals(self::FAKE_SHIP1, $ocean->peek(new Location('A', 2)));
+        self::assertEquals(self::FAKE_SHIP1, $ocean->peek(new Location('A', 3)));
+        self::assertEquals(self::FAKE_SHIP1, $ocean->peek(new Location('A', 4)));
         self::assertEquals('', $ocean->peek(new Location('B', 1)));
     }
 }

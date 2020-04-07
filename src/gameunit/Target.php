@@ -14,8 +14,8 @@ class Target {
         $this->grid = $grid;
     }
 
-    function place(Peg $peg, Location $location) {
-        $this->grid->put($peg, $location);
+    function place(Peg $peg) {
+        $this->grid->put($peg, $peg->getLocation());
     }
 
     function peek(Location $location) {
