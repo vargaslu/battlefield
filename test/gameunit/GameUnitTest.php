@@ -13,6 +13,7 @@ use Game\Battleship\GameUnit;
 use Game\Battleship\Grid;
 use Game\Battleship\HitResult;
 use Game\Battleship\Location;
+use Game\Battleship\NotAllowedShipException;
 use PHPUnit\Framework\TestCase;
 
 class GameUnitTest extends TestCase {
@@ -37,6 +38,22 @@ class GameUnitTest extends TestCase {
         $gameUnit->placeShip($fakeShip2);
 
         self::assertEquals(2, $gameUnit->availableShips());
+    }
+
+    public function testExceptionWhenPlacingSameShip() {
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new Location('A', 1), Direction::VERTICAL);
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP1, 2, new Location('A', 2), Direction::HORIZONTAL);
+
+        $gameUnit = new GameUnit($this->mockedGameService);
+        try {
+            $gameUnit->placeShip($fakeShip1);
+            $gameUnit->placeShip($fakeShip2);
+        } catch (NotAllowedShipException $exception) {
+            self::assertEquals('Allowed quantity for ship FakeShip1 already used', $exception->getMessage());
+            self::assertEquals(1, $gameUnit->availableShips());
+            return;
+        }
+        self::fail('Should have thrown an exception');
     }
 
     public function testVerifyShipWasHit() {

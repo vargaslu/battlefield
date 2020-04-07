@@ -4,6 +4,7 @@
 namespace Game\Battleship;
 
 require_once 'GameState.php';
+require_once 'GameStateFactory.php';
 
 class PlacingShipsState implements GameState {
 
@@ -15,12 +16,12 @@ class PlacingShipsState implements GameState {
 
     private $current;
 
-    private $next;
+    private $opponent;
 
-    public function __construct(GameController $gameController, GameUnit $current, GameUnit $next) {
+    public function __construct(GameController $gameController, GameUnit $current, GameUnit $opponent) {
         $this->gameController = $gameController;
         $this->current = $current;
-        $this->next = $next;
+        $this->opponent = $opponent;
         $this->shipsToPlace = [Carrier::NAME, Destroyer::NAME, Submarine::NAME, Battleship::NAME];
         $this->originalShipsToPlace = $this->shipsToPlace;
     }
@@ -31,19 +32,18 @@ class PlacingShipsState implements GameState {
     }
 
     function placingShips(Ship $ship) {
-        if (!$this->isShipInArray($ship->getName(), $this->originalShipsToPlace)) {
-            throw new NotAllowedShipException('Ship ' . $ship->getName() . ' not allowed');
-        }
+        $this->validateShipIsAllowedToBePlaced($ship);
 
         $this->current->placeShip($ship);
+
         if (($key = array_search($ship->getName(), $this->shipsToPlace)) !== false) {
             unset($this->shipsToPlace[$key]);
-        } else {
-            throw new NotAllowedShipException('Allowed quantity for ship ' . $ship->getName() . ' already used');
         }
 
+        // TODO: if not set next -> nextState is to randomize start or CallingShot with random user start
+
         if (sizeof($this->shipsToPlace) == 0) {
-            $this->setNextState(new PlacingShipsState($this->gameController, $this->next, $this->current));
+            $this->setNextState(GameStateFactory::makePlacingShipsStateFactory($this->gameController, $this->opponent, $this->current));
         }
     }
 
@@ -52,10 +52,20 @@ class PlacingShipsState implements GameState {
     }
 
     function callingShot(Location $location) {
-        // TODO: Error not calling Shots yet
+        throw new GameStateException('Not calling shots yet');
     }
 
-    function setNextState(GameState $nextGameState) {
+    private function setNextState(GameState $nextGameState) {
         $this->gameController->setState($nextGameState);
+    }
+
+    /**
+     * @param Ship $ship
+     * @throws NotAllowedShipException
+     */
+    private function validateShipIsAllowedToBePlaced(Ship $ship): void {
+        if (!$this->isShipInArray($ship->getName(), $this->originalShipsToPlace)) {
+            throw new NotAllowedShipException('Ship ' . $ship->getName() . ' not allowed');
+        }
     }
 }

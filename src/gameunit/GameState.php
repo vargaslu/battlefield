@@ -10,6 +10,4 @@ interface GameState {
 
     function callingShot(Location $location);
 
-    function setNextState(GameState $nextGameState);
-
 }

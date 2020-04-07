@@ -6,6 +6,7 @@ require_once __DIR__ . '/../../src/gameunit/GameUnit.php';
 require_once __DIR__ . '/../../src/gameunit/GameService.php';
 require_once __DIR__ . '/../../src/gameunit/GameController.php';
 require_once __DIR__ . '/../../src/gameunit/PlacingShipsState.php';
+require_once __DIR__ . '/../../src/exceptions/GameStateException.php';
 require_once __DIR__ . '/../../src/exceptions/NotAllowedShipException.php';
 
 use Game\Battleship\Carrier;
@@ -13,6 +14,7 @@ use Game\Battleship\Destroyer;
 use Game\Battleship\Direction;
 use Game\Battleship\GameController;
 use Game\Battleship\GameService;
+use Game\Battleship\GameStateException;
 use Game\Battleship\GameUnit;
 use Game\Battleship\Location;
 use Game\Battleship\NotAllowedShipException;
@@ -46,13 +48,6 @@ class PlacingShipsStateTest extends TestCase {
         self::assertEquals(1, $this->current->availableShips());
     }
 
-    public function testExceptionCannotPlaceSameShip() {
-        $this->expectException(NotAllowedShipException::class);
-
-        $this->placingShipsState->placingShips(Carrier::build(new Location('A', 1), Direction::VERTICAL));
-        $this->placingShipsState->placingShips(Carrier::build(new Location('A', 2), Direction::VERTICAL));
-    }
-
     public function testChangeStateWhenAllShipsArePlaced() {
         $this->gameController->setState($this->placingShipsState);
 
@@ -63,9 +58,18 @@ class PlacingShipsStateTest extends TestCase {
     }
 
     public function testExceptionCannotPlaceUnwantedShip() {
-        $this->expectException(NotAllowedShipException::class);
+        try {
+            $this->placingShipsState->placingShips(Carrier::build(new Location('A', 1), Direction::VERTICAL));
+            $this->placingShipsState->placingShips(Submarine::build(new Location('A', 2), Direction::VERTICAL));
+        } catch (NotAllowedShipException $exception) {
+            self::assertEquals('Ship Submarine not allowed', $exception->getMessage());
+            self::assertEquals(1, $this->current->availableShips());
+        }
+    }
 
-        $this->placingShipsState->placingShips(Carrier::build(new Location('A', 1), Direction::VERTICAL));
-        $this->placingShipsState->placingShips(Submarine::build(new Location('A', 2), Direction::VERTICAL));
+    public function testExceptionWhenTryingToCallShotsWhilePlacingShips() {
+        $this->expectException(GameStateException::class);
+
+        $this->placingShipsState->callingShot(new Location('A', 1));
     }
 }

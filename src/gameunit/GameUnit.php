@@ -3,12 +3,15 @@
 
 namespace Game\Battleship;
 
+use function PHPUnit\throwException;
+
 require_once __DIR__.'/../items/Battleship.php';
 require_once __DIR__.'/../items/Carrier.php';
 require_once __DIR__.'/../items/Cruiser.php';
 require_once __DIR__.'/../items/Submarine.php';
 require_once __DIR__.'/../items/Destroyer.php';
 require_once __DIR__.'/../listeners/PropertyChangeListener.php';
+require_once __DIR__.'/../exceptions/NotAllowedShipException.php';
 require_once 'Ocean.php';
 require_once 'Target.php';
 
@@ -31,8 +34,10 @@ class GameUnit implements PropertyChangeListener {
     }
 
     public function placeShip(Ship $ship) {
-        // TODO: Validations before placing.
-        // 1. Verify if ship is available
+        if (($key = array_search($ship->getName(), $this->placedShips)) !== false) {
+            throw new NotAllowedShipException('Allowed quantity for ship ' . $ship->getName() . ' already used');
+        }
+
         $this->ocean->place($ship);
         $this->placedShips[$ship->getName()] = $ship;
         $ship->addPropertyChangeListener($this);
