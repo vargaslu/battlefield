@@ -18,6 +18,10 @@ class Grid {
         Grid::$size = $size;
     }
 
+    static function getSize() {
+        return Grid::$size;
+    }
+
     function __construct() {
         $this->initializeBoard();
     }

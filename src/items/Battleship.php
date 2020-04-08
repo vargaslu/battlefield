@@ -10,7 +10,7 @@ final class Battleship extends Ship {
     public const NAME = 'Battleship';
 
     private function __construct(Location $location, $direction) {
-        parent::__construct(self::NAME, 4);
+        parent::__construct(self::NAME, 4, $location, $direction);
     }
 
     public static function build(Location $location, $direction) {

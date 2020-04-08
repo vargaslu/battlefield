@@ -5,6 +5,7 @@ namespace Game\Battleship;
 
 require_once 'GameState.php';
 require_once 'GameStateFactory.php';
+require_once 'GameConstants.php';
 
 class PlacingShipsState implements GameState {
 
@@ -22,13 +23,12 @@ class PlacingShipsState implements GameState {
         $this->gameController = $gameController;
         $this->current = $current;
         $this->opponent = $opponent;
-        $this->shipsToPlace = [Carrier::NAME, Destroyer::NAME, Submarine::NAME, Battleship::NAME];
-        $this->originalShipsToPlace = $this->shipsToPlace;
+        $this->setShipsToPlace(GameConstants::DEFAULT_SHIPS_TO_PLACE);
     }
 
     function setShipsToPlace($shipsToPlace) {
-        $this->shipsToPlace = $shipsToPlace;
         $this->originalShipsToPlace = $shipsToPlace;
+        $this->shipsToPlace = $shipsToPlace;
     }
 
     function placingShips(Ship $ship) {
@@ -39,8 +39,6 @@ class PlacingShipsState implements GameState {
         if (($key = array_search($ship->getName(), $this->shipsToPlace)) !== false) {
             unset($this->shipsToPlace[$key]);
         }
-
-        // TODO: if not set next -> nextState is to randomize start or CallingShot with random user start
 
         if (sizeof($this->shipsToPlace) == 0) {
             $this->setNextState(GameStateFactory::makePlacingShipsStateFactory($this->gameController, $this->opponent, $this->current));
@@ -59,10 +57,6 @@ class PlacingShipsState implements GameState {
         $this->gameController->setState($nextGameState);
     }
 
-    /**
-     * @param Ship $ship
-     * @throws NotAllowedShipException
-     */
     private function validateShipIsAllowedToBePlaced(Ship $ship): void {
         if (!$this->isShipInArray($ship->getName(), $this->originalShipsToPlace)) {
             throw new NotAllowedShipException('Ship ' . $ship->getName() . ' not allowed');
