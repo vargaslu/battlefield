@@ -6,6 +6,6 @@ namespace Game\Battleship;
 
 interface PropertyChangeListener {
 
-    function fireUpdate($obj, $oldValue, $newValue);
+    function fireUpdate($obj, $property, $value);
 
 }

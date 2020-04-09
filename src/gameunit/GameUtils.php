@@ -7,8 +7,9 @@ namespace Game\Battleship;
 class GameUtils {
 
     public function getRandomLocation() : Location {
-        $column = rand(1, Grid::getSize());
-        $letter = chr(rand(Location::ASCII_A, Location::ASCII_A + Grid::getSize()));
+        $maxGridSize = Grid::getSize() - 1;
+        $column = rand(1, $maxGridSize);
+        $letter = chr(rand(Location::ASCII_A, Location::ASCII_A + $maxGridSize));
         return new Location($letter, $column);
     }
 

@@ -4,13 +4,13 @@
 namespace Game\Battleship;
 
 
-class GameController {
+class GameController implements PropertyChangeListener {
 
     private $gameState;
 
-    private $humanPlayer;
+    private $humanGameUnit;
 
-    private $computerPlayer;
+    private $computerGameUnit;
 
     private $type;
 
@@ -21,9 +21,10 @@ class GameController {
     }
 
     public function start() {
-        //$this->humanPlayer = new GameUnit(//GameService);
-        //$this->computerPlayer = new GameUnit(//GameService);
+        //$this->humanGameUnit = new GameUnit(//GameService);
+        //$this->computerGameUnit = new GameUnit(//GameService);
         // TODO: set state PlacingShipsState with currentPlayer
+        // new AutomatedPlacingShipsState($gameController, $computerGameUnit);
     }
 
     public function setState(GameState $gameState) {
@@ -35,10 +36,14 @@ class GameController {
     }
 
     public function placeShip(Ship $ship) {
-        $this->gameState->placingShips($ship);
+        $this->gameState->placingShips($this->humanGameUnit, $ship);
     }
 
     public function callShot(Location $location) {
         $this->gameState->callingShot($location);
+    }
+
+    function fireUpdate($obj, $property, $value) {
+        // TODO: Implement fireUpdate() method.
     }
 }

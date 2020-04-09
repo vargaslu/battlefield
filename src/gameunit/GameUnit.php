@@ -33,6 +33,11 @@ class GameUnit implements PropertyChangeListener {
         $this->placedShips = [];
     }
 
+    public function isLocationFree(Location $location) : bool {
+        $peekResult = $this->ocean->peek($location);
+        return strcmp('', $peekResult) == 0;
+    }
+
     public function placeShip(Ship $ship) {
         if (($key = array_search($ship->getName(), $this->placedShips)) !== false) {
             throw new NotAllowedShipException('Allowed quantity for ship ' . $ship->getName() . ' already used');
@@ -67,8 +72,8 @@ class GameUnit implements PropertyChangeListener {
         return sizeof($this->placedShips);
     }
 
-    function fireUpdate($ship, $oldValue, $newValue) {
-        if (strcmp($newValue, Ship::DESTROYED) == 0) {
+    function fireUpdate($ship, $property, $value) {
+        if (strcmp($value, Ship::DESTROYED) == 0) {
             unset($this->placedShips[$ship]);
             // TODO: if size of placedships is 0 notify that game is over
         }

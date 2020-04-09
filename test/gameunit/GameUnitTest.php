@@ -117,4 +117,20 @@ class GameUnitTest extends TestCase {
         $gameUnit->makeShot(new Location('A', 1));
         // TODO: Assert White Peg
     }
+
+    public function testIsLocationFree() {
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new Location('B', 2), Direction::VERTICAL);
+        $gameUnit = new GameUnit($this->mockedGameService);
+        $gameUnit->placeShip($fakeShip2);
+
+        self::assertTrue($gameUnit->isLocationFree(new Location('B', 3)));
+    }
+
+    public function testIsLocationOccupied() {
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new Location('B', 2), Direction::VERTICAL);
+        $gameUnit = new GameUnit($this->mockedGameService);
+        $gameUnit->placeShip($fakeShip2);
+
+        self::assertFalse($gameUnit->isLocationFree(new Location('C', 2)));
+    }
 }

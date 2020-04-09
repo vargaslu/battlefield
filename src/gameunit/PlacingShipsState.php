@@ -4,7 +4,6 @@
 namespace Game\Battleship;
 
 require_once 'GameState.php';
-require_once 'GameStateFactory.php';
 require_once 'GameConstants.php';
 
 class PlacingShipsState implements GameState {
@@ -13,16 +12,9 @@ class PlacingShipsState implements GameState {
 
     private $shipsToPlace;
 
-    private $gameController;
+    private $listener;
 
-    private $current;
-
-    private $opponent;
-
-    public function __construct(GameController $gameController, GameUnit $current, GameUnit $opponent) {
-        $this->gameController = $gameController;
-        $this->current = $current;
-        $this->opponent = $opponent;
+    public function __construct() {
         $this->setShipsToPlace(GameConstants::DEFAULT_SHIPS_TO_PLACE);
     }
 
@@ -31,18 +23,22 @@ class PlacingShipsState implements GameState {
         $this->shipsToPlace = $shipsToPlace;
     }
 
-    function placingShips(Ship $ship) {
+    function placingShips(GameUnit $current, Ship $ship) {
         $this->validateShipIsAllowedToBePlaced($ship);
 
-        $this->current->placeShip($ship);
+        $current->placeShip($ship);
 
         if (($key = array_search($ship->getName(), $this->shipsToPlace)) !== false) {
             unset($this->shipsToPlace[$key]);
         }
 
         if (sizeof($this->shipsToPlace) == 0) {
-            $this->setNextState(GameStateFactory::makePlacingShipsStateFactory($this->gameController, $this->opponent, $this->current));
+            $this->listener->fireUpdate($current, 'ready', true);
         }
+    }
+
+    final function addPropertyChangeListener(PropertyChangeListener $listener) {
+        $this->listener = $listener;
     }
 
     private function isShipInArray($shipName, $shipArray) {
@@ -51,10 +47,6 @@ class PlacingShipsState implements GameState {
 
     function callingShot(Location $location) {
         throw new GameStateException('Not calling shots yet');
-    }
-
-    private function setNextState(GameState $nextGameState) {
-        $this->gameController->setState($nextGameState);
     }
 
     private function validateShipIsAllowedToBePlaced(Ship $ship): void {

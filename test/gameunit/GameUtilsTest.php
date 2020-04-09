@@ -6,6 +6,7 @@ require_once __DIR__ . '/../../src/gameunit/GameUtils.php';
 require_once __DIR__ . '/../../src/gameunit/Grid.php';
 require_once __DIR__ . '/../../src/positioning/Direction.php';
 
+use Game\Battleship\Direction;
 use Game\Battleship\GameUtils;
 use Game\Battleship\Grid;
 use Game\Battleship\Location;
@@ -20,16 +21,12 @@ class GameUtilsTest extends TestCase {
     }
 
     public function testMockRandomLocation() {
-        $ut = $this->getMockBuilder(GameUtils::class)->getMock();
-        $ut->expects(self::once())
-           ->method('getRandomDirection')
-           ->willReturn(1);
+        $gameUtilsMocked = $this->createStub(GameUtils::class);
+        $gameUtilsMocked->method('getRandomDirection')
+                        ->willReturn(Direction::VERTICAL);
+        $gameUtilsMocked->method('getRandomLocation')
+                        ->willReturn(new Location('D', 4));
 
-        $ut->expects(self::once())
-           ->method('getRandomLocation')
-           ->willReturn(new Location('D', 4));
-
-        $gameUtilsMocked = new GameUtils();
         $location = $gameUtilsMocked->getRandomLocation();
         self::assertEquals(1, $gameUtilsMocked->getRandomDirection());
         self::assertEquals('D', $location->getLetter());
