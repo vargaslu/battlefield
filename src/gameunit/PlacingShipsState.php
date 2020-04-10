@@ -54,4 +54,8 @@ class PlacingShipsState implements GameState {
             throw new NotAllowedShipException('Ship ' . $ship->getName() . ' not allowed');
         }
     }
+
+    public function jsonSerialize() {
+        // TODO: Implement jsonSerialize() method.
+    }
 }

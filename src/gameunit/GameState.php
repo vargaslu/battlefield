@@ -3,8 +3,9 @@
 
 namespace Game\Battleship;
 
+use JsonSerializable;
 
-interface GameState {
+interface GameState extends JsonSerializable {
 
     function placingShips(GameUnit $current, Ship $ship);
 

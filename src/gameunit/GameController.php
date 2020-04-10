@@ -3,6 +3,8 @@
 
 namespace Game\Battleship;
 
+require_once __DIR__.'/../listeners/PropertyChangeListener.php';
+require_once 'WaitingForStartState.php';
 
 class GameController implements PropertyChangeListener {
 
@@ -20,6 +22,7 @@ class GameController implements PropertyChangeListener {
 
     public function __construct() {
         $this->readyPlayers = 0;
+        $this->setState(new WaitingForStartState());
     }
 
     public function start() {
@@ -35,7 +38,7 @@ class GameController implements PropertyChangeListener {
                                                      ->placeShips();
     }
 
-    public function setState(GameState $gameState) {
+    protected function setState(GameState $gameState) {
         $this->gameState = $gameState;
     }
 
@@ -51,7 +54,7 @@ class GameController implements PropertyChangeListener {
         $this->gameState->callingShot($location);
     }
 
-    function fireUpdate($obj, $property, $value) {
+    public function fireUpdate($obj, $property, $value) {
         if (strcmp($property, 'ready') == 0) {
             $this->readyPlayers++;
 
