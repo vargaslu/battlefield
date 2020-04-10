@@ -16,15 +16,23 @@ class GameController implements PropertyChangeListener {
 
     private $placedShipsHumanPlayer;
 
-    public function __construct() {
+    private $readyPlayers;
 
+    public function __construct() {
+        $this->readyPlayers = 0;
     }
 
     public function start() {
-        //$this->humanGameUnit = new GameUnit(//GameService);
-        //$this->computerGameUnit = new GameUnit(//GameService);
-        // TODO: set state PlacingShipsState with currentPlayer
-        // new AutomatedPlacingShipsState($gameController, $computerGameUnit);
+        $gameService = new GameServiceImpl();
+        $this->humanGameUnit = new GameUnit($gameService);
+        $this->computerGameUnit = new GameUnit($gameService);
+        $placingShipsState = new PlacingShipsState();
+        $placingShipsState->addPropertyChangeListener($this);
+
+        $this->setState($placingShipsState);
+
+        (new PlayerEmulator($this->computerGameUnit))->addPropertyChangeListener($this)
+                                                     ->placeShips();
     }
 
     public function setState(GameState $gameState) {
@@ -44,6 +52,10 @@ class GameController implements PropertyChangeListener {
     }
 
     function fireUpdate($obj, $property, $value) {
-        // TODO: Implement fireUpdate() method.
+        if (strcmp($property, 'ready') == 0) {
+            $this->readyPlayers++;
+
+        }
+        // TODO: if property = ready is 2 then do shuffle and change state
     }
 }

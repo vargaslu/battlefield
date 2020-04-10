@@ -9,16 +9,12 @@ require_once __DIR__ . '/../../src/gameunit/PlacingShipsState.php';
 require_once __DIR__ . '/../../src/exceptions/GameStateException.php';
 require_once __DIR__ . '/../../src/exceptions/NotAllowedShipException.php';
 
-use Game\Battleship\PlayerEmulator;
 use Game\Battleship\Carrier;
 use Game\Battleship\Destroyer;
 use Game\Battleship\Direction;
-use Game\Battleship\GameController;
 use Game\Battleship\GameService;
-use Game\Battleship\GameState;
 use Game\Battleship\GameStateException;
 use Game\Battleship\GameUnit;
-use Game\Battleship\GameUtils;
 use Game\Battleship\Location;
 use Game\Battleship\NotAllowedShipException;
 use Game\Battleship\PlacingShipsState;
