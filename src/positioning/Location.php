@@ -42,6 +42,10 @@ final class Location {
         return new Location($location->getLetter(), $location->getColumn());
     }
 
+    public static function fromJson($json) {
+        return new Location($json['location'], $json['column']);
+    }
+
     function getLetter() {
         return $this->letter;
     }

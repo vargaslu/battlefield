@@ -3,6 +3,7 @@
 
 namespace Game\Battleship;
 
+require_once __DIR__.'/../../src/gameunit/GameControllerImpl.php';
 
 final class Context {
 

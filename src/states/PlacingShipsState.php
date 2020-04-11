@@ -3,6 +3,7 @@
 
 namespace Game\Battleship;
 
+require_once __DIR__ . '/../exceptions/GameStateException.php';
 require_once __DIR__ . '/../gameunit/Constants.php';
 require_once 'GameState.php';
 

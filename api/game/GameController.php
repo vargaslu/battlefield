@@ -6,11 +6,11 @@ namespace Game\Battleship;
 
 interface GameController {
 
-    function start();
+    function start() : MessageResult;
 
-    function placeShip(Ship $ship);
+    function placeShip($ship);
 
-    function callShot(Location $location);
+    function callShot($location);
 
     function getCurrentState() : GameState;
 

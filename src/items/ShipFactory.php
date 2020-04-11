@@ -26,8 +26,13 @@ final class ShipFactory {
             case Cruiser::NAME:
                 return Cruiser::build($location, $direction);
             default:
-                throw new InvalidArgumentException();
+                throw new InvalidArgumentException('Ship name ' . $this->shipName . ' is not valid');
         }
+    }
+
+    public static function fromJson($json) : Ship {
+        $shipFactory = new ShipFactory($json['name']);
+        return $shipFactory->buildWithLocation(Location::fromJson($json), $json['direction']);
     }
 
 }

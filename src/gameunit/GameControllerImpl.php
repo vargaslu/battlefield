@@ -9,7 +9,13 @@ require_once __DIR__.'/../states/CallingShotsState.php';
 require_once __DIR__.'/../states/GameStateLoader.php';
 require_once __DIR__.'/../states/StateUpdater.php';
 require_once __DIR__.'/../states/WaitingForStartState.php';
+require_once 'GameUnit.php';
 require_once 'GameServiceImpl.php';
+require_once 'PlayerEmulator.php';
+require_once 'SuccessfulMessageResult.php';
+require_once 'ExceptionMessageResult.php';
+
+use Exception;
 
 class GameControllerImpl implements GameController, StateUpdater {
 
@@ -28,7 +34,7 @@ class GameControllerImpl implements GameController, StateUpdater {
         $this->updateCurrentState(GameStateLoader::loadWaitingForStartState());
     }
 
-    public function start() {
+    public function start() : MessageResult {
         $gameService = new GameServiceImpl();
         $this->humanGameUnit = new GameUnit($gameService);
         $placingShipsState = GameStateLoader::loadPlacingShipsState();
@@ -37,6 +43,8 @@ class GameControllerImpl implements GameController, StateUpdater {
         $this->configureComputerBasedOpponent($gameService);
 
         $this->updateCurrentState($placingShipsState);
+
+        return new SuccessfulMessageResult('Game started successfully');
     }
 
     public function updateCurrentState(GameState $gameState, $value = null) : void {
@@ -48,11 +56,18 @@ class GameControllerImpl implements GameController, StateUpdater {
         return $this->gameState;
     }
 
-    public function placeShip(Ship $ship) {
-        $this->gameState->placingShips($this->humanGameUnit, $ship);
+    public function placeShip($jsonData) {
+        try {
+            $ship = ShipFactory::fromJson($jsonData);
+            $this->gameState->placingShips($this->humanGameUnit, $ship);
+            return new SuccessfulMessageResult('Ship placed successfully');
+        } catch (Exception $exception) {
+            return new ExceptionMessageResult($exception->getMessage());
+        }
     }
 
-    public function callShot(Location $location) {
+    public function callShot($jsonData) {
+        $location = Location::fromJson($jsonData);
         $this->gameState->callingShot($location);
     }
 
