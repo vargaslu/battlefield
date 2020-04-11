@@ -3,6 +3,7 @@
 
 namespace Game\Battleship;
 
+require_once 'GameService.php';
 
 class GameServiceImpl implements GameService {
 

@@ -19,10 +19,13 @@ class PlayerEmulator {
 
     private $listener;
 
-    public function __construct(GameUnit $gameUnit) {
-        $this->gameUnit = $gameUnit;
+    public function __construct() {
         $this->gameUtils = new GameUtils();
-        $this->shipsToPlace = GameConstants::DEFAULT_SHIPS_TO_PLACE;
+        $this->shipsToPlace = GameConstants::$DEFAULT_SHIPS_TO_PLACE;
+    }
+
+    final function setGameUnit($gameUnit) {
+        $this->gameUnit = $gameUnit;
     }
 
     final function addPropertyChangeListener(PropertyChangeListener $listener) {
@@ -30,20 +33,12 @@ class PlayerEmulator {
         return $this;
     }
 
-    function setShipsToPlace($shipsToPlace) {
-        $this->shipsToPlace = $shipsToPlace;
-    }
-
-    private function getShipsToPlace() {
-        return $this->shipsToPlace;
-    }
-
     function placeShips() {
-        foreach ($this->getShipsToPlace() as $shipName) {
+        foreach ($this->shipsToPlace as $shipName) {
             $this->searchForLocation($shipName);
         }
 
-        $this->listener->fireUpdate($this->gameUnit, 'ready', true);
+        $this->listener->fireUpdate($this->gameUnit, ReadyListener::READY, true);
     }
 
     private function searchForLocation($shipName) {

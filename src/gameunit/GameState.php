@@ -11,4 +11,6 @@ interface GameState extends JsonSerializable {
 
     function callingShot(Location $location);
 
+    function enter($value = null);
+
 }

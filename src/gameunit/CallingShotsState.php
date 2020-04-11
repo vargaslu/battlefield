@@ -3,9 +3,8 @@
 
 namespace Game\Battleship;
 
-require_once 'GameState.php';
 
-class WaitingForStartState implements GameState {
+class CallingShotsState implements GameState {
 
     function placingShips(GameUnit $current, Ship $ship) {
         // TODO: Implement placingShips() method.
@@ -15,11 +14,14 @@ class WaitingForStartState implements GameState {
         // TODO: Implement callingShot() method.
     }
 
+    /**
+     * @inheritDoc
+     */
     public function jsonSerialize() {
-        return [ 'state' => 'Waiting for start' ];
+        // TODO: Implement jsonSerialize() method.
     }
 
     function enter($value = null) {
-        // Nothing to do here
+        // TODO: Implement enter() method.
     }
 }

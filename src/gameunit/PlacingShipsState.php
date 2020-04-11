@@ -15,12 +15,8 @@ class PlacingShipsState implements GameState {
     private $listener;
 
     public function __construct() {
-        $this->setShipsToPlace(GameConstants::DEFAULT_SHIPS_TO_PLACE);
-    }
-
-    function setShipsToPlace($shipsToPlace) {
-        $this->originalShipsToPlace = $shipsToPlace;
-        $this->shipsToPlace = $shipsToPlace;
+        $this->originalShipsToPlace = GameConstants::$DEFAULT_SHIPS_TO_PLACE;
+        $this->shipsToPlace = GameConstants::$DEFAULT_SHIPS_TO_PLACE;
     }
 
     function placingShips(GameUnit $current, Ship $ship) {
@@ -33,7 +29,7 @@ class PlacingShipsState implements GameState {
         }
 
         if (sizeof($this->shipsToPlace) == 0) {
-            $this->listener->fireUpdate($current, 'ready', true);
+            $this->listener->fireUpdate($current, ReadyListener::READY, true);
         }
     }
 
@@ -56,6 +52,10 @@ class PlacingShipsState implements GameState {
     }
 
     public function jsonSerialize() {
-        // TODO: Implement jsonSerialize() method.
+        return [ 'status' => 'Placing ships' ];
+    }
+
+    function enter($value = null) {
+        // Nothing to do here;
     }
 }

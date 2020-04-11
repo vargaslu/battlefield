@@ -12,6 +12,7 @@ require_once __DIR__ . '/../../src/exceptions/NotAllowedShipException.php';
 use Game\Battleship\Carrier;
 use Game\Battleship\Destroyer;
 use Game\Battleship\Direction;
+use Game\Battleship\GameConstants;
 use Game\Battleship\GameService;
 use Game\Battleship\GameStateException;
 use Game\Battleship\GameUnit;
@@ -34,8 +35,9 @@ class PlacingShipsStateTest extends TestCase {
         $this->mockedGameService = $this->getMockBuilder(GameService::class)->getMock();
         $this->current = new GameUnit($this->mockedGameService);
 
+        GameConstants::$DEFAULT_SHIPS_TO_PLACE = [Carrier::NAME, Destroyer::NAME];
+
         $this->placingShipsState = new PlacingShipsState();
-        $this->placingShipsState->setShipsToPlace([Carrier::NAME, Destroyer::NAME]);
     }
 
     public function testPlaceShips() {
