@@ -4,7 +4,7 @@
 namespace Game\Battleship;
 
 
-class GameUtils {
+class Utils {
 
     public function getRandomLocation() : Location {
         $maxGridSize = Grid::getSize() - 1;
@@ -15,5 +15,9 @@ class GameUtils {
 
     public function getRandomDirection() {
         return rand(Direction::HORIZONTAL, Direction::VERTICAL);
+    }
+
+    static function getRandomPlayerNumber() : int {
+        return rand(1, 2);
     }
 }

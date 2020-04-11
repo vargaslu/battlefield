@@ -4,11 +4,11 @@ namespace Tests\Game\Battleship;
 
 require_once __DIR__ . '/../../src/gameunit/PlayerEmulator.php';
 require_once __DIR__ . '/../../src/gameunit/GameUnit.php';
-require_once __DIR__ . '/../../src/gameunit/GameConstants.php';
+require_once __DIR__ . '/../../src/gameunit/Constants.php';
 
 use Game\Battleship\Carrier;
 use Game\Battleship\Destroyer;
-use Game\Battleship\GameConstants;
+use Game\Battleship\Constants;
 use Game\Battleship\GameService;
 use Game\Battleship\GameUnit;
 use Game\Battleship\PlayerEmulator;
@@ -25,7 +25,7 @@ class PlayerEmulatorTest extends TestCase {
         $mockedGameService = $this->getMockBuilder(GameService::class)->getMock();
         $this->gameUnit = new GameUnit($mockedGameService);
 
-        GameConstants::$DEFAULT_SHIPS_TO_PLACE = [Carrier::NAME, Destroyer::NAME];
+        Constants::$DEFAULT_SHIPS_TO_PLACE = [Carrier::NAME, Destroyer::NAME];
 
         $this->playerEmulator = new PlayerEmulator($this->gameUnit);
     }

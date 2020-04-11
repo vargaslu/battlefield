@@ -1,0 +1,24 @@
+<?php
+
+
+namespace Game\Battleship;
+
+
+final class Constants {
+
+    public const MAX_PLAYERS = 2;
+
+    public const POSITIONED_SHIPS = 'positioned_ships';
+
+    public static $DEFAULT_SHIPS_TO_PLACE = [Carrier::NAME,
+                                             Destroyer::NAME,
+                                             Submarine::NAME,
+                                             Battleship::NAME,
+                                             Cruiser::NAME];
+
+    public static $CONFIGURED_HUMAN_PLAYERS = 1;
+
+    private function __construct() {
+    }
+
+}

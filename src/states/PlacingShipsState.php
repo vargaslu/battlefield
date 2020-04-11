@@ -3,7 +3,7 @@
 
 namespace Game\Battleship;
 
-require_once __DIR__.'/../gameunit/GameConstants.php';
+require_once __DIR__ . '/../gameunit/Constants.php';
 require_once 'GameState.php';
 
 class PlacingShipsState implements GameState {
@@ -15,8 +15,8 @@ class PlacingShipsState implements GameState {
     private $listener;
 
     public function __construct() {
-        $this->originalShipsToPlace = GameConstants::$DEFAULT_SHIPS_TO_PLACE;
-        $this->shipsToPlace = GameConstants::$DEFAULT_SHIPS_TO_PLACE;
+        $this->originalShipsToPlace = Constants::$DEFAULT_SHIPS_TO_PLACE;
+        $this->shipsToPlace = Constants::$DEFAULT_SHIPS_TO_PLACE;
     }
 
     function placingShips(GameUnit $current, Ship $ship) {
@@ -29,7 +29,7 @@ class PlacingShipsState implements GameState {
         }
 
         if (sizeof($this->shipsToPlace) == 0) {
-            $this->listener->fireUpdate($current, ReadyListener::READY, true);
+            $this->listener->fireUpdate(Constants::POSITIONED_SHIPS, ReadyListener::READY, true);
         }
     }
 

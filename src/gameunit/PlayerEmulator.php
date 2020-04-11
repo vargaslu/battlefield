@@ -5,7 +5,7 @@ namespace Game\Battleship;
 
 require_once __DIR__.'/../items/ShipFactory.php';
 require_once __DIR__.'/../states/GameState.php';
-require_once 'GameUtils.php';
+require_once 'Utils.php';
 
 use Exception;
 
@@ -21,8 +21,8 @@ class PlayerEmulator {
 
     public function __construct(GameUnit $gameUnit) {
         $this->gameUnit = $gameUnit;
-        $this->gameUtils = new GameUtils();
-        $this->shipsToPlace = GameConstants::$DEFAULT_SHIPS_TO_PLACE;
+        $this->gameUtils = new Utils();
+        $this->shipsToPlace = Constants::$DEFAULT_SHIPS_TO_PLACE;
     }
 
     final function addPropertyChangeListener(PropertyChangeListener $listener) {
@@ -35,7 +35,7 @@ class PlayerEmulator {
             $this->searchForLocation($shipName);
         }
 
-        $this->listener->fireUpdate($this->gameUnit, ReadyListener::READY, true);
+        $this->listener->fireUpdate(Constants::POSITIONED_SHIPS, ReadyListener::READY, true);
     }
 
     private function searchForLocation($shipName) {

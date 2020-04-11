@@ -9,27 +9,43 @@ class ReadyListener implements PropertyChangeListener {
 
     public const READY = 'ready';
 
-    private $gameController;
+    private $stateUpdater;
 
     private $readyPlayers;
 
-    public function __construct(GameController $gameController) {
-        $this->gameController = $gameController;
+    public function __construct(StateUpdater $stateUpdater) {
+        $this->stateUpdater = $stateUpdater;
     }
 
-    public function fireUpdate($obj, $property, $value) {
-        if (strcmp($property, self::READY) == 0) {
-            $this->readyPlayers++;
+    public function fireUpdate($key, $property, $value) {
+        if (strcmp($property, self::READY) != 0) {
+            return;
         }
 
-        if ($this->readyPlayers == GameConstants::$MAX_PLAYERS) {
-            // TODO: if property = ready is 2 then do shuffle and change state
-            $this->gameController->setState(GameStateLoader::loadCallingShotsState());
+        switch ($key) {
+            case Constants::POSITIONED_SHIPS:
+                $this->handlePositionShipsReady();
+                break;
         }
+    }
 
-        if ($this->readyPlayers == GameConstants::$CONFIGURED_HUMAN_PLAYERS) {
-            $this->gameController->setState(GameStateLoader::loadWaitingForAutomaticActionState(), 'place_ships');
+    private function handlePositionShipsReady() : void {
+        $this->readyPlayers++;
+
+        $this->changeStateWhenAllPlayersAreReady();
+
+        if ($this->readyPlayers == Constants::$CONFIGURED_HUMAN_PLAYERS) {
+            $this->stateUpdater->updateCurrentState(GameStateLoader::loadWaitingForAutomaticActionState(), 'place_ships');
         }
+    }
 
+    private function changeStateWhenAllPlayersAreReady(): void {
+        if ($this->readyPlayers == Constants::MAX_PLAYERS) {
+            if (Utils::getRandomPlayerNumber() === 1) {
+                $this->stateUpdater->updateCurrentState(GameStateLoader::loadCallingShotsState());
+            } else {
+                $this->stateUpdater->updateCurrentState(GameStateLoader::loadWaitingForAutomaticActionState(), 'call_shot');
+            }
+        }
     }
 }

@@ -2,13 +2,13 @@
 
 namespace Tests\Game\Battleship;
 
-require_once __DIR__ . '/../../src/gameunit/GameController.php';
+require_once __DIR__ . '/../../src/gameunit/GameControllerImpl.php';
 
 use Game\Battleship\Carrier;
 use Game\Battleship\Destroyer;
 use Game\Battleship\Direction;
-use Game\Battleship\GameConstants;
-use Game\Battleship\GameController;
+use Game\Battleship\Constants;
+use Game\Battleship\GameControllerImpl;
 use Game\Battleship\Location;
 use Game\Battleship\PlacingShipsState;
 use Game\Battleship\WaitingForStartState;
@@ -17,26 +17,26 @@ use PHPUnit\Framework\TestCase;
 class GameControllerTest extends TestCase {
 
     protected function setUp(): void {
-        GameConstants::$DEFAULT_SHIPS_TO_PLACE = [Carrier::NAME, Destroyer::NAME];
+        Constants::$DEFAULT_SHIPS_TO_PLACE = [Carrier::NAME, Destroyer::NAME];
     }
 
     public function testInitialState() {
-        $gameController = new GameController();
-        self::assertTrue($gameController->getState() instanceof WaitingForStartState);
+        $gameController = new GameControllerImpl();
+        self::assertTrue($gameController->getCurrentState() instanceof WaitingForStartState);
     }
 
     public function testPlacingShipsState() {
-        $gameController = new GameController();
+        $gameController = new GameControllerImpl();
         $gameController->start();
-        self::assertTrue($gameController->getState() instanceof PlacingShipsState);
+        self::assertTrue($gameController->getCurrentState() instanceof PlacingShipsState);
     }
 
     public function testCallingShotsState() {
-        $gameController = new GameController();
+        $gameController = new GameControllerImpl();
         $gameController->start();
         $gameController->placeShip(Carrier::build(new Location('A', 1), Direction::VERTICAL));
         $gameController->placeShip(Destroyer::build(new Location('A', 2), Direction::VERTICAL));
 
-        self::assertFalse($gameController->getState() instanceof PlacingShipsState);
+        self::assertFalse($gameController->getCurrentState() instanceof PlacingShipsState);
     }
 }
