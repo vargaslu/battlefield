@@ -3,6 +3,7 @@
 
 namespace Game\Battleship;
 
+require_once __DIR__.'/../../api/game/GameController.php';
 require_once __DIR__.'/../listeners/ReadyListener.php';
 require_once __DIR__.'/../states/CallingShotsState.php';
 require_once __DIR__.'/../states/GameStateLoader.php';
