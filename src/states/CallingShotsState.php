@@ -3,6 +3,7 @@
 
 namespace Game\Battleship;
 
+require_once 'GameState.php';
 
 class CallingShotsState implements GameState {
 

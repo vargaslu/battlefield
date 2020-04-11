@@ -27,8 +27,7 @@ class PlayerEmulatorTest extends TestCase {
 
         GameConstants::$DEFAULT_SHIPS_TO_PLACE = [Carrier::NAME, Destroyer::NAME];
 
-        $this->playerEmulator = new PlayerEmulator();
-        $this->playerEmulator->setGameUnit($this->gameUnit);
+        $this->playerEmulator = new PlayerEmulator($this->gameUnit);
     }
 
     public function testPlacing() {

@@ -5,7 +5,7 @@ namespace Tests\Game\Battleship;
 require_once __DIR__ . '/../../src/gameunit/GameUnit.php';
 require_once __DIR__ . '/../../src/gameunit/GameService.php';
 require_once __DIR__ . '/../../src/gameunit/GameController.php';
-require_once __DIR__ . '/../../src/gameunit/PlacingShipsState.php';
+require_once __DIR__ . '/../../src/states/PlacingShipsState.php';
 require_once __DIR__ . '/../../src/exceptions/GameStateException.php';
 require_once __DIR__ . '/../../src/exceptions/NotAllowedShipException.php';
 

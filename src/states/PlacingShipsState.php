@@ -3,8 +3,8 @@
 
 namespace Game\Battleship;
 
+require_once __DIR__.'/../gameunit/GameConstants.php';
 require_once 'GameState.php';
-require_once 'GameConstants.php';
 
 class PlacingShipsState implements GameState {
 

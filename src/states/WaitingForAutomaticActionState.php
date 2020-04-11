@@ -6,23 +6,13 @@ namespace Game\Battleship;
 
 class WaitingForAutomaticActionState implements GameState {
 
-    private $listener;
-
-    private $gameUnit;
-
     private $playerEmulator;
 
     public function __construct() {
-        $this->playerEmulator = new PlayerEmulator();
     }
 
-    final function setGameUnit($gameUnit) {
-        $this->playerEmulator->setGameUnit($gameUnit);
-    }
-
-    final function addPropertyChangeListener(PropertyChangeListener $listener) {
-        //$this->listener = $listener;
-        $this->playerEmulator->addPropertyChangeListener($listener);
+    final function setPlayerEmulator(PlayerEmulator $playerEmulator) : void {
+        $this->playerEmulator = $playerEmulator;
     }
 
     function placingShips(GameUnit $current, Ship $ship) {

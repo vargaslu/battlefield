@@ -4,7 +4,7 @@
 namespace Game\Battleship;
 
 require_once __DIR__.'/../items/ShipFactory.php';
-require_once 'GameState.php';
+require_once __DIR__.'/../states/GameState.php';
 require_once 'GameUtils.php';
 
 use Exception;
@@ -19,13 +19,10 @@ class PlayerEmulator {
 
     private $listener;
 
-    public function __construct() {
+    public function __construct(GameUnit $gameUnit) {
+        $this->gameUnit = $gameUnit;
         $this->gameUtils = new GameUtils();
         $this->shipsToPlace = GameConstants::$DEFAULT_SHIPS_TO_PLACE;
-    }
-
-    final function setGameUnit($gameUnit) {
-        $this->gameUnit = $gameUnit;
     }
 
     final function addPropertyChangeListener(PropertyChangeListener $listener) {

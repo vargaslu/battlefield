@@ -4,10 +4,10 @@
 namespace Game\Battleship;
 
 require_once __DIR__.'/../listeners/ReadyListener.php';
-require_once 'WaitingForStartState.php';
-require_once 'CallingShotsState.php';
+require_once __DIR__.'/../states/CallingShotsState.php';
+require_once __DIR__.'/../states/GameStateLoader.php';
+require_once __DIR__.'/../states/WaitingForStartState.php';
 require_once 'GameServiceImpl.php';
-require_once 'GameStateLoader.php';
 
 class GameController {
 
@@ -23,8 +23,6 @@ class GameController {
 
     private $readyListener;
 
-    private $wakeUpListener;
-
     public function __construct() {
         $this->readyListener = new ReadyListener($this);
         $this->setState(GameStateLoader::loadWaitingForStartState());
@@ -33,18 +31,15 @@ class GameController {
     public function start() {
         $gameService = new GameServiceImpl();
         $this->humanGameUnit = new GameUnit($gameService);
-        $this->computerGameUnit = new GameUnit($gameService);
         $placingShipsState = GameStateLoader::loadPlacingShipsState();
         $placingShipsState->addPropertyChangeListener($this->readyListener);
 
-        $waitingForAutomaticActionState = GameStateLoader::loadWaitingForAutomaticActionState();
-        $waitingForAutomaticActionState->setGameUnit($this->computerGameUnit);
-        $waitingForAutomaticActionState->addPropertyChangeListener($this->readyListener);
+        $this->configureComputerBasedOpponent($gameService);
 
         $this->setState($placingShipsState);
     }
 
-    public function setState(GameState $gameState, $value = null) {
+    public function setState(GameState $gameState, $value = null) : void {
         $this->gameState = $gameState;
         $gameState->enter($value);
     }
@@ -59,5 +54,15 @@ class GameController {
 
     public function callShot(Location $location) {
         $this->gameState->callingShot($location);
+    }
+
+    private function configureComputerBasedOpponent(GameServiceImpl $gameService): void {
+        if (GameConstants::$CONFIGURED_HUMAN_PLAYERS == 1) {
+            $this->computerGameUnit = new GameUnit($gameService);
+            $playerEmulator = new PlayerEmulator($this->computerGameUnit);
+            $playerEmulator->addPropertyChangeListener($this->readyListener);
+            $waitingForAutomaticActionState = GameStateLoader::loadWaitingForAutomaticActionState();
+            $waitingForAutomaticActionState->setPlayerEmulator($playerEmulator);
+        }
     }
 }
