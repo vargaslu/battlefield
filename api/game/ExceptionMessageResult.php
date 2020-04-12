@@ -3,7 +3,7 @@
 
 namespace Game\Battleship;
 
-require_once __DIR__.'/../../api/game/MessageResult.php';
+require_once __DIR__ . '/../../api/game/MessageResult.php';
 
 class ExceptionMessageResult implements MessageResult {
 

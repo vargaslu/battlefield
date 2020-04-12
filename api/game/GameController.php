@@ -6,7 +6,7 @@ namespace Game\Battleship;
 
 interface GameController {
 
-    function start() : MessageResult;
+    function start();
 
     function placeShip($ship);
 

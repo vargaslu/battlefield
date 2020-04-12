@@ -8,8 +8,12 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 include 'Context.php';
+include 'SuccessfulMessageResult.php';
+include 'ExceptionMessageResult.php';
 
 use Game\Battleship\Context;
+use Game\Battleship\ExceptionMessageResult;
+use Game\Battleship\SuccessfulMessageResult;
 
 $action = "";
 if (isset($_GET["action"])){
@@ -33,17 +37,15 @@ switch($action) {
         echo json_encode($gameController->getCurrentState());
         break;
     case "start":
-        echo json_encode($gameController->start());
+        echo json_encode(tryStartGame($gameController));
         $_SESSION['game_controller'] = serialize($gameController);
         break;
-    case "place_ship":
-        foreach ($data as $shipData) {
-            echo json_encode($gameController->placeShip($shipData));
-        }
+    case "place_ships":
+        echo json_encode(tryPlaceShips($data, $gameController));
         $_SESSION['game_controller'] = serialize($gameController);
         break;
     case "call_shot":
-        echo json_encode($gameController->callShot($data));
+        echo json_encode(tryCallShot($data, $gameController));
         $_SESSION['game_controller'] = serialize($gameController);
         break;
     case "reset":
@@ -53,4 +55,34 @@ switch($action) {
         http_response_code(404);
         echo json_encode( array("message" => "Request not found."));
 
+}
+
+function tryStartGame($gameController) {
+    try {
+        $gameController->start();
+        return new SuccessfulMessageResult('Game started successfully');
+    } catch (Exception $exception) {
+        return new ExceptionMessageResult($exception->getMessage());
+    }
+}
+
+function tryPlaceShips($data, $gameController) {
+    try {
+        foreach ($data as $shipData) {
+            $gameController->placeShip($shipData);
+        }
+        return new SuccessfulMessageResult('Ship(s) placed successfully');
+    } catch (Exception $exception) {
+        return new ExceptionMessageResult($exception->getMessage());
+    }
+}
+
+function tryCallShot($data, $gameController) {
+    try {
+        $gameController->callShot($data);
+        return new SuccessfulMessageResult('Game started successfully');
+        // TODO: Actually it returns HitResult
+    } catch (Exception $exception) {
+        return new ExceptionMessageResult($exception->getMessage());
+    }
 }

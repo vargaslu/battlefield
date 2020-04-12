@@ -12,10 +12,6 @@ require_once __DIR__.'/../states/WaitingForStartState.php';
 require_once 'GameUnit.php';
 require_once 'GameServiceImpl.php';
 require_once 'PlayerEmulator.php';
-require_once 'SuccessfulMessageResult.php';
-require_once 'ExceptionMessageResult.php';
-
-use Exception;
 
 class GameControllerImpl implements GameController, StateUpdater {
 
@@ -34,7 +30,7 @@ class GameControllerImpl implements GameController, StateUpdater {
         $this->updateCurrentState(GameStateLoader::loadWaitingForStartState());
     }
 
-    public function start() : MessageResult {
+    public function start() {
         $gameService = new GameServiceImpl();
         $this->humanGameUnit = new GameUnit($gameService);
         $placingShipsState = GameStateLoader::loadPlacingShipsState();
@@ -43,8 +39,6 @@ class GameControllerImpl implements GameController, StateUpdater {
         $this->configureComputerBasedOpponent($gameService);
 
         $this->updateCurrentState($placingShipsState);
-
-        return new SuccessfulMessageResult('Game started successfully');
     }
 
     public function updateCurrentState(GameState $gameState, $value = null) : void {
@@ -57,13 +51,8 @@ class GameControllerImpl implements GameController, StateUpdater {
     }
 
     public function placeShip($jsonData) {
-        try {
-            $ship = ShipFactory::fromJson($jsonData);
-            $this->gameState->placingShips($this->humanGameUnit, $ship);
-            return new SuccessfulMessageResult('Ship placed successfully');
-        } catch (Exception $exception) {
-            return new ExceptionMessageResult($exception->getMessage());
-        }
+        $ship = ShipFactory::fromJson($jsonData);
+        $this->gameState->placingShips($this->humanGameUnit, $ship);
     }
 
     public function callShot($jsonData) {

@@ -32,10 +32,25 @@ class GameControllerTest extends TestCase {
     }
 
     public function testCallingShotsState() {
+        $data = json_decode('
+        [{
+            "name" : "Carrier",
+            "location": "A",
+            "column": 1,
+            "direction": "V"
+        },
+        {
+            "name" : "Destroyer",
+            "location": "A",
+            "column": 2,
+            "direction": "V"
+        }]', true);
         $gameController = new GameControllerImpl();
         $gameController->start();
-        $gameController->placeShip(Carrier::build(new Location('A', 1), Direction::VERTICAL));
-        $gameController->placeShip(Destroyer::build(new Location('A', 2), Direction::VERTICAL));
+
+        foreach ($data as $jsonShip) {
+            $gameController->placeShip($jsonShip);
+        }
 
         self::assertFalse($gameController->getCurrentState() instanceof PlacingShipsState);
     }
