@@ -8,18 +8,15 @@ require_once 'GameState.php';
 class CallingShotsState implements GameState {
 
     function placingShips(GameUnit $current, Ship $ship) {
-        // TODO: Implement placingShips() method.
+        throw new GameStateException('Not placing ships anymore');
     }
 
     function callingShot(Location $location) {
         // TODO: Implement callingShot() method.
     }
 
-    /**
-     * @inheritDoc
-     */
     public function jsonSerialize() {
-        // TODO: Implement jsonSerialize() method.
+        return [ 'status' => 'Calling for shots' ];
     }
 
     function enter($value = null) {

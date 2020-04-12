@@ -15,6 +15,12 @@ use Game\Battleship\Context;
 use Game\Battleship\ExceptionMessageResult;
 use Game\Battleship\SuccessfulMessageResult;
 
+use Game\Battleship\GameStateLoader;
+
+ini_set('xdebug.var_display_max_depth', '10');
+ini_set('xdebug.var_display_max_children', '256');
+ini_set('xdebug.var_display_max_data', '1024');
+
 $action = "";
 if (isset($_GET["action"])){
     $action = $_GET["action"];
@@ -23,6 +29,7 @@ if (isset($_GET["action"])){
 $data = json_decode(file_get_contents("php://input"), true);
 
 $gameController = NULL;
+
 if (isset($_SESSION['game_controller'])) {
     $gameController = unserialize($_SESSION['game_controller']);
 } else {
@@ -34,6 +41,7 @@ switch($action) {
 
     case "status_info":
         http_response_code(200);
+        var_dump($gameController);
         echo json_encode($gameController->getCurrentState());
         break;
     case "start":

@@ -16,11 +16,11 @@ class WaitingForAutomaticActionState implements GameState {
     }
 
     function placingShips(GameUnit $current, Ship $ship) {
-        // TODO: Implement placingShips() method.
+        throw new GameStateException('Not accepting placing of ships, Please wait until I finish');
     }
 
     function callingShot(Location $location) {
-        // TODO: Implement callingShot() method.
+        throw new GameStateException('Not accepting calling shots, Please wait until I finish');
     }
 
     function enter($value = null) {

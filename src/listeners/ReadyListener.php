@@ -35,16 +35,18 @@ class ReadyListener implements PropertyChangeListener {
         $this->changeStateWhenAllPlayersAreReady();
 
         if ($this->readyPlayers == Constants::$CONFIGURED_HUMAN_PLAYERS) {
-            $this->stateUpdater->updateCurrentState(GameStateLoader::loadWaitingForAutomaticActionState(), 'place_ships');
+            $this->stateUpdater->updateCurrentState($this->stateUpdater->getWaitingForAutomaticActionState(), 'place_ships');
         }
     }
 
     private function changeStateWhenAllPlayersAreReady(): void {
         if ($this->readyPlayers == Constants::MAX_PLAYERS) {
             if (Utils::getRandomPlayerNumber() === 1) {
-                $this->stateUpdater->updateCurrentState(GameStateLoader::loadCallingShotsState());
+                echo 'Random Calling shots - Human';
+                $this->stateUpdater->updateCurrentState($this->stateUpdater->getCallingShotsState());
             } else {
-                $this->stateUpdater->updateCurrentState(GameStateLoader::loadWaitingForAutomaticActionState(), 'call_shot');
+                echo 'Random Calling shots - Computer';
+                $this->stateUpdater->updateCurrentState($this->stateUpdater->getWaitingForAutomaticActionState(), 'call_shot');
             }
         }
     }
