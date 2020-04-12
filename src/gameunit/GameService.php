@@ -6,6 +6,6 @@ namespace Game\Battleship;
 
 interface GameService {
 
-    function makeShot(GameUnit $source, Location $location);
+    function makeShot(GameUnit $source, Location $location) : HitResult;
 
 }

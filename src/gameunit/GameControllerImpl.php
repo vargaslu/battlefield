@@ -6,8 +6,10 @@ namespace Game\Battleship;
 require_once __DIR__.'/../../api/game/GameController.php';
 require_once __DIR__.'/../listeners/ReadyListener.php';
 require_once __DIR__.'/../states/CallingShotsState.php';
+require_once __DIR__.'/../states/PlacingShipsState.php';
 require_once __DIR__.'/../states/StateUpdater.php';
 require_once __DIR__.'/../states/WaitingForStartState.php';
+require_once __DIR__.'/../states/WaitingForAutomaticActionState.php';
 require_once 'GameUnit.php';
 require_once 'GameServiceImpl.php';
 require_once 'PlayerEmulator.php';
@@ -35,13 +37,7 @@ class GameControllerImpl implements GameController, StateUpdater {
     private $callingShotsState;
 
     public function __construct() {
-        $this->readyListener = new ReadyListener($this);
-        $this->waitingForStartState = new WaitingForStartState();
-        $this->placingShipsState = new PlacingShipsState();
-        $this->waitingForAutomaticActionState = new WaitingForAutomaticActionState();
-        $this->callingShotsState = new CallingShotsState();
-
-        $this->updateCurrentState($this->waitingForStartState);
+        $this->initialize();
     }
 
     public function start() {
@@ -49,6 +45,7 @@ class GameControllerImpl implements GameController, StateUpdater {
         $this->humanGameUnit = new GameUnit($gameService);
 
         $this->placingShipsState->addPropertyChangeListener($this->readyListener);
+        $this->callingShotsState->addPropertyChangeListener($this->readyListener);
 
         $this->configureComputerBasedOpponent($gameService);
 
@@ -69,9 +66,9 @@ class GameControllerImpl implements GameController, StateUpdater {
         $this->gameState->placingShips($this->humanGameUnit, $ship);
     }
 
-    public function callShot($jsonData) {
+    public function callShot($jsonData) : HitResult {
         $location = Location::fromJson($jsonData);
-        $this->gameState->callingShot($location);
+        return $this->gameState->callingShot($this->humanGameUnit, $location);
     }
 
     private function configureComputerBasedOpponent(GameServiceImpl $gameService): void {
@@ -98,5 +95,19 @@ class GameControllerImpl implements GameController, StateUpdater {
 
     public function getCallingShotsState() : CallingShotsState {
         return $this->callingShotsState;
+    }
+
+    private function initialize() {
+        $this->readyListener = new ReadyListener($this);
+        $this->waitingForStartState = new WaitingForStartState();
+        $this->placingShipsState = new PlacingShipsState();
+        $this->waitingForAutomaticActionState = new WaitingForAutomaticActionState();
+        $this->callingShotsState = new CallingShotsState();
+
+        $this->updateCurrentState($this->waitingForStartState);
+    }
+
+    public function reset(): void {
+        $this->initialize();
     }
 }

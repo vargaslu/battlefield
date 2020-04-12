@@ -11,7 +11,7 @@ class WaitingForStartState implements GameState {
         throw new GameStateException('Not placing ships yet - current state is: Waiting for start');
     }
 
-    function callingShot(Location $location = null) {
+    function callingShot(GameUnit $current = null,Location $location = null) {
         throw new GameStateException('Not calling shots yet - current state is: Waiting for start');
     }
 

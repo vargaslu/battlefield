@@ -15,7 +15,6 @@ use Game\Battleship\Context;
 use Game\Battleship\ExceptionMessageResult;
 use Game\Battleship\SuccessfulMessageResult;
 
-use Game\Battleship\GameStateLoader;
 
 ini_set('xdebug.var_display_max_depth', '10');
 ini_set('xdebug.var_display_max_children', '256');
@@ -87,9 +86,7 @@ function tryPlaceShips($data, $gameController) {
 
 function tryCallShot($data, $gameController) {
     try {
-        $gameController->callShot($data);
-        return new SuccessfulMessageResult('Game started successfully');
-        // TODO: Actually it returns HitResult
+        return $gameController->callShot($data);
     } catch (Exception $exception) {
         return new ExceptionMessageResult($exception->getMessage());
     }

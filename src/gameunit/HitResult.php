@@ -3,8 +3,9 @@
 
 namespace Game\Battleship;
 
+use JsonSerializable;
 
-final class HitResult {
+final class HitResult implements JsonSerializable {
 
     private $shipName;
 
@@ -27,7 +28,11 @@ final class HitResult {
         return $this->shipName;
     }
 
-    public function isHit() {
+    public function isHit() : bool {
         return $this->isHit;
+    }
+
+    public function jsonSerialize() {
+        return [ 'is_hit' => $this->isHit(), 'ship_name' => $this->getShipName() ];
     }
 }

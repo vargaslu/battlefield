@@ -42,7 +42,7 @@ class PlacingShipsState implements GameState {
         return (array_search($shipName, $shipArray)) !== false;
     }
 
-    function callingShot(Location $location) {
+    function callingShot(GameUnit $current, Location $location) {
         throw new GameStateException('Not calling shots yet');
     }
 

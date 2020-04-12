@@ -78,6 +78,6 @@ class PlacingShipsStateTest extends TestCase {
     public function testExceptionWhenTryingToCallShotsWhilePlacingShips() {
         $this->expectException(GameStateException::class);
 
-        $this->placingShipsState->callingShot(new Location('A', 1));
+        $this->placingShipsState->callingShot($this->current, new Location('A', 1));
     }
 }

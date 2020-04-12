@@ -10,6 +10,8 @@ final class Constants {
 
     public const POSITIONED_SHIPS = 'positioned_ships';
 
+    public const CALLED_SHOT = 'called_shot';
+
     public static $DEFAULT_SHIPS_TO_PLACE = [Carrier::NAME,
                                              Destroyer::NAME,
                                              Submarine::NAME,

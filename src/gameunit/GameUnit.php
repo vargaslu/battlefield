@@ -48,13 +48,14 @@ class GameUnit implements PropertyChangeListener {
         $ship->addPropertyChangeListener($this);
     }
 
-    public function makeShot(Location $location) {
+    public function makeShot(Location $location) : HitResult{
         $hitResult = $this->gameService->makeShot($this, $location);
         if ($hitResult->isHit()) {
             $this->target->place(Peg::createRedPeg($location));
         } else {
             $this->target->place(Peg::createWhitePeg($location));
         }
+        return $hitResult;
     }
 
     public function receiveShot(Location $location) {
