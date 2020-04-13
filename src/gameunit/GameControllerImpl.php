@@ -43,6 +43,7 @@ class GameControllerImpl implements GameController, StateUpdater {
     public function start() {
         $gameService = new GameServiceImpl();
         $this->humanGameUnit = new GameUnit($gameService);
+        $gameService->setFirstGameUnit($this->humanGameUnit);
 
         $this->placingShipsState->addPropertyChangeListener($this->readyListener);
         $this->callingShotsState->addPropertyChangeListener($this->readyListener);
@@ -74,10 +75,12 @@ class GameControllerImpl implements GameController, StateUpdater {
     private function configureComputerBasedOpponent(GameServiceImpl $gameService): void {
         if (Constants::$CONFIGURED_HUMAN_PLAYERS == 1) {
             $computerGameUnit = new GameUnit($gameService);
-            $this->playerEmulator = new PlayerEmulator($computerGameUnit);
-            $this->playerEmulator->addPropertyChangeListener($this->readyListener);
+            $gameService->setSecondGameUnit($computerGameUnit);
 
-            $this->waitingForAutomaticActionState->setPlayerEmulator($this->playerEmulator);
+            $playerEmulator = new PlayerEmulator($computerGameUnit);
+            $playerEmulator->addPropertyChangeListener($this->readyListener);
+
+            $this->waitingForAutomaticActionState->setPlayerEmulator($playerEmulator);
         }
     }
 

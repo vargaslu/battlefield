@@ -49,6 +49,7 @@ class GameUnit implements PropertyChangeListener {
     }
 
     public function makeShot(Location $location) : HitResult{
+        // TODO: Verify if target was already set
         $hitResult = $this->gameService->makeShot($this, $location);
         if ($hitResult->isHit()) {
             $this->target->place(Peg::createRedPeg($location));

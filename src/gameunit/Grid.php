@@ -4,6 +4,7 @@ namespace Game\Battleship;
 
 require_once __DIR__.'/../positioning/Location.php';
 require_once __DIR__.'/../exceptions/LocationException.php';
+require_once __DIR__.'/../exceptions/LocationOutOfBoundsException.php';
 
 use Game\Battleship\LocationException;
 use ArrayObject;
@@ -39,7 +40,7 @@ class Grid {
         $itemName = $item->getName();
 
         if ($this->isLocationOutsideGrid($location)) {
-            throw new LocationException("Item: " . $itemName ." is out of board");
+            throw new LocationOutOfBoundsException($location, $itemName);
         }
 
         if ($this->isLocationOccupied($location)) {
@@ -69,7 +70,7 @@ class Grid {
 
     public function getItem(Location $location) {
         if ($this->isLocationOutsideGrid($location)) {
-            throw new LocationOutOfBoundsException();
+            throw new LocationOutOfBoundsException($location);
         }
 
         return $this->getItemFromLocation($location);

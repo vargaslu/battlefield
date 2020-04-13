@@ -15,7 +15,13 @@ class Target {
     }
 
     function place(Peg $peg) {
-        $this->grid->put($peg, $peg->getLocation());
+        try {
+            $this->grid->put($peg, $peg->getLocation());
+        } catch (LocationException $exception) {
+            throw new LocationException("Already used position");
+        } catch (LocationOutOfBoundsException $exception) {
+            throw new LocationOutOfBoundsException($peg->getLocation());
+        }
     }
 
     function peek(Location $location) {

@@ -7,6 +7,7 @@ require_once __DIR__.'/../../src/exceptions/LocationException.php';
 require_once __DIR__.'/../items/FakeShip.php';
 
 use Game\Battleship\Grid;
+use Game\Battleship\LocationOutOfBoundsException;
 use Game\Battleship\Ocean;
 use Game\Battleship\Location;
 use Game\Battleship\Direction;
@@ -24,7 +25,7 @@ class OceanTest extends TestCase {
     }
 
     public function testExceptionWhenPartOfShipIsPlacedOutsideGridHorizontal() {
-        $this->expectException(LocationException::class);
+        $this->expectException(LocationOutOfBoundsException::class);
 
         $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new Location('A', 2), Direction::HORIZONTAL);
 
@@ -33,7 +34,7 @@ class OceanTest extends TestCase {
     }
 
     public function testExceptionWhenPartOfShipIsPlacedOutsideGridVertical() {
-        $this->expectException(LocationException::class);
+        $this->expectException(LocationOutOfBoundsException::class);
 
         $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new Location('B', 1), Direction::VERTICAL);
 

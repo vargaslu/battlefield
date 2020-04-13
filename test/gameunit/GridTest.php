@@ -41,7 +41,7 @@ class GridTest extends TestCase {
     }
 
     public function testExceptionWhenItemIsOutsideOfTheGrid() {
-        $this->expectException(LocationException::class);
+        $this->expectException(LocationOutOfBoundsException::class);
         $grid = new Grid();
         $grid->put($this->item1, new Location("A", 5));
     }
