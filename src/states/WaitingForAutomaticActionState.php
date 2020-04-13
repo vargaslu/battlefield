@@ -29,7 +29,7 @@ class WaitingForAutomaticActionState implements GameState {
                 $this->playerEmulator->placeShips();
                 break;
             case 'call_shot':
-                // TODO: decide shot location
+                $this->playerEmulator->makeShot();
                 break;
         }
     }

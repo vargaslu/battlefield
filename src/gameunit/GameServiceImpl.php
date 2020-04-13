@@ -25,7 +25,12 @@ class GameServiceImpl implements GameService {
         $this->secondGameUnit = $secondGameUnit;
     }
 
-    function makeShot(GameUnit $source, Location $location) : HitResult{
-        return $this->secondGameUnit->receiveShot($location);
+    function makeShot(GameUnit $source, Location $location) : HitResult {
+        //var_dump($this->firstGameUnit);
+        //var_dump($this->secondGameUnit);
+        if ($source === $this->firstGameUnit) {
+            return $this->secondGameUnit->receiveShot($location);
+        }
+        return $this->firstGameUnit->receiveShot($location);
     }
 }

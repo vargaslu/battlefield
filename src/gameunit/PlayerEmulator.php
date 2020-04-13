@@ -32,13 +32,13 @@ class PlayerEmulator {
 
     function placeShips() {
         foreach ($this->shipsToPlace as $shipName) {
-            $this->searchForLocation($shipName);
+            $this->searchForShipLocation($shipName);
         }
 
         $this->listener->fireUpdate(Constants::POSITIONED_SHIPS, ReadyListener::READY, true);
     }
 
-    private function searchForLocation($shipName) {
+    private function searchForShipLocation($shipName) {
         do {
             try {
                 $shipFactory = new ShipFactory($shipName);
@@ -48,7 +48,22 @@ class PlayerEmulator {
                 $this->gameUnit->placeShip($ship);
                 break;
             } catch (Exception $exception) {
+                error_log($exception->getMessage());
             }
         } while (0);
+    }
+
+    function makeShot() {
+        do {
+            try {
+                $location = $this->gameUtils->getRandomLocation();
+                $this->gameUnit->makeShot($location);
+                break;
+            } catch (Exception $exception) {
+                error_log($exception->getMessage());
+            }
+        } while (0);
+
+        $this->listener->fireUpdate(Constants::CALLED_SHOT, ReadyListener::READY, true);
     }
 }

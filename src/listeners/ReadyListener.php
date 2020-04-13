@@ -13,8 +13,11 @@ class ReadyListener implements PropertyChangeListener {
 
     private $readyPlayers;
 
+    private $playerNumber;
+
     public function __construct(StateUpdater $stateUpdater) {
         $this->stateUpdater = $stateUpdater;
+        $this->playerNumber = 0;
     }
 
     public function fireUpdate($key, $property, $value) {
@@ -27,6 +30,7 @@ class ReadyListener implements PropertyChangeListener {
                 $this->handlePositionShipsReady();
                 break;
             case Constants::CALLED_SHOT:
+                $this->handleCallingShots();
                 break;
         }
     }
@@ -43,12 +47,18 @@ class ReadyListener implements PropertyChangeListener {
 
     private function changeStateWhenAllPlayersAreReady(): void {
         if ($this->readyPlayers == Constants::MAX_PLAYERS) {
-            //if (Utils::getRandomPlayerNumber() === 1) {
-            if (true) {
-                $this->stateUpdater->updateCurrentState($this->stateUpdater->getCallingShotsState());
-            } else {
-                $this->stateUpdater->updateCurrentState($this->stateUpdater->getWaitingForAutomaticActionState(), 'call_shot');
-            }
+            $this->playerNumber = Utils::getRandomPlayerNumber();
+            $this->handleCallingShots();
+        }
+    }
+
+    private function handleCallingShots() {
+        if ($this->playerNumber === 1) {
+            $this->playerNumber = 2;
+            $this->stateUpdater->updateCurrentState($this->stateUpdater->getCallingShotsState());
+        } else {
+            $this->playerNumber = 1;
+            $this->stateUpdater->updateCurrentState($this->stateUpdater->getWaitingForAutomaticActionState(), 'call_shot');
         }
     }
 
