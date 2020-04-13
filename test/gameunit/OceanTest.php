@@ -3,6 +3,7 @@
 namespace Tests\Game\Battleship;
 
 require_once __DIR__.'/../../src/gameunit/Ocean.php';
+require_once __DIR__.'/../../src/positioning/ShipLocation.php';
 require_once __DIR__.'/../../src/exceptions/LocationException.php';
 require_once __DIR__.'/../items/FakeShip.php';
 
@@ -10,6 +11,7 @@ use Game\Battleship\Grid;
 use Game\Battleship\LocationOutOfBoundsException;
 use Game\Battleship\Ocean;
 use Game\Battleship\Location;
+use Game\Battleship\ShipLocation;
 use Game\Battleship\Direction;
 use Game\Battleship\LocationException;
 use PHPUnit\Framework\TestCase;
@@ -27,26 +29,30 @@ class OceanTest extends TestCase {
     public function testExceptionWhenPartOfShipIsPlacedOutsideGridHorizontal() {
         $this->expectException(LocationOutOfBoundsException::class);
 
-        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new Location('A', 2), Direction::HORIZONTAL);
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new ShipLocation('A', 2, Direction::HORIZONTAL));
 
         $ocean = new Ocean(new Grid());
         $ocean->place($fakeShip1);
     }
 
     public function testExceptionWhenPartOfShipIsPlacedOutsideGridVertical() {
-        $this->expectException(LocationOutOfBoundsException::class);
-
-        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new Location('B', 1), Direction::VERTICAL);
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new ShipLocation('B', 1, Direction::VERTICAL));
 
         $ocean = new Ocean(new Grid());
-        $ocean->place($fakeShip1);
+        try {
+            $ocean->place($fakeShip1);
+        } catch (LocationOutOfBoundsException $exception) {
+            self::assertEquals('', $ocean->peek(new Location('B', 1)));
+            return;
+        }
+        self::fail('Should have thrown an exception');
     }
 
     public function testExceptionWhenTwoShipsCollide() {
         $this->expectException(LocationException::class);
 
-        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new Location('B', 1), Direction::HORIZONTAL);
-        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new Location('A', 2), Direction::VERTICAL);
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new ShipLocation('B', 1, Direction::HORIZONTAL));
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new ShipLocation('A', 2, Direction::VERTICAL));
 
         $ocean = new Ocean(new Grid());
         $ocean->place($fakeShip1);
@@ -54,7 +60,7 @@ class OceanTest extends TestCase {
     }
 
     public function testPeekFromGrid() {
-        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new Location('A', 1), Direction::HORIZONTAL);
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 5, new ShipLocation('A', 1, Direction::HORIZONTAL));
 
         $ocean = new Ocean(new Grid());
         $ocean->place($fakeShip1);

@@ -21,14 +21,11 @@ abstract class Ship implements Item, JsonSerializable {
 
     private $location;
 
-    private $direction;
-
-    protected function __construct($name, $size, Location $location, $direction) {
+    protected function __construct($name, $size, ShipLocation $location = null) {
         $this->name = $name;
         $this->size = $size;
         $this->lives = $size;
         $this->location = $location;
-        $this->direction = $direction;
         $this->listeners = [];
     }
 
@@ -59,12 +56,8 @@ abstract class Ship implements Item, JsonSerializable {
         $this->listeners[] = $listener;
     }
 
-    final function getLocation(): Location {
+    final function getLocation(): ShipLocation {
         return $this->location;
-    }
-
-    final function getDirection() {
-        return $this->direction;
     }
 
     private function notifyShipIsSankToListeners() {

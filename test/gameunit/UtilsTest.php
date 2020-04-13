@@ -12,7 +12,7 @@ use Game\Battleship\Grid;
 use Game\Battleship\Location;
 use PHPUnit\Framework\TestCase;
 
-class GameUtilsTest extends TestCase {
+class UtilsTest extends TestCase {
 
     public function testRandomLocation() {
         $location = Utils::getRandomLocation();
@@ -20,16 +20,4 @@ class GameUtilsTest extends TestCase {
         self::assertTrue(strpos('ABCDEFGHIJKLMNOPQRSTUVWXYZ', $location->getLetter()) !== false);
     }
 
-    public function testMockRandomLocation() {
-        $gameUtilsMocked = $this->createStub(Utils::class);
-        $gameUtilsMocked->method('getRandomDirection')
-                        ->willReturn(Direction::VERTICAL);
-        $gameUtilsMocked->method('getRandomLocation')
-                        ->willReturn(new Location('D', 4));
-
-        $location = $gameUtilsMocked->getRandomLocation();
-        self::assertEquals(1, $gameUtilsMocked->getRandomDirection());
-        self::assertEquals('D', $location->getLetter());
-        self::assertEquals(4, $location->getColumn());
-    }
 }

@@ -14,6 +14,7 @@ use Game\Battleship\Grid;
 use Game\Battleship\HitResult;
 use Game\Battleship\Location;
 use Game\Battleship\NotAllowedShipException;
+use Game\Battleship\ShipLocation;
 use PHPUnit\Framework\TestCase;
 
 class GameUnitTest extends TestCase {
@@ -30,8 +31,8 @@ class GameUnitTest extends TestCase {
     }
 
     public function testPositionSuccessfully() {
-        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new Location('A', 1), Direction::VERTICAL);
-        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new Location('A', 2), Direction::HORIZONTAL);
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new ShipLocation('A', 1, Direction::VERTICAL));
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new ShipLocation('A', 2, Direction::HORIZONTAL));
 
         $gameUnit = new GameUnit($this->mockedGameService);
         $gameUnit->placeShip($fakeShip1);
@@ -41,8 +42,8 @@ class GameUnitTest extends TestCase {
     }
 
     public function testExceptionWhenPlacingSameShip() {
-        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new Location('A', 1), Direction::VERTICAL);
-        $fakeShip2 = new FakeShip(self::FAKE_SHIP1, 2, new Location('A', 2), Direction::HORIZONTAL);
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new ShipLocation('A', 1, Direction::VERTICAL));
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP1, 2, new ShipLocation('A', 2, Direction::HORIZONTAL));
 
         $gameUnit = new GameUnit($this->mockedGameService);
         try {
@@ -57,7 +58,7 @@ class GameUnitTest extends TestCase {
     }
 
     public function testVerifyShipWasHit() {
-        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new Location('B', 2), Direction::VERTICAL);
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new ShipLocation('B', 2, Direction::VERTICAL));
 
         $gameUnit = new GameUnit($this->mockedGameService);
         $gameUnit->placeShip($fakeShip1);
@@ -68,7 +69,7 @@ class GameUnitTest extends TestCase {
     }
 
     public function testVerifyShipWasNotHit() {
-        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new Location('B', 2), Direction::VERTICAL);
+        $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new ShipLocation('B', 2, Direction::VERTICAL));
 
         $gameUnit = new GameUnit($this->mockedGameService);
         $gameUnit->placeShip($fakeShip1);
@@ -79,7 +80,7 @@ class GameUnitTest extends TestCase {
     }
 
     public function testVerifyShipIsDestroyed() {
-        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new Location('B', 2), Direction::VERTICAL);
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new ShipLocation('B', 2, Direction::VERTICAL));
 
         $gameUnit = new GameUnit($this->mockedGameService);
         $gameUnit->placeShip($fakeShip2);
@@ -119,7 +120,7 @@ class GameUnitTest extends TestCase {
     }
 
     public function testIsLocationFree() {
-        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new Location('B', 2), Direction::VERTICAL);
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new ShipLocation('B', 2, Direction::VERTICAL));
         $gameUnit = new GameUnit($this->mockedGameService);
         $gameUnit->placeShip($fakeShip2);
 
@@ -127,7 +128,7 @@ class GameUnitTest extends TestCase {
     }
 
     public function testIsLocationOccupied() {
-        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new Location('B', 2), Direction::VERTICAL);
+        $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new ShipLocation('B', 2, Direction::VERTICAL));
         $gameUnit = new GameUnit($this->mockedGameService);
         $gameUnit->placeShip($fakeShip2);
 

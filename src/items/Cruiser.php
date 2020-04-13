@@ -9,11 +9,15 @@ final class Cruiser extends Ship {
 
     public const NAME = 'Cruiser';
 
-    private function __construct(Location $location, $direction) {
-        parent::__construct(self::NAME, 3, $location, $direction);
+    private function __construct(ShipLocation $location) {
+        parent::__construct(self::NAME, 3, $location);
     }
 
-    public static function build(Location $location, $direction) {
-        return new Cruiser($location, $direction);
+    public static function build(ShipLocation $location) {
+        return new Cruiser($location);
+    }
+
+    public static function buildWithoutLocation() {
+        return new Cruiser();
     }
 }

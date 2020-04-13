@@ -4,7 +4,7 @@
 namespace Game\Battleship;
 
 
-final class Location {
+class Location {
 
     public const ASCII_A = 65;
 

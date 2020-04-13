@@ -17,6 +17,7 @@ use Game\Battleship\GameService;
 use Game\Battleship\GameStateException;
 use Game\Battleship\GameUnit;
 use Game\Battleship\Location;
+use Game\Battleship\ShipLocation;
 use Game\Battleship\NotAllowedShipException;
 use Game\Battleship\PlacingShipsState;
 use Game\Battleship\PropertyChangeListener;
@@ -42,8 +43,8 @@ class PlacingShipsStateTest extends TestCase {
 
     public function testPlaceShips() {
         $this->placingShipsState->placingShips($this->current,
-                                               Carrier::build(new Location('A', 1),
-                                                              Direction::VERTICAL));
+                                               Carrier::build(new ShipLocation('A', 1,
+                                                              Direction::VERTICAL)));
         self::assertEquals(1, $this->current->availableShips());
     }
 
@@ -54,21 +55,21 @@ class PlacingShipsStateTest extends TestCase {
         $this->placingShipsState->addPropertyChangeListener($listener);
 
         $this->placingShipsState->placingShips($this->current,
-                                               Carrier::build(new Location('A', 1),
-                                                              Direction::VERTICAL));
+                                               Carrier::build(new ShipLocation('A', 1,
+                                                              Direction::VERTICAL)));
         $this->placingShipsState->placingShips($this->current,
-                                               Destroyer::build(new Location('A', 2),
-                                                                Direction::VERTICAL));
+                                               Destroyer::build(new ShipLocation('A', 2,
+                                                                Direction::VERTICAL)));
     }
 
     public function testExceptionCannotPlaceUnwantedShip() {
         try {
             $this->placingShipsState->placingShips($this->current,
-                                                   Carrier::build(new Location('A', 1),
-                                                                  Direction::VERTICAL));
+                                                   Carrier::build(new ShipLocation('A', 1,
+                                                                  Direction::VERTICAL)));
             $this->placingShipsState->placingShips($this->current,
-                                                   Submarine::build(new Location('A', 2),
-                                                                    Direction::VERTICAL));
+                                                   Submarine::build(new ShipLocation('A', 2,
+                                                                    Direction::VERTICAL)));
         } catch (NotAllowedShipException $exception) {
             self::assertEquals('Ship Submarine not allowed', $exception->getMessage());
             self::assertEquals(1, $this->current->availableShips());

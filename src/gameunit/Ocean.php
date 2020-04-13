@@ -17,27 +17,29 @@ class Ocean {
     }
 
     function place(Ship $ship) {
-        $nextLocation = Location::of($ship->getLocation());
+        $this->validateShipLocationFromShip($ship);
+
+        $locationCopy = clone $ship->getLocation();
         for ($size = 0; $size < $ship->getSize(); $size++) {
-            $this->grid->put($ship, $nextLocation);
-            $nextLocation = $this->calculateNextLocation($nextLocation, $ship->getDirection());
+            $this->grid->put($ship, $locationCopy);
+            $locationCopy->increase(1);
         }
+    }
+
+    private function validateShipLocationFromShip(Ship $ship) {
+        $locationCopy = clone $ship->getLocation();
+        $locationCopy->increase($ship->getSize() - 1);
+        if ($this->isLocationOutsideGrid($locationCopy)) {
+            throw new LocationOutOfBoundsException($ship->getLocation(), $ship->getName());
+        }
+    }
+
+    private function isLocationOutsideGrid(ShipLocation $location) {
+        return ord($location->getLetter()) > (Grid::getSize() + Location::ASCII_DECIMALS_GAP) ||
+            $location->getColumn() > Grid::getSize();
     }
 
     function peek(Location $location) {
         return $this->grid->getItem($location);
-    }
-
-    private function calculateNextLocation(Location $location, $direction) {
-        $newLocation = Location::of($location);
-
-        if ($direction == Direction::HORIZONTAL) {
-            $newLocation->increaseColumn();
-        } else if ($direction == Direction::VERTICAL){
-            $newLocation->increaseLetter();
-        } else {
-            throw new Exception("Invalid Position value");
-        }
-        return $newLocation;
     }
 }

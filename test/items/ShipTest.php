@@ -6,8 +6,10 @@ require_once __DIR__.'/../../src/listeners/PropertyChangeListener.php';
 require_once __DIR__.'/../../src/positioning/Location.php';
 require_once 'FakeShip.php';
 
+use Game\Battleship\Direction;
 use Game\Battleship\PropertyChangeListener;
 use Game\Battleship\Location;
+use Game\Battleship\ShipLocation;
 use PHPUnit\Framework\TestCase;
 
 class ShipTest extends TestCase {
@@ -15,7 +17,7 @@ class ShipTest extends TestCase {
     private $defaultLocation;
 
     protected function setUp(): void {
-        $this->defaultLocation = new Location('A', '1');
+        $this->defaultLocation = new ShipLocation('A', '1', Direction::VERTICAL);
     }
 
     public function testShipCreation() {
@@ -23,7 +25,10 @@ class ShipTest extends TestCase {
         self::assertEquals("FakeShip", $fakeShip->getName());
         self::assertEquals(2, $fakeShip->getSize());
         self::assertEquals(true, $fakeShip->isAlive());
-        self::assertEquals(true, $fakeShip->getLocation() == new Location('A', '1'));
+        self::assertEquals(true,
+                           $fakeShip->getLocation() == new ShipLocation('A',
+                                                                        '1',
+                                                                        Direction::VERTICAL));
     }
 
     public function testHitToSink() {

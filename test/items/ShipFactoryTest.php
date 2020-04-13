@@ -16,7 +16,7 @@ use Game\Battleship\Carrier;
 use Game\Battleship\Cruiser;
 use Game\Battleship\Destroyer;
 use Game\Battleship\Direction;
-use Game\Battleship\Location;
+use Game\Battleship\ShipLocation;
 use Game\Battleship\ShipFactory;
 use Game\Battleship\Submarine;
 use PHPUnit\Framework\TestCase;
@@ -26,36 +26,36 @@ class ShipFactoryTest extends TestCase {
     private $location;
 
     protected function setUp(): void {
-        $this->location = new Location('A', 3);
+        $this->location = new ShipLocation('A', 3, Direction::VERTICAL);
     }
 
     public function testCarrierCreation() {
         $factory = new ShipFactory(Carrier::NAME);
-        $ship = $factory->buildWithLocation($this->location, Direction::VERTICAL);
+        $ship = $factory->buildWithLocation($this->location);
         self::assertTrue($ship instanceof Carrier);
     }
 
     public function testCruiserCreation() {
         $factory = new ShipFactory(Cruiser::NAME);
-        $ship = $factory->buildWithLocation($this->location, Direction::VERTICAL);
+        $ship = $factory->buildWithLocation($this->location);
         self::assertTrue($ship instanceof Cruiser);
     }
 
     public function testDestroyerCreation() {
         $factory = new ShipFactory(Destroyer::NAME);
-        $ship = $factory->buildWithLocation($this->location, Direction::VERTICAL);
+        $ship = $factory->buildWithLocation($this->location);
         self::assertTrue($ship instanceof Destroyer);
     }
 
     public function testBattleshipCreation() {
         $factory = new ShipFactory(Battleship::NAME);
-        $ship = $factory->buildWithLocation($this->location, Direction::VERTICAL);
+        $ship = $factory->buildWithLocation($this->location);
         self::assertTrue($ship instanceof Battleship);
     }
 
     public function testSubmarineCreation() {
         $factory = new ShipFactory(Submarine::NAME);
-        $ship = $factory->buildWithLocation($this->location, Direction::VERTICAL);
+        $ship = $factory->buildWithLocation($this->location);
         self::assertTrue($ship instanceof Submarine);
     }
 
@@ -63,6 +63,6 @@ class ShipFactoryTest extends TestCase {
         $this->expectException(\InvalidArgumentException::class);
 
         $factory = new ShipFactory('Fake');
-        $factory->buildWithLocation($this->location, Direction::VERTICAL);
+        $factory->buildWithLocation($this->location);
     }
 }
