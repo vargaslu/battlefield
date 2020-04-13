@@ -24,6 +24,8 @@ class GameUnit implements PropertyChangeListener {
 
     private $placedShips;
 
+    private $originalPlacedShips;
+
     private $gameService;
 
     public function __construct(GameService $gameService) {
@@ -31,6 +33,7 @@ class GameUnit implements PropertyChangeListener {
         $this->ocean = new Ocean(new Grid());
         $this->target = new Target(new Grid());
         $this->placedShips = [];
+        $this->originalPlacedShips = [];
     }
 
     public function isLocationFree(Location $location) : bool {
@@ -46,6 +49,8 @@ class GameUnit implements PropertyChangeListener {
         $this->ocean->place($ship);
         $this->placedShips[$ship->getName()] = $ship;
         $ship->addPropertyChangeListener($this);
+
+        $this->originalPlacedShips = $this->placedShips;
     }
 
     public function makeShot(Location $location) : HitResult{
@@ -71,6 +76,10 @@ class GameUnit implements PropertyChangeListener {
 
     public function availableShips() {
         return sizeof($this->placedShips);
+    }
+
+    public function getPlacedShips(): array {
+        return $this->originalPlacedShips;
     }
 
     function fireUpdate($ship, $property, $value) {

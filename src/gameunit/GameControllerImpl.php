@@ -100,6 +100,13 @@ class GameControllerImpl implements GameController, StateUpdater {
         return $this->callingShotsState;
     }
 
+    public function getShipsState() {
+        if (isset($this->humanGameUnit)) {
+            return $this->humanGameUnit->getPlacedShips();
+        }
+        return [];
+    }
+
     private function initialize() {
         $this->readyListener = new ReadyListener($this);
         $this->waitingForStartState = new WaitingForStartState();

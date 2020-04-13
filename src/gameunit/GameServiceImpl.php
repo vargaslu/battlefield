@@ -14,7 +14,6 @@ class GameServiceImpl implements GameService {
     private $secondGameUnit;
 
     public function __construct() {
-
     }
 
     public function setFirstGameUnit(GameUnit $firstGameUnit): void {
@@ -26,11 +25,10 @@ class GameServiceImpl implements GameService {
     }
 
     function makeShot(GameUnit $source, Location $location) : HitResult {
-        //var_dump($this->firstGameUnit);
-        //var_dump($this->secondGameUnit);
+        $gameUnitToReceiveShot = $this->firstGameUnit;
         if ($source === $this->firstGameUnit) {
-            return $this->secondGameUnit->receiveShot($location);
+            $gameUnitToReceiveShot = $this->secondGameUnit;
         }
-        return $this->firstGameUnit->receiveShot($location);
+        return $gameUnitToReceiveShot->receiveShot($location);
     }
 }

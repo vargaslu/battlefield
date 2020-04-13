@@ -55,6 +55,9 @@ switch($action) {
         echo json_encode(tryCallShot($data, $gameController));
         $_SESSION['game_controller'] = serialize($gameController);
         break;
+    case "ships_status":
+        echo json_encode($gameController->getShipsState());
+        break;
     case "reset":
         unset($_SESSION['game_controller']);
         break;

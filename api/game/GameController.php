@@ -14,6 +14,8 @@ interface GameController {
 
     function getCurrentState() : GameState;
 
+    function getShipsState();
+
     function reset() : void;
 
 }

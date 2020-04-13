@@ -5,7 +5,9 @@ namespace Game\Battleship;
 
 require_once 'Item.php';
 
-abstract class Ship implements Item {
+use JsonSerializable;
+
+abstract class Ship implements Item, JsonSerializable {
 
     public const DESTROYED = 'destroyed';
 
@@ -70,5 +72,11 @@ abstract class Ship implements Item {
             $listener = $this->listeners[$i];
             $listener->fireUpdate($this->getName(), '', Ship::DESTROYED);
         }
+    }
+
+    public function jsonSerialize() {
+        $status = $this->isAlive() ? 'live' : 'destroyed';
+        $hitsReceived = $this->getSize() - $this->lives;
+        return [ 'name' => $this->getName(), 'status' => $status, 'hits_received' => $hitsReceived ];
     }
 }
