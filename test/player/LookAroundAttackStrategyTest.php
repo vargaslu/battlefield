@@ -2,13 +2,14 @@
 
 namespace Tests\Game\Battleship;
 
-require_once __DIR__ . '/../../src/gameunit/PlayerEmulator.php';
 require_once __DIR__ . '/../../src/gameunit/GameUnit.php';
 require_once __DIR__ . '/../../src/gameunit/Constants.php';
-require_once __DIR__ . '/../../src/gameunit/LookAroundAttackStrategy.php';
 require_once __DIR__ . '/../../src/gameunit/HitResult.php';
+require_once __DIR__ . '/../../src/player/PlayerEmulator.php';
+require_once __DIR__ . '/../../src/player/LookAroundAttackStrategy.php';
 require_once __DIR__ . '/../../src/positioning/Location.php';
-require_once 'FakeGameService.php';
+
+require_once __DIR__ . '/../gameunit/FakeGameService.php';
 require_once 'FakeLookAroundAttackStrategy.php';
 
 use Game\Battleship\Carrier;

@@ -5,6 +5,7 @@ namespace Game\Battleship;
 
 require_once __DIR__.'/../../api/game/GameController.php';
 require_once __DIR__.'/../listeners/ReadyListener.php';
+require_once __DIR__.'/../player/PlayerEmulator.php';
 require_once __DIR__.'/../positioning/ShipLocation.php';
 require_once __DIR__.'/../states/CallingShotsState.php';
 require_once __DIR__.'/../states/PlacingShipsState.php';
@@ -13,7 +14,6 @@ require_once __DIR__.'/../states/WaitingForStartState.php';
 require_once __DIR__.'/../states/WaitingForAutomaticActionState.php';
 require_once 'GameUnit.php';
 require_once 'GameServiceImpl.php';
-require_once 'PlayerEmulator.php';
 
 class GameControllerImpl implements GameController, StateUpdater {
 

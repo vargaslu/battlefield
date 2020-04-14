@@ -3,12 +3,11 @@
 
 namespace Game\Battleship;
 
-require_once __DIR__.'/../items/ShipFactory.php';
-require_once __DIR__.'/../listeners/ReadyListener.php';
-require_once __DIR__.'/../positioning/ShipLocation.php';
-require_once __DIR__.'/../states/GameState.php';
-
-require_once 'Utils.php';
+require_once __DIR__ . '/../gameunit/Utils.php';
+require_once __DIR__ . '/../items/ShipFactory.php';
+require_once __DIR__ . '/../listeners/ReadyListener.php';
+require_once __DIR__ . '/../positioning/ShipLocation.php';
+require_once __DIR__ . '/../states/GameState.php';
 require_once 'RandomAttackStrategy.php';
 
 use Exception;
