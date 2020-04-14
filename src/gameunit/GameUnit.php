@@ -41,6 +41,11 @@ class GameUnit implements PropertyChangeListener {
         return strcmp('', $peekResult) == 0;
     }
 
+    public function isTargetLocationMarked(Location $location) : bool {
+        $peekResult = $this->target->peek($location);
+        return strcmp('', $peekResult) != 0;
+    }
+
     public function placeShip(Ship $ship) {
         if (($key = array_search($ship->getName(), $this->placedShips)) !== false) {
             throw new NotAllowedShipException('Allowed quantity for ship ' . $ship->getName() . ' already used');

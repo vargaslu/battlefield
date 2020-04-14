@@ -9,12 +9,11 @@ require_once __DIR__.'/../positioning/ShipLocation.php';
 require_once __DIR__.'/../states/GameState.php';
 
 require_once 'Utils.php';
+require_once 'RandomAttackStrategy.php';
 
 use Exception;
 
 class PlayerEmulator {
-
-    private $gameUtils;
 
     private $shipsToPlace;
 
@@ -22,14 +21,12 @@ class PlayerEmulator {
 
     private $listener;
 
-    private $successfulHitLocation;
-
-    private $successfulHitShip;
+    private $attackStrategy;
 
     public function __construct(GameUnit $gameUnit) {
         $this->gameUnit = $gameUnit;
-        $this->gameUtils = new Utils();
         $this->shipsToPlace = Constants::$DEFAULT_SHIPS_TO_PLACE;
+        $this->attackStrategy = new RandomAttackStrategy($this->gameUnit);
     }
 
     final function addPropertyChangeListener(PropertyChangeListener $listener) {
@@ -50,9 +47,7 @@ class PlayerEmulator {
         while (true) {
             try {
                 $shipFactory = new ShipFactory($shipName);
-                $location = $this->getRandomLocation();
-                $direction = $this->getRandomDirection();
-                $shipLocation = new ShipLocation($location->getLetter(), $location->getColumn(), $direction);
+                $shipLocation = $this->getRandomShipLocation();
                 $ship = $shipFactory->buildWithLocation($shipLocation);
                 $this->gameUnit->placeShip($ship);
                 break;
@@ -71,41 +66,25 @@ class PlayerEmulator {
     }
 
     function makeShot() {
-        $tries = 0;
-        while (true) {
-            try {
-                $location = $this->calculateNextPossibleLocation();
-                $hitResult = $this->gameUnit->makeShot($location);
-                if ($hitResult->isHit()) {
-                    $this->successfulHitLocation = $location;
-                    $this->successfulHitShip = (new ShipFactory($hitResult->getShipName()))->buildWithoutLocation();
-                }
-                break;
-            } catch (Exception $exception) {
-                error_log($exception->getMessage());
-                if ($tries === $this->getMaxTries()) {
-                    throw new Exception('Unable to make shots');
-                }
-                $tries++;
-            }
-        }
+
+        $this->attackStrategy->makeShot();
 
         $this->listener->fireUpdate(Constants::CALLED_SHOT, ReadyListener::READY, true);
     }
 
-    private function calculateNextPossibleLocation() : Location {
-        if (isset($this->successfulHitLocation)) {
-            return $this->getRandomLocation();
-        } else {
-            return $this->getRandomLocation();
-        }
+    public function setAttackStrategy(AttackStrategy $attackStrategy) {
+        $this->attackStrategy = $attackStrategy;
     }
 
     protected function getRandomLocation() : Location {
         return Utils::getRandomLocation();
     }
 
-    protected function getRandomDirection() {
-        return Utils::getRandomDirection();
+    protected function getRandomShipLocation() {
+        return Utils::getRandomShipLocation();
+    }
+
+    protected function getGameUnit(): GameUnit {
+        return $this->gameUnit;
     }
 }

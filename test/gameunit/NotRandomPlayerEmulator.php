@@ -6,15 +6,15 @@ namespace Tests\Game\Battleship;
 use Game\Battleship\GameUnit;
 use Game\Battleship\Location;
 use Game\Battleship\PlayerEmulator;
+use Game\Battleship\ShipLocation;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\TestCase;
 
 
 class NotRandomPlayerEmulator extends PlayerEmulator {
 
     private $locations;
 
-    private $directions;
+    private $shipLocations;
 
     private $allowOriginalRandomCalculation;
 
@@ -27,25 +27,25 @@ class NotRandomPlayerEmulator extends PlayerEmulator {
         $this->locations = $locations;
     }
 
-    public function setDesiredDirections($directions) {
-        $this->directions = $directions;
+    public function setDesiredShipLocations($shipLocations) {
+        $this->shipLocations = $shipLocations;
     }
 
     public function disableOriginalRandomCalculations() {
         $this->allowOriginalRandomCalculation = false;
     }
 
-    protected function getRandomDirection() {
+    protected function getRandomShipLocation() : ShipLocation {
         if ($this->allowOriginalRandomCalculation) {
-            return parent::getRandomDirection();
+            return parent::getRandomShipLocation();
         }
-        if (sizeof($this->directions) === 0) {
-            Assert::fail('A configured Direction is missing');
+        if (sizeof($this->shipLocations) === 0) {
+            Assert::fail('A configured ShipLocation is missing');
         }
-        $direction = $this->directions[0];
-        unset($this->directions[0]);
-        $this->directions = array_values($this->directions);
-        return $direction;
+        $shipLocation = $this->shipLocations[0];
+        unset($this->shipLocations[0]);
+        $this->shipLocations = array_values($this->shipLocations);
+        return $shipLocation;
     }
 
     protected function getRandomLocation(): Location {
@@ -66,5 +66,9 @@ class NotRandomPlayerEmulator extends PlayerEmulator {
             return parent::getMaxTries();
         }
         return 1;
+    }
+
+    public function verifyShot(Location $location) {
+        return $this->getGameUnit()->isTargetLocationMarked($location);
     }
 }

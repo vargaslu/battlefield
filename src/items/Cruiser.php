@@ -9,8 +9,10 @@ final class Cruiser extends Ship {
 
     public const NAME = 'Cruiser';
 
+    public const SIZE = 3;
+
     private function __construct(ShipLocation $location) {
-        parent::__construct(self::NAME, 3, $location);
+        parent::__construct(self::NAME, self::SIZE, $location);
     }
 
     public static function build(ShipLocation $location) {

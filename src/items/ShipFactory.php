@@ -47,6 +47,23 @@ final class ShipFactory {
         }
     }
 
+    public static function getSize($shipName) : int {
+        switch ($shipName) {
+            case strtoupper(Carrier::NAME):
+                return Carrier::SIZE;
+            case strtoupper(Battleship::NAME):
+                return Battleship::SIZE;
+            case strtoupper(Destroyer::NAME):
+                return Destroyer::SIZE;
+            case strtoupper(Submarine::NAME):
+                return Submarine::SIZE;
+            case strtoupper(Cruiser::NAME):
+                return Cruiser::SIZE;
+            default:
+                throw new InvalidArgumentException('Ship name ' . $shipName . ' is not valid');
+        }
+    }
+
     public static function fromJson($json) : Ship {
         $shipFactory = new ShipFactory($json['name']);
         return $shipFactory->buildWithLocation(ShipLocation::fromJson($json));
