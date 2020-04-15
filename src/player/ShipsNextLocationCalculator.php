@@ -31,8 +31,8 @@ class ShipsNextLocationCalculator {
     }
 
     public function createCalculations($shipName, Location $foundLocation, $size) {
-        if (!array_key_exists($shipName, $this->shipsLocationQueue)) {
-            $this->shipsLives[$shipName] = $size;
+        if (!$this->existsInQueue($shipName)) {
+            $this->shipsLives[$shipName] = $size - 1;
             $this->shipsLocationQueue[$shipName] = [$foundLocation];
             $this->currentIndex = 1;
             $this->fillArrayWithAroundLocations($foundLocation);
@@ -85,11 +85,23 @@ class ShipsNextLocationCalculator {
         array_push($firstShipValues, $newLocation);
     }
 
-    public function markHitToShip($shipName) {
-        $this->shipsLives[$shipName]--;
+    public function hitShip($shipName) {
+        if ($this->existsInQueue($shipName)) {
+            $this->shipsLives[$shipName]--;
+
+            $this->recalculateNextPossibleLocations();
+
+            $this->currentIndex++;
+
+            $this->destroyShip($shipName);
+        }
     }
 
-    public function recalculateNextPossibleLocations() {
+    public function existsInQueue($shipName) : bool {
+        return array_key_exists($shipName, $this->shipsLocationQueue);
+    }
+
+    private function recalculateNextPossibleLocations() {
         $startingLocation= $this->getFirstLocation();
         $currentLocation = $this->getCurrentLocation();
         $direction = $this->getNextLocationsDirection($startingLocation, $currentLocation);
@@ -133,6 +145,9 @@ class ShipsNextLocationCalculator {
     }
 
     public function removeCurrentLocation() {
+        if (!isset($this->shipsLocationQueue) || (sizeof($this->shipsLocationQueue) === 0)) {
+            return;
+        }
         $firstShipValues = &$this->getFirstShipValues();
         unset($firstShipValues[$this->currentIndex]);
         $firstShipValues = array_values($firstShipValues);
@@ -171,6 +186,10 @@ class ShipsNextLocationCalculator {
         return $this->shipsLives[$firstShipName];
     }
 
+    public function getNumberOfStoredShips() {
+        return sizeof($this->shipsLocationQueue);
+    }
+
     public function __toString() {
         if (sizeof($this->shipsLocationQueue) === 0) {
             return '[]';
@@ -189,5 +208,13 @@ class ShipsNextLocationCalculator {
     private function &getFirstShipValues() : array {
         $firstShipName = array_keys($this->shipsLocationQueue)[0];
         return $this->shipsLocationQueue[$firstShipName];
+    }
+
+    private function destroyShip($shipName): void {
+        if ($this->shipsLives[$shipName] === 0) {
+            unset($this->shipsLocationQueue[$shipName]);
+            unset($this->shipsLives[$shipName]);
+            $this->currentIndex = 1;
+        }
     }
 }

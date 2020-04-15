@@ -48,7 +48,7 @@ final class ShipFactory {
     }
 
     public static function getSize($shipName) : int {
-        switch ($shipName) {
+        switch (strtoupper($shipName)) {
             case strtoupper(Carrier::NAME):
                 return Carrier::SIZE;
             case strtoupper(Battleship::NAME):

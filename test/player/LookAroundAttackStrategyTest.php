@@ -12,14 +12,10 @@ require_once __DIR__ . '/../../src/positioning/Location.php';
 require_once __DIR__ . '/../gameunit/FakeGameService.php';
 require_once 'FakeLookAroundAttackStrategy.php';
 
-use Game\Battleship\Carrier;
-use Game\Battleship\Constants;
-use Game\Battleship\Destroyer;
-use Game\Battleship\GameService;
 use Game\Battleship\GameUnit;
+use Game\Battleship\Grid;
 use Game\Battleship\HitResult;
 use Game\Battleship\Location;
-use Game\Battleship\LookAroundAttackStrategy;
 use PHPUnit\Framework\TestCase;
 
 class LookAroundAttackStrategyTest extends TestCase {
@@ -31,6 +27,7 @@ class LookAroundAttackStrategyTest extends TestCase {
     private $attackStrategy;
 
     protected function setUp(): void {
+        Grid::setSize(8);
         $this->fakeGameService = new FakeGameService();
         $this->gameUnit = new GameUnit($this->fakeGameService);
 
