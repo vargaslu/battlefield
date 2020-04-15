@@ -56,7 +56,7 @@ class Grid {
         $this->board[$letter][$column] = $itemName;
     }
 
-    private function isLocationOutsideGrid(Location $location) {
+    private function isLocationOutsideGrid(Location $location) : bool {
         return ord($location->getLetter()) > (Grid::$size + Location::ASCII_DECIMALS_GAP) || $location->getColumn() > Grid::$size;
     }
 
