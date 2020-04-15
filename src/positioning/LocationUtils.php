@@ -3,6 +3,7 @@
 
 namespace Game\Battleship;
 
+require_once __DIR__.'/../../src/exceptions/InvalidLocationException.php';
 require_once __DIR__.'/../../src/gameunit/Grid.php';
 
 final class LocationUtils {
