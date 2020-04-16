@@ -21,6 +21,7 @@ class LookAroundAttackStrategy implements AttackStrategy {
         $location = $this->getNextShotLocationIfAvailable();
         $hitResult = $this->gameUnit->makeShot($location);
         $this->calculateNextPossibleLocation($hitResult, $location);
+        error_log('Made shot: ' . (string) $location . ' hit: '. (string) $hitResult->isHit());
     }
 
     private function getNextShotLocationIfAvailable() {

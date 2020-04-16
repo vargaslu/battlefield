@@ -5,8 +5,11 @@ namespace Game\Battleship;
 
 require_once __DIR__.'/../../api/game/GameController.php';
 require_once __DIR__.'/../listeners/ReadyListener.php';
+require_once __DIR__.'/../listeners/EndGameListener.php';
 require_once __DIR__.'/../player/PlayerEmulator.php';
+require_once __DIR__.'/../player/LookAroundAttackStrategy.php';
 require_once __DIR__.'/../positioning/ShipLocation.php';
+require_once __DIR__.'/../states/EndedGameState.php';
 require_once __DIR__.'/../states/CallingShotsState.php';
 require_once __DIR__.'/../states/PlacingShipsState.php';
 require_once __DIR__.'/../states/StateUpdater.php';
@@ -27,6 +30,8 @@ class GameControllerImpl implements GameController, StateUpdater {
 
     private $readyListener;
 
+    private $endGameListener;
+
     private $playerEmulator;
 
     private $waitingForStartState;
@@ -37,6 +42,8 @@ class GameControllerImpl implements GameController, StateUpdater {
 
     private $callingShotsState;
 
+    private $endedGameState;
+
     public function __construct() {
         $this->initialize();
     }
@@ -44,6 +51,8 @@ class GameControllerImpl implements GameController, StateUpdater {
     public function start() {
         $gameService = new GameServiceImpl();
         $this->humanGameUnit = new GameUnit($gameService);
+        $this->humanGameUnit->setEndListener($this->endGameListener);
+
         $gameService->setFirstGameUnit($this->humanGameUnit);
 
         $this->placingShipsState->addPropertyChangeListener($this->readyListener);
@@ -79,6 +88,7 @@ class GameControllerImpl implements GameController, StateUpdater {
             $gameService->setSecondGameUnit($computerGameUnit);
 
             $playerEmulator = new PlayerEmulator($computerGameUnit);
+            $playerEmulator->setAttackStrategy(new LookAroundAttackStrategy($computerGameUnit));
             $playerEmulator->addPropertyChangeListener($this->readyListener);
 
             $this->waitingForAutomaticActionState->setPlayerEmulator($playerEmulator);
@@ -101,6 +111,10 @@ class GameControllerImpl implements GameController, StateUpdater {
         return $this->callingShotsState;
     }
 
+    public function getEndedGameState() : EndedGameState {
+        return $this->endedGameState;
+    }
+
     public function getShipsState() {
         if (isset($this->humanGameUnit)) {
             return $this->humanGameUnit->getPlacedShips();
@@ -110,10 +124,13 @@ class GameControllerImpl implements GameController, StateUpdater {
 
     private function initialize() {
         $this->readyListener = new ReadyListener($this);
+        $this->endGameListener = new EndGameListener($this);
+
         $this->waitingForStartState = new WaitingForStartState();
         $this->placingShipsState = new PlacingShipsState();
         $this->waitingForAutomaticActionState = new WaitingForAutomaticActionState();
         $this->callingShotsState = new CallingShotsState();
+        $this->endedGameState = new EndedGameState();
 
         $this->updateCurrentState($this->waitingForStartState);
     }

@@ -28,12 +28,18 @@ class GameUnit implements PropertyChangeListener {
 
     private $gameService;
 
+    private $endListener;
+
     public function __construct(GameService $gameService) {
         $this->gameService = $gameService;
         $this->ocean = new Ocean(new Grid());
         $this->target = new Target(new Grid());
         $this->placedShips = [];
         $this->originalPlacedShips = [];
+    }
+
+    public function setEndListener(PropertyChangeListener $endListener) {
+        $this->endListener = $endListener;
     }
 
     public function isLocationFree(Location $location) : bool {
@@ -74,6 +80,7 @@ class GameUnit implements PropertyChangeListener {
             return HitResult::createMissedHitResult();
         }
 
+        error_log('receiving shot in: '. $location);
         $ship = $this->placedShips[$peekResult];
         $ship->hit();
         return HitResult::createSuccessfulHitResult($peekResult);
@@ -90,7 +97,13 @@ class GameUnit implements PropertyChangeListener {
     function fireUpdate($ship, $property, $value) {
         if (strcmp($value, Ship::DESTROYED) == 0) {
             unset($this->placedShips[$ship]);
-            // TODO: if size of placedships is 0 notify that game is over
+            $this->notifyToListenersIfNoMoreShipsAreAvailable();
+        }
+    }
+
+    private function notifyToListenersIfNoMoreShipsAreAvailable(): void {
+        if (sizeof($this->placedShips) === 0) {
+            $this->endListener->fireUpdate($this, 'GAME_OVER', true);
         }
     }
 }

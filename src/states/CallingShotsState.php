@@ -29,6 +29,6 @@ class CallingShotsState implements GameState {
     }
 
     function enter($value = null) {
-        // TODO: Implement enter() method.
+        // Nothing to do here
     }
 }

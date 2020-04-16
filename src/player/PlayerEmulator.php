@@ -38,6 +38,8 @@ class PlayerEmulator {
             $this->searchForShipLocation($shipName);
         }
 
+        var_dump($this->gameUnit);
+
         $this->listener->fireUpdate(Constants::POSITIONED_SHIPS, ReadyListener::READY, true);
     }
 
@@ -51,13 +53,13 @@ class PlayerEmulator {
                 $this->gameUnit->placeShip($ship);
                 break;
             } catch (Exception $exception) {
-                error_log($exception->getMessage());
                 if ($tries === $this->getMaxTries()) {
                     throw new Exception('Unable to place ship ' . $shipName);
                 }
                 $tries++;
             }
         };
+        // TODO: If unable to place ship, reset board and try again
     }
 
     protected function getMaxTries() {

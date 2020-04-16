@@ -14,6 +14,8 @@ interface StateUpdater {
 
     function getCallingShotsState() : CallingShotsState;
 
+    function getEndedGameState() : EndedGameState;
+
     function updateCurrentState(GameState $gameState, $value = null) : void;
 
 }
