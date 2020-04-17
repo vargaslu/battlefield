@@ -108,7 +108,6 @@ class GameUnit implements PropertyChangeListener {
     function fireUpdate($ship, $property, $value) {
         if (strcmp($value, Ship::DESTROYED) == 0) {
             unset($this->placedShips[$ship]);
-            var_dump($this->placedShips);
             $this->notifyToListenersIfNoMoreShipsAreAvailable();
         }
     }
