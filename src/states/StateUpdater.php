@@ -18,4 +18,6 @@ interface StateUpdater {
 
     function updateCurrentState(GameState $gameState, $value = null) : void;
 
+    function getCurrentState() : GameState;
+
 }

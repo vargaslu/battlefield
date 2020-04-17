@@ -30,12 +30,23 @@ class GameUnit implements PropertyChangeListener {
 
     private $endListener;
 
+    private $owner;
+
     public function __construct(GameService $gameService) {
         $this->gameService = $gameService;
         $this->ocean = new Ocean(new Grid());
         $this->target = new Target(new Grid());
         $this->placedShips = [];
         $this->originalPlacedShips = [];
+        $this->owner = 'Player 1';
+    }
+
+    public function setOwner(string $owner): void {
+        $this->owner = $owner;
+    }
+
+    public function getOwner(): string {
+        return $this->owner;
     }
 
     public function setEndListener(PropertyChangeListener $endListener) {
@@ -97,13 +108,19 @@ class GameUnit implements PropertyChangeListener {
     function fireUpdate($ship, $property, $value) {
         if (strcmp($value, Ship::DESTROYED) == 0) {
             unset($this->placedShips[$ship]);
+            var_dump($this->placedShips);
             $this->notifyToListenersIfNoMoreShipsAreAvailable();
         }
     }
 
+    function getFreeAvailableTargetPositions() {
+        return $this->target->getNotUsedGridPositions();
+    }
+
     private function notifyToListenersIfNoMoreShipsAreAvailable(): void {
         if (sizeof($this->placedShips) === 0) {
-            $this->endListener->fireUpdate($this, 'GAME_OVER', true);
+            error_log('notify Game Over');
+            $this->endListener->fireUpdate($this, 'GAME_OVER', $this->owner);
         }
     }
 }

@@ -82,4 +82,17 @@ class GridTest extends TestCase {
 
         self::assertEquals(2, sizeof($filteredGrid));
     }
+
+    public function testFilteredArray() {
+        $grid = new Grid();
+        $grid->put($this->item1, new Location("B", 2));
+        $grid->put($this->item1, new Location("C", 2));
+        $grid->put($this->item2, new Location("C", 3));
+
+        $filteredGrid = $grid->getFilteredGridAsArray(function ($value) {
+            return strcmp($value, 'item1') == 0;
+        });
+
+        self::assertEquals(2, sizeof($filteredGrid));
+    }
 }

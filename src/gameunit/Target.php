@@ -28,6 +28,11 @@ class Target {
         return $this->grid->getItem($location);
     }
 
+    function getNotUsedGridPositions() {
+        $filterClosure = $this->getClosureFilter('');
+        return $this->grid->getFilteredGridAsArray($filterClosure);
+    }
+
     function getWhitePegs() {
         $filterClosure = $this->getClosureFilter(Peg::WHITE);
         return $this->grid->getFilteredGrid($filterClosure);

@@ -73,4 +73,25 @@ class LookAroundAttackStrategyTest extends TestCase {
         self::assertTrue($this->attackStrategy->verifyShot(new Location('C', 2)));
         self::assertTrue($this->attackStrategy->verifyShot(new Location('D', 2)));
     }
+
+    public function testBugMakeShotWhenAnotherShipWasFound() {
+        $this->fakeGameService->expectedHitResults([HitResult::createSuccessfulHitResult("Destroyer"),
+                                                    HitResult::createSuccessfulHitResult("Carrier"),
+                                                    HitResult::createSuccessfulHitResult("Destroyer"),
+                                                    HitResult::createMissedHitResult(),
+                                                    HitResult::createMissedHitResult(),
+                                                    HitResult::createSuccessfulHitResult("Carrier")]);
+
+        $this->attackStrategy->setDesiredLocations([new Location('A', 2),
+                                                    new Location('B', 2),
+                                                    new Location('C', 4)]);
+
+        $this->attackStrategy->makeShot();
+        $this->attackStrategy->makeShot();
+        $this->attackStrategy->makeShot();
+
+        self::assertTrue($this->attackStrategy->verifyShot(new Location('A', 2)));
+        self::assertTrue($this->attackStrategy->verifyShot(new Location('A', 1)));
+        self::assertTrue($this->attackStrategy->verifyShot(new Location('B', 2)));
+    }
 }

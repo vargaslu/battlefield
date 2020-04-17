@@ -40,7 +40,6 @@ switch($action) {
 
     case "status_info":
         http_response_code(200);
-        var_dump($gameController);
         echo json_encode($gameController->getCurrentState());
         break;
     case "start":

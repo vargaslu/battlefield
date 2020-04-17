@@ -24,4 +24,8 @@ final class Utils {
     public static function getRandomPlayerNumber() : int {
         return rand(1, 2);
     }
+
+    public static function getRandomNumberFromTo($from, $to) {
+        return rand($from, $to);
+    }
 }

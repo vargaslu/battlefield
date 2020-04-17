@@ -53,6 +53,8 @@ class GameControllerImpl implements GameController, StateUpdater {
         $this->humanGameUnit = new GameUnit($gameService);
         $this->humanGameUnit->setEndListener($this->endGameListener);
 
+        $this->endedGameState->registerFirstGameUnitOwner($this->humanGameUnit->getOwner());
+
         $gameService->setFirstGameUnit($this->humanGameUnit);
 
         $this->placingShipsState->addPropertyChangeListener($this->readyListener);
@@ -85,7 +87,12 @@ class GameControllerImpl implements GameController, StateUpdater {
     private function configureComputerBasedOpponent(GameServiceImpl $gameService): void {
         if (Constants::$CONFIGURED_HUMAN_PLAYERS == 1) {
             $computerGameUnit = new GameUnit($gameService);
+            $computerGameUnit->setEndListener($this->endGameListener);
+            $computerGameUnit->setOwner('Computer');
+
             $gameService->setSecondGameUnit($computerGameUnit);
+
+            $this->endedGameState->registerSecondGameUnitOwner($computerGameUnit->getOwner());
 
             $playerEmulator = new PlayerEmulator($computerGameUnit);
             $playerEmulator->setAttackStrategy(new LookAroundAttackStrategy($computerGameUnit));
@@ -123,14 +130,18 @@ class GameControllerImpl implements GameController, StateUpdater {
     }
 
     private function initialize() {
-        $this->readyListener = new ReadyListener($this);
-        $this->endGameListener = new EndGameListener($this);
 
         $this->waitingForStartState = new WaitingForStartState();
         $this->placingShipsState = new PlacingShipsState();
         $this->waitingForAutomaticActionState = new WaitingForAutomaticActionState();
         $this->callingShotsState = new CallingShotsState();
         $this->endedGameState = new EndedGameState();
+
+        $this->readyListener = new ReadyListener($this);
+        $this->readyListener->acceptedGameStates([$this->placingShipsState,
+                                                  $this->waitingForAutomaticActionState,
+                                                  $this->callingShotsState]);
+        $this->endGameListener = new EndGameListener($this);
 
         $this->updateCurrentState($this->waitingForStartState);
     }

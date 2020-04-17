@@ -93,6 +93,19 @@ class Grid {
         return $filteredArray;
     }
 
+    public function getFilteredGridAsArray($filterClosure) {
+        $filteredArray = [];
+
+        foreach ($this->board as $letter => $columns) {
+            foreach ($columns as $column => $value) {
+                if ($filterClosure($value)) {
+                    array_push($filteredArray, [$letter, $column]);
+                }
+            }
+        }
+        return $filteredArray;
+    }
+
     function asString() {
         $gridDisplay = "";
 

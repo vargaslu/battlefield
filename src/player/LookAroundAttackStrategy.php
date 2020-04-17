@@ -51,7 +51,11 @@ class LookAroundAttackStrategy implements AttackStrategy {
     }
 
     protected function getRandomLocation() {
-        return Utils::getRandomLocation();
+        $availableTargetPositions = $this->gameUnit->getFreeAvailableTargetPositions();
+        $index = Utils::getRandomNumberFromTo(0, sizeof($availableTargetPositions) - 1);
+        $letter = $availableTargetPositions[$index][0];
+        $column = $availableTargetPositions[$index][1];
+        return new Location($letter, $column);
     }
 
     protected function getGameUnit(): GameUnit {

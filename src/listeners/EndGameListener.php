@@ -13,8 +13,10 @@ class EndGameListener implements PropertyChangeListener {
     }
 
     function fireUpdate($obj, $property, $value) {
+        error_log('fireUpdate: ' . $property);
         if (strcmp($property, 'GAME_OVER') == 0) {
-            $this->stateUpdater->updateCurrentState($this->stateUpdater->getEndedGameState());
+            error_log('Updating current status');
+            $this->stateUpdater->updateCurrentState($this->stateUpdater->getEndedGameState(), $value);
         }
     }
 }

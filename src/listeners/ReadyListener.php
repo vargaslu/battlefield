@@ -15,12 +15,22 @@ class ReadyListener implements PropertyChangeListener {
 
     private $playerNumber;
 
+    private $acceptedGameStates;
+
     public function __construct(StateUpdater $stateUpdater) {
         $this->stateUpdater = $stateUpdater;
         $this->playerNumber = 0;
     }
 
+    public function acceptedGameStates($acceptedGameStates) {
+        $this->acceptedGameStates = $acceptedGameStates;
+    }
+
     public function fireUpdate($key, $property, $value) {
+        if (!in_array($this->stateUpdater->getCurrentState(), $this->acceptedGameStates)) {
+            return;
+        }
+
         if (strcmp($property, self::READY) != 0) {
             return;
         }

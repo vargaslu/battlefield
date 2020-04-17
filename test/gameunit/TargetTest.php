@@ -52,4 +52,13 @@ class TargetTest extends TestCase {
         self::assertEquals(Peg::RED, $target->peek(new Location('A', 2)));
         self::assertEquals(Peg::WHITE, $target->peek(new Location('D', 3)));
     }
+
+    public function testGetNoUsedPositions() {
+        $target = new Target(new Grid());
+        $target->place(Peg::createRedPeg(new Location('A', 2)));
+        $target->place(Peg::createWhitePeg(new Location('D', 3)));
+        $target->place(Peg::createWhitePeg(new Location('C', 5)));
+
+        self::assertEquals(22, sizeof($target->getNotUsedGridPositions()));
+    }
 }

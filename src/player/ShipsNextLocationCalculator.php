@@ -28,18 +28,18 @@ class ShipsNextLocationCalculator {
         $this->gameUnit = $gameUnit;
         $this->shipsLocationQueue = [];
         $this->shipsLives = [];
+        $this->currentIndex = 1;
     }
 
     public function createCalculations($shipName, Location $foundLocation, $size) {
         if (!$this->existsInQueue($shipName)) {
             $this->shipsLives[$shipName] = $size - 1;
             $this->shipsLocationQueue[$shipName] = [$foundLocation];
-            $this->currentIndex = 1;
-            $this->fillArrayWithAroundLocations($foundLocation);
+            $this->fillArrayWithAroundLocations($foundLocation, $this->shipsLocationQueue[$shipName]);
         }
     }
 
-    private function fillArrayWithAroundLocations(Location $location) {
+    private function fillArrayWithAroundLocations(Location $location, $shipLocations) {
         $this->tryAddDecreasedLocationForDirection($location, Direction::VERTICAL);
 
         $this->tryAddDecreasedLocationForDirection($location, Direction::HORIZONTAL);

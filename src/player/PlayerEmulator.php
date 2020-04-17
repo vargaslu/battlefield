@@ -49,10 +49,12 @@ class PlayerEmulator {
             try {
                 $shipFactory = new ShipFactory($shipName);
                 $shipLocation = $this->getRandomShipLocation();
+                error_log('Add ship: ' . $shipName. ' location:' . (string)$shipLocation);
                 $ship = $shipFactory->buildWithLocation($shipLocation);
                 $this->gameUnit->placeShip($ship);
                 break;
             } catch (Exception $exception) {
+                error_log('Error: '.$exception->getMessage() . ' trying again');
                 if ($tries === $this->getMaxTries()) {
                     throw new Exception('Unable to place ship ' . $shipName);
                 }
@@ -78,7 +80,11 @@ class PlayerEmulator {
     }
 
     protected function getRandomLocation() : Location {
-        return Utils::getRandomLocation();
+        $availableTargetPositions = $this->gameUnit->getFreeAvailableTargetPositions();
+        $index = Utils::getRandomNumberFromTo(0, sizeof($availableTargetPositions) - 1);
+        $letter = $availableTargetPositions[$index][0];
+        $column = $availableTargetPositions[$index][1];
+        return new Location($letter, $column);
     }
 
     protected function getRandomShipLocation() {
