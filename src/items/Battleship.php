@@ -19,7 +19,4 @@ final class Battleship extends Ship {
         return new Battleship($location);
     }
 
-    public static function buildWithoutLocation() {
-        return new Battleship();
-    }
 }

@@ -18,8 +18,4 @@ final class Submarine extends Ship {
     public static function build(ShipLocation $location) {
         return new Submarine($location);
     }
-
-    public static function buildWithoutLocation() {
-        return new Submarine();
-    }
 }

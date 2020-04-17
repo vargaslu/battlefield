@@ -17,8 +17,4 @@ final class Destroyer extends Ship {
     public static function build(ShipLocation $location) {
         return new Destroyer($location);
     }
-
-    public static function buildWithoutLocation() {
-        return new Destroyer();
-    }
 }

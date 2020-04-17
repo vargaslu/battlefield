@@ -16,7 +16,7 @@ class FakeLookAroundAttackStrategy extends LookAroundAttackStrategy {
         parent::__construct($gameUnit);
     }
 
-    public function setDesiredLocations($locations) {
+    public function setRandomShotLocations($locations) {
         $this->locations = $locations;
     }
 

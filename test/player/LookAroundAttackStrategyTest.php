@@ -37,8 +37,8 @@ class LookAroundAttackStrategyTest extends TestCase {
     public function testMissingShotShouldRandomNextTime() {
         $this->fakeGameService->expectedHitResults([HitResult::createMissedHitResult(),
                                                     HitResult::createMissedHitResult()]);
-        $this->attackStrategy->setDesiredLocations([new Location('A', 1),
-                                                    new Location('B', 2)]);
+        $this->attackStrategy->setRandomShotLocations([new Location('A', 1),
+                                                       new Location('B', 2)]);
 
         $this->attackStrategy->makeShot();
         $this->attackStrategy->makeShot();
@@ -55,9 +55,9 @@ class LookAroundAttackStrategyTest extends TestCase {
                                                     HitResult::createSuccessfulHitResult("Carrier"),
                                                     HitResult::createSuccessfulHitResult("Carrier")]);
 
-        $this->attackStrategy->setDesiredLocations([new Location('D', 4),
-                                                    new Location('B', 2),
-                                                    new Location('C', 4)]);
+        $this->attackStrategy->setRandomShotLocations([new Location('D', 4),
+                                                       new Location('B', 2),
+                                                       new Location('C', 4)]);
 
         $this->attackStrategy->makeShot();
         $this->attackStrategy->makeShot();
@@ -82,9 +82,7 @@ class LookAroundAttackStrategyTest extends TestCase {
                                                     HitResult::createMissedHitResult(),
                                                     HitResult::createSuccessfulHitResult("Carrier")]);
 
-        $this->attackStrategy->setDesiredLocations([new Location('A', 2),
-                                                    new Location('B', 2),
-                                                    new Location('C', 4)]);
+        $this->attackStrategy->setRandomShotLocations([new Location('A', 2)]);
 
         $this->attackStrategy->makeShot();
         $this->attackStrategy->makeShot();

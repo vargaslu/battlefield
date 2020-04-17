@@ -18,8 +18,4 @@ final class Carrier extends Ship {
     public static function build(ShipLocation $location) {
         return new Carrier($location);
     }
-
-    public static function buildWithoutLocation() {
-        return new Carrier();
-    }
 }

@@ -30,23 +30,6 @@ final class ShipFactory {
         }
     }
 
-    public function buildWithoutLocation() : Ship {
-        switch ($this->shipName) {
-            case strtoupper(Carrier::NAME):
-                return Carrier::buildWithoutLocation();
-            case strtoupper(Battleship::NAME):
-                return Battleship::buildWithoutLocation();
-            case strtoupper(Destroyer::NAME):
-                return Destroyer::buildWithoutLocation();
-            case strtoupper(Submarine::NAME):
-                return Submarine::buildWithoutLocation();
-            case strtoupper(Cruiser::NAME):
-                return Cruiser::buildWithoutLocation();
-            default:
-                throw new InvalidArgumentException('Ship name ' . $this->shipName . ' is not valid');
-        }
-    }
-
     public static function getSize($shipName) : int {
         switch (strtoupper($shipName)) {
             case strtoupper(Carrier::NAME):

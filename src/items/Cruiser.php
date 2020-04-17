@@ -18,8 +18,4 @@ final class Cruiser extends Ship {
     public static function build(ShipLocation $location) {
         return new Cruiser($location);
     }
-
-    public static function buildWithoutLocation() {
-        return new Cruiser();
-    }
 }

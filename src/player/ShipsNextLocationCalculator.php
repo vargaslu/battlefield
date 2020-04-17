@@ -35,26 +35,39 @@ class ShipsNextLocationCalculator {
         if (!$this->existsInQueue($shipName)) {
             $this->shipsLives[$shipName] = $size - 1;
             $this->shipsLocationQueue[$shipName] = [$foundLocation];
-            $this->fillArrayWithAroundLocations($foundLocation, $this->shipsLocationQueue[$shipName]);
+            $this->registerFourPossibleLocationsAroundFoundLocation($this->shipsLocationQueue[$shipName],
+                                                                    $foundLocation);
+            $this->removeLocationIfFoundInFirstShipQueue($foundLocation);
         }
     }
 
-    private function fillArrayWithAroundLocations(Location $location, $shipLocations) {
-        $this->tryAddDecreasedLocationForDirection($location, Direction::VERTICAL);
-
-        $this->tryAddDecreasedLocationForDirection($location, Direction::HORIZONTAL);
-
-        $this->tryAddIncreasedLocationForDirection($location, Direction::VERTICAL);
-
-        $this->tryAddIncreasedLocationForDirection($location, Direction::HORIZONTAL);
+    private function removeLocationIfFoundInFirstShipQueue() {
+        if (sizeof($this->shipsLocationQueue) > 1) {
+            $this->removeCurrentLocation();
+        }
     }
 
-    private function tryAddDecreasedLocationForDirection(Location $location, $direction, $times = 1, $reThrowException = false) {
+    private function registerFourPossibleLocationsAroundFoundLocation(&$shipLocations,
+                                                                      Location $location) {
+        $this->tryAddDecreasedLocationForDirection($shipLocations, $location, Direction::VERTICAL);
+
+        $this->tryAddDecreasedLocationForDirection($shipLocations, $location, Direction::HORIZONTAL);
+
+        $this->tryAddIncreasedLocationForDirection($shipLocations, $location, Direction::VERTICAL);
+
+        $this->tryAddIncreasedLocationForDirection($shipLocations, $location, Direction::HORIZONTAL);
+    }
+
+    private function tryAddDecreasedLocationForDirection(&$shipLocations,
+                                                         Location $location,
+                                                         $direction,
+                                                         $times = 1,
+                                                         $reThrowException = false) {
         try {
             $newLocation = $location;
             for ($i = 0; $i < $times; $i++) {
                 $newLocation = LocationUtils::decrease($newLocation, $direction);
-                $this->addWhenTargetLocationsIsFree($newLocation);
+                $this->addWhenTargetLocationsIsFree($shipLocations, $newLocation);
             }
         } catch (InvalidLocationException $exception) {
             if ($reThrowException) {
@@ -63,12 +76,16 @@ class ShipsNextLocationCalculator {
         }
     }
 
-    private function tryAddIncreasedLocationForDirection(Location $location, $direction, $times = 1, $reThrowException = false) {
+    private function tryAddIncreasedLocationForDirection(&$shipsLocations,
+                                                         Location $location,
+                                                         $direction,
+                                                         $times = 1,
+                                                         $reThrowException = false) {
         try {
             $newLocation = $location;
             for ($i = 0; $i < $times; $i++) {
                 $newLocation = LocationUtils::increase($newLocation, $direction);
-                $this->addWhenTargetLocationsIsFree($newLocation);
+                $this->addWhenTargetLocationsIsFree($shipsLocations, $newLocation);
             }
         } catch (InvalidLocationException $exception) {
             if ($reThrowException) {
@@ -77,12 +94,12 @@ class ShipsNextLocationCalculator {
         }
     }
 
-    private function addWhenTargetLocationsIsFree(Location $newLocation) {
+    private function addWhenTargetLocationsIsFree(&$shipLocations, Location $newLocation) {
         if ($this->gameUnit->isTargetLocationMarked($newLocation)) {
             throw new InvalidLocationException();
         }
-        $firstShipValues = &$this->getFirstShipValues();
-        array_push($firstShipValues, $newLocation);
+        //$firstShipValues = &$this->getFirstShipValues();
+        array_push($shipLocations, $newLocation);
     }
 
     public function hitShip($shipName) {
@@ -110,11 +127,11 @@ class ShipsNextLocationCalculator {
         array_splice($firstShipValues, $this->currentIndex + 1);
         try {
             $currentLocation = $this->getCurrentLocation();
-            $this->fillWithNextLocationsInTheCorrectDirection($currentLocation, $direction);
+            $this->fillWithNextLocationsInTheCorrectDirection($firstShipValues, $currentLocation, $direction);
         } catch (InvalidLocationException $exception) {
             $turnAroundDirection = $this->getTurnAroundDirection($direction);
             $firstLocation = $this->getFirstLocation();
-            $this->fillWithNextLocationsInTheCorrectDirection($firstLocation, $turnAroundDirection);
+            $this->fillWithNextLocationsInTheCorrectDirection($firstShipValues, $firstLocation, $turnAroundDirection);
         }
     }
 
@@ -131,16 +148,16 @@ class ShipsNextLocationCalculator {
         }
     }
 
-    private function fillWithNextLocationsInTheCorrectDirection(Location $fromLocation, $direction) {
+    private function fillWithNextLocationsInTheCorrectDirection(&$shipLocations, Location $fromLocation, $direction) {
         $times = $this->getCurrentSize();
         if (self::HORIZONTAL_LEFT === $direction) {
-            $this->tryAddDecreasedLocationForDirection($fromLocation, Direction::HORIZONTAL, $times, true);
+            $this->tryAddDecreasedLocationForDirection($shipLocations, $fromLocation, Direction::HORIZONTAL, $times, true);
         } elseif (self::HORIZONTAL_RIGHT === $direction) {
-            $this->tryAddIncreasedLocationForDirection($fromLocation, Direction::HORIZONTAL, $times, true);
+            $this->tryAddIncreasedLocationForDirection($shipLocations, $fromLocation, Direction::HORIZONTAL, $times, true);
         } elseif (self::VERTICAL_UP === $direction) {
-            $this->tryAddDecreasedLocationForDirection($fromLocation, Direction::VERTICAL, $times, true);
+            $this->tryAddDecreasedLocationForDirection($shipLocations, $fromLocation, Direction::VERTICAL, $times, true);
         } elseif (self::VERTICAL_DOWN === $direction) {
-            $this->tryAddIncreasedLocationForDirection($fromLocation, Direction::VERTICAL, $times, true);
+            $this->tryAddIncreasedLocationForDirection($shipLocations, $fromLocation, Direction::VERTICAL, $times, true);
         }
     }
 
