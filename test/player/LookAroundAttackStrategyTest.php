@@ -16,22 +16,23 @@ use Game\Battleship\GameUnit;
 use Game\Battleship\Grid;
 use Game\Battleship\HitResult;
 use Game\Battleship\Location;
+use Game\Battleship\PropertyChangeListener;
 use PHPUnit\Framework\TestCase;
 
 class LookAroundAttackStrategyTest extends TestCase {
 
     private $fakeGameService;
 
-    private $gameUnit;
-
     private $attackStrategy;
 
     protected function setUp(): void {
         Grid::setSize(8);
         $this->fakeGameService = new FakeGameService();
-        $this->gameUnit = new GameUnit($this->fakeGameService);
+        $mockedReadyListener = $this->createStub(PropertyChangeListener::class);
+        $gameUnit = new GameUnit($this->fakeGameService);
+        $gameUnit->setReadyListener($mockedReadyListener);
 
-        $this->attackStrategy = new FakeLookAroundAttackStrategy($this->gameUnit);;
+        $this->attackStrategy = new FakeLookAroundAttackStrategy($gameUnit);
     }
 
     public function testMissingShotShouldRandomNextTime() {

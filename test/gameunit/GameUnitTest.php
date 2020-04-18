@@ -15,6 +15,7 @@ use Game\Battleship\GameUnit;
 use Game\Battleship\Grid;
 use Game\Battleship\HitResult;
 use Game\Battleship\Location;
+use Game\Battleship\LocationException;
 use Game\Battleship\NotAllowedShipException;
 use Game\Battleship\PropertyChangeListener;
 use Game\Battleship\ShipLocation;
@@ -29,34 +30,36 @@ class GameUnitTest extends TestCase {
 
     private $mockedGameService;
 
+    private $gameUnit;
+
     protected function setUp(): void {
         Grid::setSize(5);
         $this->mockedGameService = $this->getMockBuilder(GameService::class)->getMock();
-
+        $mockedReadyListener = $this->getMockBuilder(PropertyChangeListener::class)->getMock();
+        $this->gameUnit = new GameUnit($this->mockedGameService);
+        $this->gameUnit->setReadyListener($mockedReadyListener);
     }
 
     public function testPositionSuccessfully() {
         $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new ShipLocation('A', 1, Direction::VERTICAL));
         $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new ShipLocation('A', 2, Direction::HORIZONTAL));
 
-        $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->placeShip($fakeShip1);
-        $gameUnit->placeShip($fakeShip2);
+        $this->gameUnit->placeShip($fakeShip1);
+        $this->gameUnit->placeShip($fakeShip2);
 
-        self::assertEquals(2, $gameUnit->availableShips());
+        self::assertEquals(2, $this->gameUnit->availableShips());
     }
 
     public function testExceptionWhenPlacingSameShip() {
         $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new ShipLocation('A', 1, Direction::VERTICAL));
         $fakeShip2 = new FakeShip(self::FAKE_SHIP1, 2, new ShipLocation('A', 2, Direction::HORIZONTAL));
 
-        $gameUnit = new GameUnit($this->mockedGameService);
         try {
-            $gameUnit->placeShip($fakeShip1);
-            $gameUnit->placeShip($fakeShip2);
+            $this->gameUnit->placeShip($fakeShip1);
+            $this->gameUnit->placeShip($fakeShip2);
         } catch (NotAllowedShipException $exception) {
             self::assertEquals('Allowed quantity for ship FakeShip1 already used', $exception->getMessage());
-            self::assertEquals(1, $gameUnit->availableShips());
+            self::assertEquals(1, $this->gameUnit->availableShips());
             return;
         }
         self::fail('Should have thrown an exception');
@@ -65,9 +68,8 @@ class GameUnitTest extends TestCase {
     public function testVerifyShipWasHit() {
         $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new ShipLocation('B', 2, Direction::VERTICAL));
 
-        $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->placeShip($fakeShip1);
-        $hitResult = $gameUnit->receiveShot(new Location('B', 2));
+        $this->gameUnit->placeShip($fakeShip1);
+        $hitResult = $this->gameUnit->receiveShot(new Location('B', 2));
 
         self::assertEquals(true, $hitResult->isHit());
         self::assertEquals(self::FAKE_SHIP1, $hitResult->getShipName());
@@ -76,9 +78,8 @@ class GameUnitTest extends TestCase {
     public function testVerifyShipWasNotHit() {
         $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new ShipLocation('B', 2, Direction::VERTICAL));
 
-        $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->placeShip($fakeShip1);
-        $hitResult = $gameUnit->receiveShot(new Location('B', 1));
+        $this->gameUnit->placeShip($fakeShip1);
+        $hitResult = $this->gameUnit->receiveShot(new Location('B', 1));
 
         self::assertEquals(false, $hitResult->isHit());
         self::assertEquals('', $hitResult->getShipName());
@@ -90,55 +91,63 @@ class GameUnitTest extends TestCase {
         $listener = $this->getMockBuilder(PropertyChangeListener::class)->getMock();
         $listener->expects($this->once())->method('fireUpdate');
 
-        $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->setEndGameListener($listener);
-        $gameUnit->placeShip($fakeShip2);
-        self::assertEquals(1, $gameUnit->availableShips());
+        $this->gameUnit->setEndGameListener($listener);
+        $this->gameUnit->placeShip($fakeShip2);
+        self::assertEquals(1, $this->gameUnit->availableShips());
 
-        $hitResult = $gameUnit->receiveShot(new Location('B', 2));
+        $hitResult = $this->gameUnit->receiveShot(new Location('B', 2));
         self::assertEquals(true, $hitResult->isHit());
-        self::assertEquals(1, $gameUnit->availableShips());
+        self::assertEquals(1, $this->gameUnit->availableShips());
 
-        $hitResult = $gameUnit->receiveShot(new Location('C', 2));
+        $hitResult = $this->gameUnit->receiveShot(new Location('C', 2));
         self::assertEquals(true, $hitResult->isHit());
-        self::assertEquals(0, $gameUnit->availableShips());
+        self::assertEquals(0, $this->gameUnit->availableShips());
     }
 
     public function testSuccessOpponentHit() {
-        $gameUnit = new GameUnit($this->mockedGameService);
         $this->mockedGameService
             ->expects($this->once())
             ->method('makeShot')
-            ->with($gameUnit, $this->anything())
+            ->with($this->gameUnit, $this->anything())
             ->willReturn(HitResult::createSuccessfulHitResult(self::FAKE_SHIP1));
 
-        $gameUnit->makeShot(new Location('A', 1));
+        $this->gameUnit->makeShot(new Location('A', 1));
+    }
+
+    public function testExceptionWhenSameHitLocationIsUsed() {
+        $this->expectException(LocationException::class);
+        
+        $this->mockedGameService
+            ->expects($this->once())
+            ->method('makeShot')
+            ->with($this->gameUnit, $this->anything())
+            ->willReturn(HitResult::createSuccessfulHitResult(self::FAKE_SHIP1));
+
+        $this->gameUnit->makeShot(new Location('A', 1));
+        $this->gameUnit->makeShot(new Location('A', 1));
     }
 
     public function testMissedOpponentHit() {
-        $gameUnit = new GameUnit($this->mockedGameService);
         $this->mockedGameService
             ->expects($this->once())
             ->method('makeShot')
-            ->with($gameUnit, $this->anything())
+            ->with($this->gameUnit, $this->anything())
             ->willReturn(HitResult::createMissedHitResult());
 
-        $gameUnit->makeShot(new Location('A', 1));
+        $this->gameUnit->makeShot(new Location('A', 1));
     }
 
     public function testIsLocationFree() {
         $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new ShipLocation('B', 2, Direction::VERTICAL));
-        $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->placeShip($fakeShip2);
+        $this->gameUnit->placeShip($fakeShip2);
 
-        self::assertTrue($gameUnit->isLocationFree(new Location('B', 3)));
+        self::assertTrue($this->gameUnit->isLocationFree(new Location('B', 3)));
     }
 
     public function testIsLocationOccupied() {
         $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new ShipLocation('B', 2, Direction::VERTICAL));
-        $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->placeShip($fakeShip2);
+        $this->gameUnit->placeShip($fakeShip2);
 
-        self::assertFalse($gameUnit->isLocationFree(new Location('C', 2)));
+        self::assertFalse($this->gameUnit->isLocationFree(new Location('C', 2)));
     }
 }

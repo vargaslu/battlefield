@@ -70,8 +70,6 @@ class GameControllerImpl implements GameController, StateUpdater {
         $gameService = new GameServiceImpl();
         $this->configurePlayers($gameService);
 
-        $this->callingShotsState->addPropertyChangeListener($this->readyListener);
-
         $this->updateCurrentState($this->placingShipsState);
     }
 

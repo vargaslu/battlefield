@@ -67,10 +67,7 @@ class PlayerEmulator {
     }
 
     function makeShot() {
-
         $this->attackStrategy->makeShot();
-
-        $this->listener->fireUpdate(Constants::CALLED_SHOT, ReadyListener::READY, true);
     }
 
     public function setAttackStrategy(AttackStrategy $attackStrategy) {

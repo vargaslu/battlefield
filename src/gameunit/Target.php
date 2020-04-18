@@ -15,12 +15,18 @@ class Target {
     }
 
     function place(Peg $peg) {
+        $pegLocation = $peg->getLocation();
+        $this->validateLocation($pegLocation);
+        $this->grid->put($peg, $pegLocation);
+    }
+
+    function validateLocation(Location $location) {
         try {
-            $this->grid->put($peg, $peg->getLocation());
+            $this->grid->validateLocation($location);
         } catch (LocationException $exception) {
             throw new LocationException("Already used position");
         } catch (LocationOutOfBoundsException $exception) {
-            throw new LocationOutOfBoundsException($peg->getLocation());
+            throw new LocationOutOfBoundsException($location);
         }
     }
 

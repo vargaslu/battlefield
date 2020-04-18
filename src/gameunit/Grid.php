@@ -39,16 +39,7 @@ class Grid {
 
         $itemName = $item->getName();
 
-        if ($this->isLocationOutsideGrid($location)) {
-            throw new LocationOutOfBoundsException($location, $itemName);
-        }
-
-        if ($this->isLocationOccupied($location)) {
-            throw new LocationException("Location " .
-                $location .
-                " is occupied by Item: " .
-                $this->getItemFromLocation($location));
-        }
+        $this->validateLocation($location);
 
         $letter = $location->getLetter();
         $column = $location->getColumn();
@@ -60,7 +51,20 @@ class Grid {
         return ord($location->getLetter()) > (Grid::$size + Location::ASCII_DECIMALS_GAP) || $location->getColumn() > Grid::$size;
     }
 
-    private function isLocationOccupied(Location $location) {
+    public function validateLocation(Location $location) {
+        if ($this->isLocationOutsideGrid($location)) {
+            throw new LocationOutOfBoundsException($location);
+        }
+
+        if ($this->isLocationOccupied($location)) {
+            throw new LocationException("Location " .
+                                        $location .
+                                        " is occupied by Item: " .
+                                        $this->getItemFromLocation($location));
+        }
+    }
+
+    private function isLocationOccupied(Location $location) : bool {
         return $this->getItemFromLocation($location) !== '';
     }
 

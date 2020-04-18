@@ -91,12 +91,16 @@ class GameUnit {
     }
 
     public function makeShot(Location $location) : HitResult {
+        $this->target->validateLocation($location);
         $hitResult = $this->gameService->makeShot($this, $location);
         if ($hitResult->isHit()) {
             $this->target->place(Peg::createRedPeg($location));
         } else {
             $this->target->place(Peg::createWhitePeg($location));
         }
+
+        $this->readyListener->fireUpdate(Constants::CALLED_SHOT, ReadyListener::READY, true);
+
         return $hitResult;
     }
 
