@@ -12,7 +12,7 @@ class CallingShotsState implements GameState {
     }
 
     function callingShot(GameUnit $current, Location $location) {
-        return $current->makeShot($location);
+        return $current->callShotIntoLocation($location);
     }
 
     public function jsonSerialize() {

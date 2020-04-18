@@ -3,8 +3,6 @@
 
 namespace Game\Battleship;
 
-use function PHPUnit\throwException;
-
 require_once __DIR__.'/../items/Battleship.php';
 require_once __DIR__.'/../items/Carrier.php';
 require_once __DIR__.'/../items/Cruiser.php';
@@ -93,9 +91,9 @@ class GameUnit {
         }
     }
 
-    public function makeShot(Location $location) : HitResult {
+    public function callShotIntoLocation(Location $location) : HitResult {
         $this->target->validateLocation($location);
-        $hitResult = $this->gameService->makeShot($this, $location);
+        $hitResult = $this->gameService->makeShotFromSourceToOpponentLocation($this, $location);
         $this->placePegInLocationAccordingToHitResult($hitResult, $location);
 
         $this->notifyReadyListenerEndOfCallingShots();

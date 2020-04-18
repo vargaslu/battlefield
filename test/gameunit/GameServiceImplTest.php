@@ -26,7 +26,7 @@ class GameServiceImplTest extends TestCase {
     public function testThatSecondPlayerReceivesShot() {
         $this->gameService->setFirstGameUnit($this->fakeFirstGameUnit);
         $this->gameService->setSecondGameUnit($this->fakeSecondGameUnit);
-        $this->gameService->makeShot($this->fakeFirstGameUnit, new Location('A', 1));
+        $this->gameService->makeShotFromSourceToOpponentLocation($this->fakeFirstGameUnit, new Location('A', 1));
 
         self::assertFalse($this->fakeFirstGameUnit->receivedShot);
         self::assertTrue($this->fakeSecondGameUnit->receivedShot);
@@ -35,7 +35,7 @@ class GameServiceImplTest extends TestCase {
     public function testThatFirstPlayerReceivesShot() {
         $this->gameService->setFirstGameUnit($this->fakeFirstGameUnit);
         $this->gameService->setSecondGameUnit($this->fakeSecondGameUnit);
-        $this->gameService->makeShot($this->fakeSecondGameUnit, new Location('A', 1));
+        $this->gameService->makeShotFromSourceToOpponentLocation($this->fakeSecondGameUnit, new Location('A', 1));
 
         self::assertFalse($this->fakeSecondGameUnit->receivedShot);
         self::assertTrue($this->fakeFirstGameUnit->receivedShot);

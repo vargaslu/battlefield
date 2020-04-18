@@ -111,7 +111,7 @@ class GameUnitTest extends TestCase {
             ->with($this->gameUnit, $this->anything())
             ->willReturn(HitResult::createSuccessfulHitResult(self::FAKE_SHIP1));
 
-        $this->gameUnit->makeShot(new Location('A', 1));
+        $this->gameUnit->callShotIntoLocation(new Location('A', 1));
     }
 
     public function testExceptionWhenSameHitLocationIsUsed() {
@@ -123,8 +123,8 @@ class GameUnitTest extends TestCase {
             ->with($this->gameUnit, $this->anything())
             ->willReturn(HitResult::createSuccessfulHitResult(self::FAKE_SHIP1));
 
-        $this->gameUnit->makeShot(new Location('A', 1));
-        $this->gameUnit->makeShot(new Location('A', 1));
+        $this->gameUnit->callShotIntoLocation(new Location('A', 1));
+        $this->gameUnit->callShotIntoLocation(new Location('A', 1));
     }
 
     public function testMissedOpponentHit() {
@@ -134,7 +134,7 @@ class GameUnitTest extends TestCase {
             ->with($this->gameUnit, $this->anything())
             ->willReturn(HitResult::createMissedHitResult());
 
-        $this->gameUnit->makeShot(new Location('A', 1));
+        $this->gameUnit->callShotIntoLocation(new Location('A', 1));
     }
 
     public function testIsLocationFree() {

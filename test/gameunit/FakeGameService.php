@@ -22,7 +22,7 @@ class FakeGameService implements GameService {
         $this->hitResults = $hitResults;
     }
 
-    function makeShot(GameUnit $source, Location $location): HitResult {
+    function makeShotFromSourceToOpponentLocation(GameUnit $source, Location $location): HitResult {
         if (sizeof($this->hitResults) === 0) {
             Assert::fail('A configured ShipLocation is missing');
         }

@@ -18,7 +18,7 @@ class RandomAttackStrategy implements AttackStrategy {
         while (true) {
             try {
                 $location = Utils::getRandomLocation();
-                $this->gameUnit->makeShot($location);
+                $this->gameUnit->callShotIntoLocation($location);
                 break;
             } catch (Exception $exception) {
                 error_log($exception->getMessage());

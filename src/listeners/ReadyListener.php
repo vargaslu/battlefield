@@ -8,6 +8,8 @@ require_once 'PropertyChangeListener.php';
 class ReadyListener implements PropertyChangeListener {
 
     public const READY = 'ready';
+    const PLAYER_NUMBER_1 = 1;
+    const PLACER_NUMBER_2 = 2;
 
     private $stateUpdater;
 
@@ -63,11 +65,11 @@ class ReadyListener implements PropertyChangeListener {
     }
 
     private function handleCallingShots() {
-        if ($this->playerNumber === 1) {
-            $this->playerNumber = 2;
+        if ($this->playerNumber === self::PLAYER_NUMBER_1) {
+            $this->playerNumber = self::PLACER_NUMBER_2;
             $this->stateUpdater->updateCurrentState($this->stateUpdater->getCallingShotsState());
         } else {
-            $this->playerNumber = 1;
+            $this->playerNumber = self::PLAYER_NUMBER_1;
             $this->stateUpdater->updateCurrentState($this->stateUpdater->getWaitingForAutomaticActionState(), 'call_shot');
         }
     }

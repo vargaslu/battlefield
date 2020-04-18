@@ -24,11 +24,15 @@ class GameServiceImpl implements GameService {
         $this->secondGameUnit = $secondGameUnit;
     }
 
-    function makeShot(GameUnit $source, Location $location) : HitResult {
-        $gameUnitToReceiveShot = $this->firstGameUnit;
-        if ($source === $this->firstGameUnit) {
-            $gameUnitToReceiveShot = $this->secondGameUnit;
-        }
+    function makeShotFromSourceToOpponentLocation(GameUnit $source, Location $location) : HitResult {
+        $gameUnitToReceiveShot = $this->chooseGameUnitToReceiveShot($source);
         return $gameUnitToReceiveShot->receiveShot($location);
+    }
+
+    private function chooseGameUnitToReceiveShot(GameUnit $source) : GameUnit {
+        if ($source === $this->firstGameUnit) {
+            return $this->secondGameUnit;
+        }
+        return $this->firstGameUnit;
     }
 }
