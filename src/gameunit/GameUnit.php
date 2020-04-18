@@ -25,8 +25,6 @@ class GameUnit {
 
     private $placedShips;
 
-    private $originalPlacedShips;
-
     private $gameService;
 
     private $shipDestroyedListener;
@@ -40,7 +38,6 @@ class GameUnit {
         $this->ocean = new Ocean(new Grid());
         $this->target = new Target(new Grid());
         $this->placedShips = [];
-        $this->originalPlacedShips = [];
         $this->shipDestroyedListener = new ShipDestroyedListener($this->placedShips);
         $this->setOwner('Player 1');
     }
@@ -73,19 +70,25 @@ class GameUnit {
     }
 
     public function placeShip(Ship $ship) {
-        if (($key = array_search($ship->getName(), $this->placedShips)) !== false) {
-            throw new NotAllowedShipException('Allowed quantity for ship ' . $ship->getName() . ' already used');
-        }
+        $this->validateShipIsNotPlacedMoreThanOnce($ship->getName());
 
         $this->ocean->place($ship);
         $this->placedShips[$ship->getName()] = $ship;
         $ship->addPropertyChangeListener($this->shipDestroyedListener);
 
-        $this->originalPlacedShips = $this->placedShips;
+        $this->notifyReadyListenerEndOfPlaceShips();
+    }
 
+    private function validateShipIsNotPlacedMoreThanOnce(string $shipName): void {
+        if (array_search($shipName, $this->placedShips) !== false) {
+            throw new NotAllowedShipException('Allowed quantity for ship ' . $shipName . ' already used');
+        }
+    }
+
+    private function notifyReadyListenerEndOfPlaceShips(): void {
         $result = array_diff(Constants::$DEFAULT_SHIPS_TO_PLACE, array_keys($this->placedShips));
+
         if (sizeof($result) === 0) {
-            error_log('>>Ready!!! '. $this->getOwner());
             $this->readyListener->fireUpdate(Constants::POSITIONED_SHIPS, ReadyListener::READY, true);
         }
     }
@@ -93,15 +96,23 @@ class GameUnit {
     public function makeShot(Location $location) : HitResult {
         $this->target->validateLocation($location);
         $hitResult = $this->gameService->makeShot($this, $location);
+        $this->placePegInLocationAccordingToHitResult($hitResult, $location);
+
+        $this->notifyReadyListenerEndOfCallingShots();
+
+        return $hitResult;
+    }
+
+    private function placePegInLocationAccordingToHitResult(HitResult $hitResult, Location $location): void {
         if ($hitResult->isHit()) {
             $this->target->place(Peg::createRedPeg($location));
         } else {
             $this->target->place(Peg::createWhitePeg($location));
         }
+    }
 
+    private function notifyReadyListenerEndOfCallingShots(): void {
         $this->readyListener->fireUpdate(Constants::CALLED_SHOT, ReadyListener::READY, true);
-
-        return $hitResult;
     }
 
     public function receiveShot(Location $location) {
@@ -110,18 +121,25 @@ class GameUnit {
             return HitResult::createMissedHitResult();
         }
 
-        error_log('receiving shot in: '. $location);
+        error_log('Receiving shot in: '. $location);
         $ship = $this->placedShips[$peekResult];
         $ship->hit();
         return HitResult::createSuccessfulHitResult($peekResult);
     }
 
     public function availableShips() {
-        return sizeof($this->placedShips);
+        return array_reduce($this->placedShips, $this->countAliveShipsClosure());
+    }
+
+    private function countAliveShipsClosure() {
+        return function ($carry, Ship $ship) {
+            $carry += ($ship->isAlive()) ? 1 : 0;
+            return $carry;
+        };
     }
 
     public function getPlacedShips(): array {
-        return $this->originalPlacedShips;
+        return $this->placedShips;
     }
 
     function getFreeAvailableTargetPositions() {

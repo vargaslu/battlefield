@@ -3,6 +3,7 @@
 
 namespace Game\Battleship;
 
+require_once 'PropertyChangeListener.php';
 
 class ShipDestroyedListener implements PropertyChangeListener {
 
@@ -12,8 +13,8 @@ class ShipDestroyedListener implements PropertyChangeListener {
 
     private $owner;
 
-    public function __construct(&$placedShips) {
-        $this->ships = &$placedShips;
+    public function __construct($placedShips) {
+        $this->ships = $placedShips;
     }
 
     function setEndGameListener($endGameListener): void {
@@ -26,14 +27,24 @@ class ShipDestroyedListener implements PropertyChangeListener {
 
     function fireUpdate($ship, $property, $value): void {
         if (strcmp($value, Ship::DESTROYED) == 0) {
-            unset($this->ships[$ship]);
             $this->notifyToListenersIfNoMoreShipsAreAvailable();
         }
     }
 
     private function notifyToListenersIfNoMoreShipsAreAvailable(): void {
-        if (sizeof($this->ships) === 0) {
+        $isAtLeastOneShipAlive = array_reduce($this->ships, $this->isAtLeastOneShipAliveClosure());
+        if (!$isAtLeastOneShipAlive) {
             $this->endGameListener->fireUpdate($this, 'GAME_OVER', $this->owner);
         }
+    }
+
+    private function isAtLeastOneShipAliveClosure() {
+        return function ($carry, Ship $ship) {
+            if (!isset($carry)) {
+                return $ship->isAlive();
+            }
+            $carry = $carry || $ship->isAlive();
+            return $carry;
+        };
     }
 }

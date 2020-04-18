@@ -18,8 +18,6 @@ class PlayerEmulator {
 
     private $gameUnit;
 
-    private $listener;
-
     private $attackStrategy;
 
     public function __construct(GameUnit $gameUnit) {
@@ -28,17 +26,10 @@ class PlayerEmulator {
         $this->attackStrategy = new RandomAttackStrategy($this->gameUnit);
     }
 
-    final function addPropertyChangeListener(PropertyChangeListener $listener) {
-        $this->listener = $listener;
-        return $this;
-    }
-
     function placeShips() {
         foreach ($this->shipsToPlace as $shipName) {
             $this->searchForShipLocation($shipName);
         }
-
-        var_dump($this->gameUnit);
     }
 
     private function searchForShipLocation($shipName) {

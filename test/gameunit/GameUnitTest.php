@@ -116,7 +116,7 @@ class GameUnitTest extends TestCase {
 
     public function testExceptionWhenSameHitLocationIsUsed() {
         $this->expectException(LocationException::class);
-        
+
         $this->mockedGameService
             ->expects($this->once())
             ->method('makeShot')

@@ -101,7 +101,6 @@ class GameControllerImpl implements GameController, StateUpdater {
 
             $playerEmulator = new PlayerEmulator($computerGameUnit);
             $playerEmulator->setAttackStrategy(new LookAroundAttackStrategy($computerGameUnit));
-            $playerEmulator->addPropertyChangeListener($this->readyListener);
 
             $this->waitingForAutomaticActionState->setPlayerEmulator($playerEmulator);
         }
