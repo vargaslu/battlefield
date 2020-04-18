@@ -27,7 +27,7 @@ class GameControllerTest extends TestCase {
 
     public function testPlacingShipsState() {
         $gameController = new GameControllerImpl();
-        $gameController->start();
+        $gameController->start('');
         self::assertTrue($gameController->getCurrentState() instanceof PlacingShipsState);
     }
 
@@ -46,7 +46,7 @@ class GameControllerTest extends TestCase {
             "direction": "V"
         }]', true);
         $gameController = new GameControllerImpl();
-        $gameController->start();
+        $gameController->start('');
 
         foreach ($data as $jsonShip) {
             $gameController->placeShip($jsonShip);

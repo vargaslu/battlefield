@@ -1,11 +1,11 @@
 <?php
 session_start();
 
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json; charset=UTF-8');
+header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Max-Age: 3600');
+header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
 include 'Context.php';
 include 'SuccessfulMessageResult.php';
@@ -15,60 +15,65 @@ use Game\Battleship\Context;
 use Game\Battleship\ExceptionMessageResult;
 use Game\Battleship\SuccessfulMessageResult;
 
+const GAME_CONTROLLER = 'game_controller';
 
-ini_set('xdebug.var_display_max_depth', '10');
-ini_set('xdebug.var_display_max_children', '256');
-ini_set('xdebug.var_display_max_data', '1024');
-
-$action = "";
-if (isset($_GET["action"])){
-    $action = $_GET["action"];
+$action = '';
+if (isset($_GET['action'])){
+    $action = $_GET['action'];
 }
 
-$data = json_decode(file_get_contents("php://input"), true);
+$data = json_decode(file_get_contents('php://input'), true);
 
 $gameController = NULL;
 
-if (isset($_SESSION['game_controller'])) {
-    $gameController = unserialize($_SESSION['game_controller']);
+if (isset($_SESSION[GAME_CONTROLLER])) {
+    $gameController = unserialize($_SESSION[GAME_CONTROLLER]);
 } else {
     $gameController = Context::loadGameController();
-    $_SESSION['game_controller'] = serialize($gameController);
+    $_SESSION[GAME_CONTROLLER] = serialize($gameController);
 }
 
-switch($action) {
+doAction($action, $gameController, $data);
 
-    case "status_info":
-        http_response_code(200);
-        echo json_encode($gameController->getCurrentState());
-        break;
-    case "start":
-        echo json_encode(tryStartGame($gameController));
-        $_SESSION['game_controller'] = serialize($gameController);
-        break;
-    case "place_ships":
-        echo json_encode(tryPlaceShips($data, $gameController));
-        $_SESSION['game_controller'] = serialize($gameController);
-        break;
-    case "call_shot":
-        echo json_encode(tryCallShot($data, $gameController));
-        $_SESSION['game_controller'] = serialize($gameController);
-        break;
-    case "ships_status":
-        echo json_encode($gameController->getShipsState());
-        break;
-    case "reset":
-        unset($_SESSION['game_controller']);
-        break;
-    default:
-        http_response_code(404);
-        echo json_encode( array("message" => "Request not found."));
-
+function doAction($action, $gameController, $data) {
+    switch($action) {
+        case 'status_info':
+            http_response_code(200);
+            echo json_encode($gameController->getCurrentState());
+            break;
+        case 'start':
+            echo json_encode(tryStartGame($data, $gameController));
+            saveGameControllerInSession($gameController);
+            break;
+        case 'place_ships':
+            echo json_encode(tryPlaceShips($data, $gameController));
+            saveGameControllerInSession($gameController);
+            break;
+        case 'call_shot':
+            echo json_encode(tryCallShot($data, $gameController));
+            saveGameControllerInSession($gameController);
+            break;
+        case 'ships_status':
+            echo json_encode($gameController->getShipsState());
+            break;
+        case 'reset':
+            unset($_SESSION[GAME_CONTROLLER]);
+            http_response_code(200);
+            echo json_encode( array('message' => 'Successful game reset.'));
+            break;
+        default:
+            http_response_code(404);
+            echo json_encode( array('message' => 'Request not found.'));
+    }
 }
 
-function tryStartGame($gameController) {
+function saveGameControllerInSession($gameController) {
+    $_SESSION[GAME_CONTROLLER] = serialize($gameController);
+}
+
+function tryStartGame($data, $gameController) {
     try {
-        $gameController->start();
+        $gameController->start($data);
         return new SuccessfulMessageResult('Game started successfully');
     } catch (Exception $exception) {
         return new ExceptionMessageResult($exception->getMessage());

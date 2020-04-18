@@ -66,7 +66,7 @@ class GameControllerImpl implements GameController, StateUpdater {
         $this->endGameListener = new EndGameListener($this);
     }
 
-    public function start() {
+    public function start($jsonData) {
         $gameService = new GameServiceImpl();
         $this->configurePlayers($gameService);
 

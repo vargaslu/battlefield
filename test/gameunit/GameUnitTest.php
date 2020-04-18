@@ -107,7 +107,7 @@ class GameUnitTest extends TestCase {
     public function testSuccessOpponentHit() {
         $this->mockedGameService
             ->expects($this->once())
-            ->method('makeShot')
+            ->method('makeShotFromSourceToOpponentLocation')
             ->with($this->gameUnit, $this->anything())
             ->willReturn(HitResult::createSuccessfulHitResult(self::FAKE_SHIP1));
 
@@ -119,7 +119,7 @@ class GameUnitTest extends TestCase {
 
         $this->mockedGameService
             ->expects($this->once())
-            ->method('makeShot')
+            ->method('makeShotFromSourceToOpponentLocation')
             ->with($this->gameUnit, $this->anything())
             ->willReturn(HitResult::createSuccessfulHitResult(self::FAKE_SHIP1));
 
@@ -130,7 +130,7 @@ class GameUnitTest extends TestCase {
     public function testMissedOpponentHit() {
         $this->mockedGameService
             ->expects($this->once())
-            ->method('makeShot')
+            ->method('makeShotFromSourceToOpponentLocation')
             ->with($this->gameUnit, $this->anything())
             ->willReturn(HitResult::createMissedHitResult());
 

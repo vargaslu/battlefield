@@ -6,9 +6,9 @@ namespace Game\Battleship;
 
 interface GameController {
 
-    function start();
+    function start($data);
 
-    function placeShip($ship);
+    function placeShip($ships);
 
     function callShot($location);
 
