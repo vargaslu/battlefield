@@ -1,6 +1,4 @@
-# Turn rewrite engine on
 Options +FollowSymlinks
 RewriteEngine On
 
-# map neat URL to internal URL
 RewriteRule ^api/game/status_info/$   /api/game/RestController.php?action=status_info [nc,qsa]

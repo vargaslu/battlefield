@@ -11,12 +11,13 @@ require_once __DIR__.'/../items/Cruiser.php';
 require_once __DIR__.'/../items/Submarine.php';
 require_once __DIR__.'/../items/Destroyer.php';
 require_once __DIR__.'/../listeners/PropertyChangeListener.php';
+require_once __DIR__.'/../listeners/ShipDestroyedListener.php';
 require_once __DIR__.'/../exceptions/NotAllowedShipException.php';
 require_once 'Ocean.php';
 require_once 'Target.php';
 
 
-class GameUnit implements PropertyChangeListener {
+class GameUnit {
 
     private $ocean;
 
@@ -28,7 +29,7 @@ class GameUnit implements PropertyChangeListener {
 
     private $gameService;
 
-    private $endListener;
+    private $shipDestroyedListener;
 
     private $owner;
 
@@ -38,19 +39,21 @@ class GameUnit implements PropertyChangeListener {
         $this->target = new Target(new Grid());
         $this->placedShips = [];
         $this->originalPlacedShips = [];
-        $this->owner = 'Player 1';
+        $this->shipDestroyedListener = new ShipDestroyedListener($this->placedShips);
+        $this->setOwner('Player 1');
     }
 
     public function setOwner(string $owner): void {
         $this->owner = $owner;
+        $this->shipDestroyedListener->setOwner($owner);
     }
 
     public function getOwner(): string {
         return $this->owner;
     }
 
-    public function setEndListener(PropertyChangeListener $endListener) {
-        $this->endListener = $endListener;
+    public function setEndGameListener(PropertyChangeListener $endListener) {
+        $this->shipDestroyedListener->setEndGameListener($endListener);
     }
 
     public function isLocationFree(Location $location) : bool {
@@ -70,12 +73,12 @@ class GameUnit implements PropertyChangeListener {
 
         $this->ocean->place($ship);
         $this->placedShips[$ship->getName()] = $ship;
-        $ship->addPropertyChangeListener($this);
+        $ship->addPropertyChangeListener($this->shipDestroyedListener);
 
         $this->originalPlacedShips = $this->placedShips;
     }
 
-    public function makeShot(Location $location) : HitResult{
+    public function makeShot(Location $location) : HitResult {
         $hitResult = $this->gameService->makeShot($this, $location);
         if ($hitResult->isHit()) {
             $this->target->place(Peg::createRedPeg($location));
@@ -105,21 +108,7 @@ class GameUnit implements PropertyChangeListener {
         return $this->originalPlacedShips;
     }
 
-    function fireUpdate($ship, $property, $value) {
-        if (strcmp($value, Ship::DESTROYED) == 0) {
-            unset($this->placedShips[$ship]);
-            $this->notifyToListenersIfNoMoreShipsAreAvailable();
-        }
-    }
-
     function getFreeAvailableTargetPositions() {
         return $this->target->getNotUsedGridPositions();
-    }
-
-    private function notifyToListenersIfNoMoreShipsAreAvailable(): void {
-        if (sizeof($this->placedShips) === 0) {
-            error_log('notify Game Over');
-            $this->endListener->fireUpdate($this, 'GAME_OVER', $this->owner);
-        }
     }
 }

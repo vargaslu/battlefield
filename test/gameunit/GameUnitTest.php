@@ -91,7 +91,7 @@ class GameUnitTest extends TestCase {
         $listener->expects($this->once())->method('fireUpdate');
 
         $gameUnit = new GameUnit($this->mockedGameService);
-        $gameUnit->setEndListener($listener);
+        $gameUnit->setEndGameListener($listener);
         $gameUnit->placeShip($fakeShip2);
         self::assertEquals(1, $gameUnit->availableShips());
 

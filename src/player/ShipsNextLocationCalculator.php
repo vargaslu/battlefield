@@ -214,9 +214,7 @@ class ShipsNextLocationCalculator {
 
         $firstShipValues = $this->getFirstShipValues();
         $resultString = '[ ';
-        foreach ($firstShipValues as $locationValue) {
-            $resultString .= (string) $locationValue.', ';
-        }
+        $resultString .= implode(', ', $firstShipValues);
         $resultString = rtrim($resultString, ', ');
         $resultString .= ' ]';
         return $resultString;

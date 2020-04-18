@@ -26,13 +26,9 @@ class GameControllerImpl implements GameController, StateUpdater {
 
     private $type;
 
-    private $placedShipsHumanPlayer;
-
     private $readyListener;
 
     private $endGameListener;
-
-    private $playerEmulator;
 
     private $waitingForStartState;
 
@@ -45,24 +41,71 @@ class GameControllerImpl implements GameController, StateUpdater {
     private $endedGameState;
 
     public function __construct() {
-        $this->initialize();
+        $this->initializeGame();
+    }
+
+    private function initializeGame() {
+        $this->initializeGameStates();
+        $this->initializeListeners();
+        $this->updateCurrentState($this->waitingForStartState);
+    }
+
+    private function initializeGameStates(): void {
+        $this->waitingForStartState = new WaitingForStartState();
+        $this->placingShipsState = new PlacingShipsState();
+        $this->waitingForAutomaticActionState = new WaitingForAutomaticActionState();
+        $this->callingShotsState = new CallingShotsState();
+        $this->endedGameState = new EndedGameState();
+    }
+
+    private function initializeListeners(): void {
+        $this->readyListener = new ReadyListener($this);
+        $this->readyListener->acceptedGameStates([$this->placingShipsState,
+                                                  $this->waitingForAutomaticActionState,
+                                                  $this->callingShotsState]);
+        $this->endGameListener = new EndGameListener($this);
     }
 
     public function start() {
         $gameService = new GameServiceImpl();
-        $this->humanGameUnit = new GameUnit($gameService);
-        $this->humanGameUnit->setEndListener($this->endGameListener);
-
-        $this->endedGameState->registerFirstGameUnitOwner($this->humanGameUnit->getOwner());
-
-        $gameService->setFirstGameUnit($this->humanGameUnit);
+        $this->configurePlayers($gameService);
 
         $this->placingShipsState->addPropertyChangeListener($this->readyListener);
         $this->callingShotsState->addPropertyChangeListener($this->readyListener);
 
-        $this->configureComputerBasedOpponent($gameService);
-
         $this->updateCurrentState($this->placingShipsState);
+    }
+
+    private function configurePlayers(GameServiceImpl $gameService): void {
+        $this->configureHumanPlayer($gameService);
+        $this->configureComputerBasedOpponent($gameService);
+    }
+
+    private function configureHumanPlayer(GameServiceImpl $gameService): void {
+        $this->humanGameUnit = new GameUnit($gameService);
+        $this->humanGameUnit->setEndGameListener($this->endGameListener);
+
+        $this->endedGameState->registerFirstGameUnitOwner($this->humanGameUnit->getOwner());
+
+        $gameService->setFirstGameUnit($this->humanGameUnit);
+    }
+
+    private function configureComputerBasedOpponent(GameServiceImpl $gameService): void {
+        if (Constants::$CONFIGURED_HUMAN_PLAYERS == 1) {
+            $computerGameUnit = new GameUnit($gameService);
+            $computerGameUnit->setEndGameListener($this->endGameListener);
+            $computerGameUnit->setOwner('Computer');
+
+            $gameService->setSecondGameUnit($computerGameUnit);
+
+            $this->endedGameState->registerSecondGameUnitOwner($computerGameUnit->getOwner());
+
+            $playerEmulator = new PlayerEmulator($computerGameUnit);
+            $playerEmulator->setAttackStrategy(new LookAroundAttackStrategy($computerGameUnit));
+            $playerEmulator->addPropertyChangeListener($this->readyListener);
+
+            $this->waitingForAutomaticActionState->setPlayerEmulator($playerEmulator);
+        }
     }
 
     public function updateCurrentState(GameState $gameState, $value = null) : void {
@@ -82,24 +125,6 @@ class GameControllerImpl implements GameController, StateUpdater {
     public function callShot($jsonData) : HitResult {
         $location = Location::fromJson($jsonData);
         return $this->gameState->callingShot($this->humanGameUnit, $location);
-    }
-
-    private function configureComputerBasedOpponent(GameServiceImpl $gameService): void {
-        if (Constants::$CONFIGURED_HUMAN_PLAYERS == 1) {
-            $computerGameUnit = new GameUnit($gameService);
-            $computerGameUnit->setEndListener($this->endGameListener);
-            $computerGameUnit->setOwner('Computer');
-
-            $gameService->setSecondGameUnit($computerGameUnit);
-
-            $this->endedGameState->registerSecondGameUnitOwner($computerGameUnit->getOwner());
-
-            $playerEmulator = new PlayerEmulator($computerGameUnit);
-            $playerEmulator->setAttackStrategy(new LookAroundAttackStrategy($computerGameUnit));
-            $playerEmulator->addPropertyChangeListener($this->readyListener);
-
-            $this->waitingForAutomaticActionState->setPlayerEmulator($playerEmulator);
-        }
     }
 
     public function getWaitingForStartState(): WaitingForStartState {
@@ -129,24 +154,7 @@ class GameControllerImpl implements GameController, StateUpdater {
         return [];
     }
 
-    private function initialize() {
-
-        $this->waitingForStartState = new WaitingForStartState();
-        $this->placingShipsState = new PlacingShipsState();
-        $this->waitingForAutomaticActionState = new WaitingForAutomaticActionState();
-        $this->callingShotsState = new CallingShotsState();
-        $this->endedGameState = new EndedGameState();
-
-        $this->readyListener = new ReadyListener($this);
-        $this->readyListener->acceptedGameStates([$this->placingShipsState,
-                                                  $this->waitingForAutomaticActionState,
-                                                  $this->callingShotsState]);
-        $this->endGameListener = new EndGameListener($this);
-
-        $this->updateCurrentState($this->waitingForStartState);
-    }
-
     public function reset(): void {
-        $this->initialize();
+        $this->initializeGame();
     }
 }
