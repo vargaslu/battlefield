@@ -39,8 +39,6 @@ class PlayerEmulator {
         }
 
         var_dump($this->gameUnit);
-
-        $this->listener->fireUpdate(Constants::POSITIONED_SHIPS, ReadyListener::READY, true);
     }
 
     private function searchForShipLocation($shipName) {

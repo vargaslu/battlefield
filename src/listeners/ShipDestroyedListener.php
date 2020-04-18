@@ -33,7 +33,6 @@ class ShipDestroyedListener implements PropertyChangeListener {
 
     private function notifyToListenersIfNoMoreShipsAreAvailable(): void {
         if (sizeof($this->ships) === 0) {
-            error_log('notify Game Over');
             $this->endGameListener->fireUpdate($this, 'GAME_OVER', $this->owner);
         }
     }

@@ -28,13 +28,18 @@ class PlacingShipsStateTest extends TestCase {
 
     private $mockedGameService;
 
+    private $mockedReadyListener;
+
     private $current;
 
     private $placingShipsState;
 
     protected function setUp(): void {
         $this->mockedGameService = $this->getMockBuilder(GameService::class)->getMock();
+        $this->mockedReadyListener = $this->getMockBuilder(PropertyChangeListener::class)->getMock();
+
         $this->current = new GameUnit($this->mockedGameService);
+        $this->current->setReadyListener($this->mockedReadyListener);
 
         Constants::$DEFAULT_SHIPS_TO_PLACE = [Carrier::NAME, Destroyer::NAME];
 
@@ -49,10 +54,7 @@ class PlacingShipsStateTest extends TestCase {
     }
 
     public function testNotifyListenerWhenAllShipsArePlaced() {
-        $listener = $this->getMockBuilder(PropertyChangeListener::class)->getMock();
-        $listener->expects($this->once())->method('fireUpdate');
-
-        $this->placingShipsState->addPropertyChangeListener($listener);
+        $this->mockedReadyListener->expects($this->once())->method('fireUpdate');
 
         $this->placingShipsState->placingShips($this->current,
                                                Carrier::build(new ShipLocation('A', 1,

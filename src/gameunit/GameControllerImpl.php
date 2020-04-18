@@ -70,7 +70,6 @@ class GameControllerImpl implements GameController, StateUpdater {
         $gameService = new GameServiceImpl();
         $this->configurePlayers($gameService);
 
-        $this->placingShipsState->addPropertyChangeListener($this->readyListener);
         $this->callingShotsState->addPropertyChangeListener($this->readyListener);
 
         $this->updateCurrentState($this->placingShipsState);
@@ -83,6 +82,7 @@ class GameControllerImpl implements GameController, StateUpdater {
 
     private function configureHumanPlayer(GameServiceImpl $gameService): void {
         $this->humanGameUnit = new GameUnit($gameService);
+        $this->humanGameUnit->setReadyListener($this->readyListener);
         $this->humanGameUnit->setEndGameListener($this->endGameListener);
 
         $this->endedGameState->registerFirstGameUnitOwner($this->humanGameUnit->getOwner());
@@ -93,6 +93,7 @@ class GameControllerImpl implements GameController, StateUpdater {
     private function configureComputerBasedOpponent(GameServiceImpl $gameService): void {
         if (Constants::$CONFIGURED_HUMAN_PLAYERS == 1) {
             $computerGameUnit = new GameUnit($gameService);
+            $computerGameUnit->setReadyListener($this->readyListener);
             $computerGameUnit->setEndGameListener($this->endGameListener);
             $computerGameUnit->setOwner('Computer');
 

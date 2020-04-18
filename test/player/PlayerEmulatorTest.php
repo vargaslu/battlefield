@@ -40,7 +40,8 @@ class PlayerEmulatorTest extends TestCase {
         $listener = $this->getMockBuilder(PropertyChangeListener::class)->getMock();
         $listener->expects($this->once())->method('fireUpdate');
 
-        $this->playerEmulator->addPropertyChangeListener($listener)->placeShips();
+        $this->gameUnit->setReadyListener($listener);
+        $this->playerEmulator->placeShips();
     }
 
     public function testPlacingWithoutRandomLocations() {
@@ -51,7 +52,8 @@ class PlayerEmulatorTest extends TestCase {
         $this->playerEmulator->setDesiredShipLocations([new ShipLocation('A', 1, Direction::VERTICAL),
                                                     new ShipLocation('A', 2, Direction::VERTICAL)]);
 
-        $this->playerEmulator->addPropertyChangeListener($listener)->placeShips();
+        $this->gameUnit->setReadyListener($listener);
+        $this->playerEmulator->placeShips();
     }
 
     public function testSearchAnotherPlaceIfExceptionIsCatch() {
@@ -63,6 +65,7 @@ class PlayerEmulatorTest extends TestCase {
                                                     new ShipLocation('B', 1, Direction::VERTICAL),
                                                     new ShipLocation('A', 2, Direction::VERTICAL)]);
 
-        $this->playerEmulator->addPropertyChangeListener($listener)->placeShips();
+        $this->gameUnit->setReadyListener($listener);
+        $this->playerEmulator->placeShips();
     }
 }

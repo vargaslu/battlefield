@@ -31,6 +31,8 @@ class GameUnit {
 
     private $shipDestroyedListener;
 
+    private $readyListener;
+
     private $owner;
 
     public function __construct(GameService $gameService) {
@@ -52,8 +54,12 @@ class GameUnit {
         return $this->owner;
     }
 
-    public function setEndGameListener(PropertyChangeListener $endListener) {
-        $this->shipDestroyedListener->setEndGameListener($endListener);
+    public function setReadyListener(PropertyChangeListener $readyListener) {
+        $this->readyListener = $readyListener;
+    }
+
+    public function setEndGameListener(PropertyChangeListener $endGameListener) {
+        $this->shipDestroyedListener->setEndGameListener($endGameListener);
     }
 
     public function isLocationFree(Location $location) : bool {
@@ -76,6 +82,12 @@ class GameUnit {
         $ship->addPropertyChangeListener($this->shipDestroyedListener);
 
         $this->originalPlacedShips = $this->placedShips;
+
+        $result = array_diff(Constants::$DEFAULT_SHIPS_TO_PLACE, array_keys($this->placedShips));
+        if (sizeof($result) === 0) {
+            error_log('>>Ready!!! '. $this->getOwner());
+            $this->readyListener->fireUpdate(Constants::POSITIONED_SHIPS, ReadyListener::READY, true);
+        }
     }
 
     public function makeShot(Location $location) : HitResult {
