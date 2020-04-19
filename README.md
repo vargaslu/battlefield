@@ -2,8 +2,9 @@
 Small battleship game using PHP, an explanation of the basic rules can be found [here](https://www.hasbro.com/common/instruct/Battleship.PDF).
 The game uses JSON REST API calls. 
 
-##Start the game server
+## Start the game server
 There are two ways to start the game server locally:
+                 
 ### Using PHP Built-in Server
 ```
 $php -S localhost:<port>
