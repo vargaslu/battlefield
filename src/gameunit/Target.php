@@ -49,9 +49,20 @@ class Target {
         return $this->grid->getFilteredGrid($filterClosure);
     }
 
+    function getAllUsedPegs() {
+        $filterClosure = $this->getAllPegsClosureFilter();
+        return $this->grid->getFilteredGridAsArray($filterClosure);
+    }
+
     private function getClosureFilter($pegType) {
         return function ($value) use ($pegType) {
             return $value === $pegType;
+        };
+    }
+
+    private function getAllPegsClosureFilter() {
+        return function ($value) {
+            return ($value !== '') || ($value === Peg::WHITE);
         };
     }
 }

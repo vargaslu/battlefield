@@ -103,7 +103,7 @@ class GameUnit {
 
     private function placePegInLocationAccordingToHitResult(HitResult $hitResult, Location $location): void {
         if ($hitResult->isHit()) {
-            $this->target->place(Peg::createRedPeg($location));
+            $this->target->place(Peg::createRedPeg($location, $hitResult->getShipName()));
         } else {
             $this->target->place(Peg::createWhitePeg($location));
         }
@@ -142,5 +142,19 @@ class GameUnit {
 
     function getFreeAvailableTargetPositions() {
         return $this->target->getNotUsedGridPositions();
+    }
+
+    function getAllUsedTargetPositions() {
+        $allUsedPegs = $this->target->getAllUsedPegs();
+        return array_map($this->mapToLocation(), $allUsedPegs);
+    }
+
+    private function mapToLocation() {
+        return function ($shotsStatus) {
+            $letter = $shotsStatus[0];
+            $column = $shotsStatus[1];
+            $hit = (strcmp($shotsStatus[2], Peg::WHITE) == 0) ? 'Missed': ('Hit '. $shotsStatus[2]);
+          return [ "location" => $letter, "column" => $column , "hit_status" => $hit ];
+        };
     }
 }

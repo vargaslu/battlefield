@@ -56,8 +56,12 @@ function doAction($action, $gameController, $data) {
         case 'ships_status':
             echo json_encode($gameController->getShipsState());
             break;
+        case 'display_shots':
+            echo json_encode($gameController->getUsedCoordinates());
+            break;
         case 'reset':
             unset($_SESSION[GAME_CONTROLLER]);
+            $gameController->reset();
             http_response_code(200);
             echo json_encode( array('message' => 'Successful game reset.'));
             break;

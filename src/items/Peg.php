@@ -27,8 +27,8 @@ class Peg implements Item {
         return new Peg(self::WHITE, $location);
     }
 
-    public static function createRedPeg(Location $location) {
-        return new Peg(self::RED, $location);
+    public static function createRedPeg(Location $location, $shipName) {
+        return new Peg($shipName, $location);
     }
 
     final function getName() {

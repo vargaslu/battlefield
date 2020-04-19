@@ -103,7 +103,7 @@ class Grid {
         foreach ($this->board as $letter => $columns) {
             foreach ($columns as $column => $value) {
                 if ($filterClosure($value)) {
-                    array_push($filteredArray, [$letter, $column]);
+                    array_push($filteredArray, [$letter, $column, $value]);
                 }
             }
         }

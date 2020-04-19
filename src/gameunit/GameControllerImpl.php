@@ -163,6 +163,13 @@ class GameControllerImpl implements GameController, StateUpdater {
         return [];
     }
 
+    function getUsedCoordinates() {
+        if (isset($this->humanGameUnit)) {
+            return $this->humanGameUnit->getAllUsedTargetPositions();
+        }
+        return [];
+    }
+
     public function reset(): void {
         $this->initializeGame();
     }

@@ -163,4 +163,15 @@ class GameUnitTest extends TestCase {
             self::assertTrue($this->gameUnit->isLocationFree(new Location('A', 2)));
         }
     }
+
+    public function testGetAllUsedTargetPositions() {
+        $this->mockedGameService
+            ->expects($this->once())
+            ->method('makeShotFromSourceToOpponentLocation')
+            ->with($this->gameUnit, $this->anything())
+            ->willReturn(HitResult::createSuccessfulHitResult(self::FAKE_SHIP1));
+
+        $this->gameUnit->callShotIntoLocation(new Location('A', 1));
+        $this->gameUnit->getAllUsedTargetPositions();
+    }
 }

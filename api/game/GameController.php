@@ -16,6 +16,8 @@ interface GameController {
 
     function getShipsState();
 
+    function getUsedCoordinates();
+
     function reset() : void;
 
 }

@@ -24,7 +24,7 @@ class TargetTest extends TestCase {
         $this->expectException(LocationOutOfBoundsException::class);
 
         $target = new Target(new Grid());
-        $target->place(Peg::createRedPeg(new Location('A', 6)));
+        $target->place(Peg::createRedPeg(new Location('A', 6), 'FakeShip1'));
     }
 
     public function testExceptionWhenPegIsOutsideGridVertically() {
@@ -36,26 +36,25 @@ class TargetTest extends TestCase {
 
     public function testGetFilteredPegs() {
         $target = new Target(new Grid());
-        $target->place(Peg::createRedPeg(new Location('A', 2)));
+        $target->place(Peg::createRedPeg(new Location('A', 2), 'FakeShip'));
         $target->place(Peg::createWhitePeg(new Location('D', 3)));
         $target->place(Peg::createWhitePeg(new Location('C', 5)));
 
         self::assertEquals(2, sizeof($target->getWhitePegs()));
-        self::assertEquals(1, sizeof($target->getRedPegs()));
     }
 
     public function testPeekFromGrid() {
         $target = new Target(new Grid());
-        $target->place(Peg::createRedPeg(new Location('A', 2)));
+        $target->place(Peg::createRedPeg(new Location('A', 2), 'FakeShip'));
         $target->place(Peg::createWhitePeg(new Location('D', 3)));
 
-        self::assertEquals(Peg::RED, $target->peek(new Location('A', 2)));
+        self::assertEquals('FakeShip', $target->peek(new Location('A', 2)));
         self::assertEquals(Peg::WHITE, $target->peek(new Location('D', 3)));
     }
 
     public function testGetNoUsedPositions() {
         $target = new Target(new Grid());
-        $target->place(Peg::createRedPeg(new Location('A', 2)));
+        $target->place(Peg::createRedPeg(new Location('A', 2), 'FakeShip'));
         $target->place(Peg::createWhitePeg(new Location('D', 3)));
         $target->place(Peg::createWhitePeg(new Location('C', 5)));
 

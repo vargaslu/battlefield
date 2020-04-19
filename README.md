@@ -54,6 +54,8 @@ POST Method to call shots.
 }
 ```
 Where location and column is the place where the shot will be called.
+### display_shots
+GET Method to see a list of called shots
 ### ship_status
 GET Method to see the status of the ships
 ### reset
