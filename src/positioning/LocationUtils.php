@@ -49,7 +49,7 @@ final class LocationUtils {
         return new Location($letter, $column);
     }
 
-    public static function decrease(Location $location, $direction) {
+    public static function decrease(Location $location, $direction) : Location {
         Direction::validate($direction);
         $letter = $location->getLetter();
         $column = $location->getColumn();

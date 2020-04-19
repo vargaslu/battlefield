@@ -36,4 +36,7 @@ class ShipLocation extends Location {
         }
     }
 
+    public function extractLocation() : Location {
+        return new Location($this->getLetter(), $this->getColumn());
+    }
 }

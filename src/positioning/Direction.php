@@ -24,8 +24,8 @@ final class Direction {
             return Direction::VERTICAL;
         } else {
             throw new InvalidArgumentException('Not valid value for direction found {'. $value .
-                                               '} only valid values are [0, \'H\'] for horizontal -'.
-                                               '[1, \'V\'] for vertical');
+                                               '} only valid values are \'H\' for horizontal and'.
+                                               '\'V\' for vertical');
         }
     }
 }

@@ -79,7 +79,7 @@ class GameUnit {
 
     private function validateShipIsNotPlacedMoreThanOnce(string $shipName): void {
         if (array_search($shipName, $this->placedShips) !== false) {
-            throw new NotAllowedShipException('Allowed quantity for ship ' . $shipName . ' already used');
+            throw new NotAllowedShipException('Ship ' . $shipName . ' already placed');
         }
     }
 

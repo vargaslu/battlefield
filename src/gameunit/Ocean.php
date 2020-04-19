@@ -18,12 +18,9 @@ class Ocean {
 
     function place(Ship $ship) {
         $this->validateShipLocationFromShip($ship);
+        $this->validateGridIsNotOccupiedBeforePlacingShip($ship);
 
-        $locationCopy = clone $ship->getLocation();
-        for ($size = 0; $size < $ship->getSize(); $size++) {
-            $this->grid->put($ship, $locationCopy);
-            $locationCopy->increase(1);
-        }
+        $this->placeShipInTheGridAccordingToLocationAndSize($ship);
     }
 
     private function validateShipLocationFromShip(Ship $ship) {
@@ -31,6 +28,22 @@ class Ocean {
         $locationCopy->increase($ship->getSize() - 1);
         if ($this->isLocationOutsideGrid($locationCopy)) {
             throw new LocationOutOfBoundsException($ship->getLocation(), $ship->getName());
+        }
+    }
+
+    private function validateGridIsNotOccupiedBeforePlacingShip(Ship $ship) {
+        $locationCopy = clone $ship->getLocation();
+        for ($size = 0; $size < $ship->getSize(); $size++) {
+            $this->grid->validateLocation($locationCopy->extractLocation());
+            $locationCopy->increase(1);
+        }
+    }
+
+    private function placeShipInTheGridAccordingToLocationAndSize(Ship $ship): void {
+        $locationCopy = clone $ship->getLocation();
+        for ($size = 0; $size < $ship->getSize(); $size++) {
+            $this->grid->put($ship, $locationCopy);
+            $locationCopy->increase(1);
         }
     }
 

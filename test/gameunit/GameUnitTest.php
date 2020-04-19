@@ -58,7 +58,7 @@ class GameUnitTest extends TestCase {
             $this->gameUnit->placeShip($fakeShip1);
             $this->gameUnit->placeShip($fakeShip2);
         } catch (NotAllowedShipException $exception) {
-            self::assertEquals('Allowed quantity for ship FakeShip1 already used', $exception->getMessage());
+            self::assertEquals('Ship FakeShip1 already placed', $exception->getMessage());
             self::assertEquals(1, $this->gameUnit->availableShips());
             return;
         }
@@ -149,5 +149,18 @@ class GameUnitTest extends TestCase {
         $this->gameUnit->placeShip($fakeShip2);
 
         self::assertFalse($this->gameUnit->isLocationFree(new Location('C', 2)));
+    }
+
+    public function testExceptionWhenPlacingShipWhereAnotherIsFound() {
+        try {
+            $fakeShip1 = new FakeShip(self::FAKE_SHIP1, 3, new ShipLocation('A', 3, Direction::VERTICAL));
+            $fakeShip2 = new FakeShip(self::FAKE_SHIP2, 2, new ShipLocation('A', 2, Direction::HORIZONTAL));
+
+            $this->gameUnit->placeShip($fakeShip1);
+            $this->gameUnit->placeShip($fakeShip2);
+        } catch (LocationException $exception) {
+            self::assertEquals('Location A-3 is occupied by Item: FakeShip1', $exception->getMessage());
+            self::assertTrue($this->gameUnit->isLocationFree(new Location('A', 2)));
+        }
     }
 }

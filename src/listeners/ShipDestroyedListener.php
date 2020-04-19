@@ -13,8 +13,8 @@ class ShipDestroyedListener implements PropertyChangeListener {
 
     private $owner;
 
-    public function __construct($placedShips) {
-        $this->ships = $placedShips;
+    public function __construct(&$placedShips) {
+        $this->ships = &$placedShips;
     }
 
     function setEndGameListener($endGameListener): void {

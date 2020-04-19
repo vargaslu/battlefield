@@ -14,7 +14,6 @@ A Dockerfile was created with an Apache Web Server.
 $docker build -t battleship_game .
 $docker run -d -p <port>:80 --name battleship battleship_game
 ```
-_Note: <port> is the desired port to be used_
 
 Verify in Postman that the game has started using:
 ```
@@ -33,7 +32,7 @@ GET Method that gives information about the state of the game.
 ### start
 POST Method to start the game.
 ### place_ships
-POST Method to place the ships.
+POST Method to place the ships, accepted is an array with ship values.
 ```json
 [{
   "name" : "Carrier",
@@ -42,9 +41,9 @@ POST Method to place the ships.
   "direction": "V"
 }, {...}]
 ```
-Possible ship names are \[ 'Carrier' | 'Cruiser' | 'Destroyer' | 'Battleship' | 'Submarine' \], location and 
+Possible ship names ("Carrier"|"Cruiser"|"Destroyer"|"Battleship"|"Submarine"), location and 
 column indicates where in the ocean grid will the ship be placed, direction can take two values
-\[ 'V' | 'H' \] from vertical or horizontal.
+("V"|"H") for vertical or horizontal positioning.
 
 ### call_shot
 POST Method to call shots.
@@ -59,5 +58,5 @@ Where location and column is the place where the shot will be called.
 GET Method to see the status of the ships
 ### reset
 GET Method to reset the game, and leaves it in waiting to start status.
-##Authors
+##Author
 - *Luis Vargas*
