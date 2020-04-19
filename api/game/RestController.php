@@ -82,10 +82,12 @@ function tryStartGame($data, $gameController) {
 
 function tryPlaceShips($data, $gameController) {
     try {
+        $results = [];
         foreach ($data as $shipData) {
-            $gameController->placeShip($shipData);
+            $placeShipResult = $gameController->placeShip($shipData);
+            array_push($results, $placeShipResult);
         }
-        return new SuccessfulMessageResult('Ship(s) placed successfully');
+        return $results;
     } catch (Exception $exception) {
         return new ExceptionMessageResult($exception->getMessage());
     }

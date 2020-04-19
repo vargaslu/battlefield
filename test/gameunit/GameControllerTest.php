@@ -32,7 +32,19 @@ class GameControllerTest extends TestCase {
     }
 
     public function testCallingShotsState() {
-        $data = json_decode('
+        $data = json_decode($this->getJsonCallForPlaceShips(), true);
+        $gameController = new GameControllerImpl();
+        $gameController->start('');
+
+        foreach ($data as $jsonShip) {
+            $gameController->placeShip($jsonShip);
+        }
+
+        self::assertFalse($gameController->getCurrentState() instanceof PlacingShipsState);
+    }
+
+    private function getJsonCallForPlaceShips() : string {
+        return '
         [{
             "name" : "Carrier",
             "location": "A",
@@ -44,14 +56,6 @@ class GameControllerTest extends TestCase {
             "location": "A",
             "column": 2,
             "direction": "V"
-        }]', true);
-        $gameController = new GameControllerImpl();
-        $gameController->start('');
-
-        foreach ($data as $jsonShip) {
-            $gameController->placeShip($jsonShip);
-        }
-
-        self::assertFalse($gameController->getCurrentState() instanceof PlacingShipsState);
+        }]';
     }
 }

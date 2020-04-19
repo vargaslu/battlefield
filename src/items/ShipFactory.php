@@ -10,11 +10,11 @@ final class ShipFactory {
     private $shipName;
 
     public function __construct($shipName) {
-        $this->shipName = strtoupper($shipName);
+        $this->shipName = $shipName;
     }
 
     public function buildWithLocation(ShipLocation $location) : Ship {
-        switch ($this->shipName) {
+        switch (strtoupper($this->shipName)) {
             case strtoupper(Carrier::NAME):
                 return Carrier::build($location);
             case strtoupper(Battleship::NAME):

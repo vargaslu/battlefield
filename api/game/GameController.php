@@ -8,7 +8,7 @@ interface GameController {
 
     function start($data);
 
-    function placeShip($ships);
+    function placeShip($ships) : PlaceShipResult;
 
     function callShot($location);
 

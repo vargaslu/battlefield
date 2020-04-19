@@ -6,6 +6,8 @@ namespace Game\Battleship;
 
 class WaitingForAutomaticActionState implements GameState {
 
+    private const WAITING_FOR_OPPONENT_AUTOMATIC_ACTION_STATE = 'Waiting for opponent automatic action';
+
     private $playerEmulator;
 
     public function __construct() {
@@ -16,11 +18,13 @@ class WaitingForAutomaticActionState implements GameState {
     }
 
     function placingShips(GameUnit $current, Ship $ship) {
-        throw new GameStateException('Not accepting placing of ships, Please wait until I finish');
+        throw new GameStateException('Not accepting placing of ships',
+                                     self::WAITING_FOR_OPPONENT_AUTOMATIC_ACTION_STATE);
     }
 
     function callingShot(GameUnit $current, Location $location) {
-        throw new GameStateException('Not accepting calling shots, Please wait until I finish');
+        throw new GameStateException('Not accepting calling shots',
+                                     self::WAITING_FOR_OPPONENT_AUTOMATIC_ACTION_STATE);
     }
 
     function enter($value = null) {
@@ -35,6 +39,6 @@ class WaitingForAutomaticActionState implements GameState {
     }
 
     public function jsonSerialize() {
-        return [ 'state' => 'Waiting for opponent automatic action' ];
+        return [ 'state' => self::WAITING_FOR_OPPONENT_AUTOMATIC_ACTION_STATE];
     }
 }

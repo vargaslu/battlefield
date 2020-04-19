@@ -4,6 +4,7 @@
 namespace Game\Battleship;
 
 require_once __DIR__.'/../../api/game/GameController.php';
+require_once __DIR__.'/../../api/game/PlaceShipResult.php';
 require_once __DIR__.'/../listeners/ReadyListener.php';
 require_once __DIR__.'/../listeners/EndGameListener.php';
 require_once __DIR__.'/../player/PlayerEmulator.php';
@@ -17,6 +18,8 @@ require_once __DIR__.'/../states/WaitingForStartState.php';
 require_once __DIR__.'/../states/WaitingForAutomaticActionState.php';
 require_once 'GameUnit.php';
 require_once 'GameServiceImpl.php';
+
+use Exception;
 
 class GameControllerImpl implements GameController, StateUpdater {
 
@@ -115,9 +118,17 @@ class GameControllerImpl implements GameController, StateUpdater {
         return $this->gameState;
     }
 
-    public function placeShip($jsonData) {
-        $ship = ShipFactory::fromJson($jsonData);
-        $this->gameState->placingShips($this->humanGameUnit, $ship);
+    public function placeShip($jsonData) : PlaceShipResult {
+        try {
+            $ship = ShipFactory::fromJson($jsonData);
+            $this->gameState->placingShips($this->humanGameUnit, $ship);
+            return PlaceShipResult::createSuccessful($ship->getName());
+        } catch (GameStateException $exception) {
+            throw $exception;
+        } catch (Exception $exception) {
+            $shipName = $jsonData['name'];
+            return PlaceShipResult::createFailed($shipName, $exception->getMessage());
+        }
     }
 
     public function callShot($jsonData) : HitResult {

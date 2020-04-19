@@ -9,6 +9,8 @@ require_once 'GameState.php';
 
 class PlacingShipsState implements GameState {
 
+    private const PLACING_SHIPS_STATE = 'Placing ships';
+
     public function __construct() {
     }
 
@@ -28,11 +30,11 @@ class PlacingShipsState implements GameState {
     }
 
     function callingShot(GameUnit $current, Location $location) {
-        throw new GameStateException('Not calling shots yet');
+        throw new GameStateException('Not calling shots yet', self::PLACING_SHIPS_STATE);
     }
 
     public function jsonSerialize() {
-        return [ 'status' => 'Placing ships' ];
+        return [ 'status' => self::PLACING_SHIPS_STATE];
     }
 
     function enter($value = null) {
